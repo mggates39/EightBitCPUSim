@@ -1,0 +1,648 @@
+
+<html lang='en-us'>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: #1a1a1a;
+            background-color: #ffffff;
+            font-size: 14px;
+        }
+        .clk-button {
+            margin: 5px 5px 5px 5px;
+            display: block;
+            text-align: center;
+            vertical-align: middle;
+            padding: 4px 10px;
+            border: 0 solid #a12727;
+            border-radius: 3px;
+            background: #0869d1;
+            background: -webkit-gradient(linear, left top, left bottom, from(#0869d1), to(#005582));
+            background: -moz-linear-gradient(top, #0869d1, #005582);
+            background: linear-gradient(to bottom, #0869d1, #005582);
+            font: normal normal bold 11px arial;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .clk-button:hover,
+        .clk-button:focus {
+            background: #0a7efb;
+            background: -webkit-gradient(linear, left top, left bottom, from(#0a7efb), to(#00669c));
+            background: -moz-linear-gradient(top, #0a7efb, #00669c);
+            background: linear-gradient(to bottom, #0a7efb, #00669c);
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .clk-button:active {
+            background: #053f7d;
+            background: -webkit-gradient(linear, left top, left bottom, from(#053f7d), to(#005582));
+            background: -moz-linear-gradient(top, #053f7d, #005582);
+            background: linear-gradient(to bottom, #053f7d, #005582);
+        }
+        .memory {
+            font-family: Monospaced, monospace;
+            font-size: 13px;
+        }
+        .memoryInput {
+            font-family: Monospaced, monospace;
+            padding: 1px;
+            border: 1px solid #e5e5e5;
+        }
+        .container {
+            position: absolute;
+            top: 70px;
+            padding-bottom: 100px;
+        }
+
+        .block {
+            background-color: #fafafa;
+            z-index: 100;
+            position: absolute;
+            border: 1px solid grey;
+            margin: 0 0 0 40px;
+            width: 275px;
+            border-radius: 4px;
+        }
+
+        .block-title {
+            background-color: #fafafa;
+            z-index: 2;
+            font-size: .9em;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            position: relative;
+            top: -0.5em;
+            margin-left: 15px;
+            display: inline;
+
+        }
+        .big-value {
+            font-family: Monospaced, monospace;
+            font-size: 1.3em;
+            width: 100%;
+            text-align:center;
+        }
+
+        .blinken-light {
+            margin-top: 7px;
+            float: left;
+            border: 1px solid #666666;
+            width: 15px;
+            height: 15px;
+            border-radius: 25px;
+        }
+        .blink-light-on {
+            background-color: #16ff00;
+        }
+
+        .block-content {
+            margin: 2px 50px 5px 50px;
+            font-size: .8em;
+            line-height: 1.7em;
+        }
+
+        .block-io {
+            font-family: Monospaced, monospace;
+            width: 40px;
+            position: absolute;
+            font-size: .75rem;
+            display: inline;
+        }
+
+        .block-io-1-left {
+            left: 2px;
+            top: 15px;
+        }
+
+        .block-io-2-left {
+            left: 2px;
+            top: 40px;
+        }
+        .block-io-3-left {
+            left: 2px;
+            top: 65px;
+        }
+        .block-io-4-left {
+            left: 2px;
+            top: 90px;
+        }
+        .block-io-5-left {
+            left: 2px;
+            top: 115px;
+        }
+        .block-io-1-right {
+            text-align: right;
+            top: 15px;
+            right: 2px;
+        }
+        .block-io-2-right {
+            text-align: right;
+            top: 40px;
+            right: 2px;
+        }
+        .block-io-3-right {
+            text-align: right;
+            top: 65px;
+            right: 2px;
+        }
+        .block-io-4-right {
+            text-align: right;
+            top: 90px;
+            right: 2px;
+        }
+        .block-io-5-right {
+            text-align: right;
+            top: 115px;
+            right: 2px;
+        }
+        .block-io-6-right {
+            text-align: right;
+            top: 140px;
+            right: 2px;
+        }
+        .block-io-7-right {
+            text-align: right;
+            top: 165px;
+            right: 2px;
+        }
+        .bus-value {
+            font-family: Monospaced, monospace;
+            font-size: .8em;
+            position: absolute;
+            top: 10px;
+            left: 350px;
+        }
+        .canvas-style {
+            width: 900px;
+            height: 900px;
+            overflow: no-display;
+            z-index:1;
+        }
+        .control-logic-table {
+            vertical-align: middle;
+            margin-left: -30px;
+            text-align: center;
+        }
+        .control-logic-table tr th {
+            vertical-align: middle;
+            text-align: center;
+            padding-left: 3px;
+            padding-right: 10px;
+        }
+        .highlight-pin {
+            font-weight: bolder;
+            font-size: 1.3em;
+            color: #0054df;
+        }
+        .highlight-mem-row {
+            border: 1px solid #0028fa;
+            background-color: #d1eeff;
+        }
+        .halt {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 1.5em;
+            color: #ff1b4e;
+            font-weight: bold;
+        }
+
+        .display-container.display-size-12 {
+            margin-bottom: 4px;
+        }
+        .display-container {
+            position: relative;
+            margin-right: 4px;
+            float: left;
+        }
+
+        .display-container div.segment-x,
+        .display-container div.segment-y {
+            position: absolute;
+        }
+
+        .display-container span.segment-border {
+            display: block;
+            position: absolute;
+        }
+
+        .display-container.display-size-12 {
+            width: 24px;
+            height: 44px;
+        }
+
+        .display-container.display-size-12 .segment-x {
+            width: 14px;
+            left: 2px;
+            border-bottom: 2px solid #005fff;
+            border-left: 2px solid transparent;
+            border-right: 2px solid transparent;
+        }
+
+        .display-container.display-size-12 .segment-x .segment-border {
+            top: 2px;
+            left: -2px;
+            right: -2px;
+            border-top: 2px solid #005fff;
+            border-left: 2px solid transparent;
+            border-right: 2px solid transparent;
+        }
+
+        .display-container.display-size-12 .segment-y {
+            height: 14px;
+            width: 0;
+            border-right: 2px solid #005fff;
+            border-top: 2px solid transparent;
+            border-bottom: 2px solid transparent;
+        }
+
+        .display-container.display-size-12 .segment-y .segment-border {
+            position: relative;
+            left: 2px;
+            height: 14px;
+            margin-top: -2px;
+            border-left: 2px solid #005fff;
+            border-top: 2px solid transparent;
+            border-bottom: 2px solid transparent;
+        }
+
+        .display-container.display-size-12 .segment-a {
+            top: 0;
+        }
+
+        .display-container.display-size-12 .segment-b {
+            top: 2px;
+            left: 20px;
+        }
+
+        .display-container.display-size-12 .segment-c {
+            top: 22px;
+            left: 20px;
+        }
+
+        .display-container.display-size-12 .segment-d {
+            top: 38px;
+        }
+
+        .display-container.display-size-12 .segment-e {
+            top: 22px;
+            left: 0px;
+        }
+
+        .display-container.display-size-12 .segment-f {
+            top: 2px;
+            left: 0px;
+        }
+
+        .display-container.display-size-12 .segment-g {
+            top: 20px;
+        }
+
+        .display-no-1 .segment-a,
+        .display-no-1 .segment-d,
+        .display-no-1 .segment-e,
+        .display-no-1 .segment-f,
+        .display-no-1 .segment-g {
+            /*display: none;*/
+            opacity: 0.1;
+            filter: alpha(opacity=10);
+        }
+
+        .display-no-2 .segment-c,
+        .display-no-2 .segment-f {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        .display-no-3 .segment-e,
+        .display-no-3 .segment-f {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        .display-no-4 .segment-a,
+        .display-no-4 .segment-d,
+        .display-no-4 .segment-e {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        .display-no-5 .segment-b,
+        .display-no-5 .segment-e {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        .display-no-6 .segment-b {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        .display-no-7 .segment-d,
+        .display-no-7 .segment-e,
+        .display-no-7 .segment-f,
+        .display-no-7 .segment-g {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        .display-no-8 {}
+
+        .display-no-9 .segment-e {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        .display-no-0 .segment-g {
+            /*display: none;*/
+            opacity: 0.1;
+        }
+
+        /* clock */
+        #vertical-center {
+            position: absolute;
+            height: 0;
+            top: 25px;
+            left: 100px;
+        }
+
+        #clock-container {
+            margin: 0;
+            width: 500px;
+            height: 100px;
+        }
+
+        #clock-container .display-container:last-child {
+            margin: 0;
+        }
+
+        #clock-container:after {
+            display: block;
+            content: '.';
+            visibility: hidden;
+            clear: both;
+        }
+
+        .light {
+            z-index: 500;
+            position: absolute;
+            content:'';
+            display:block;
+            height:12px;
+            width:12px;
+            border-radius:100%;
+            top:auto;
+            left:50%;
+            margin: 0 auto auto 0;
+        }
+        .light-container {
+            z-index: 500;
+            position: absolute;
+        }
+
+        .light-red {
+            box-shadow:0 0 5px #ef0600,0 0 0 #ff312e, inset 0 20px 20px 40px #ff0020, inset 30px 0 35px 50px #ff6172;
+        }
+
+        .light-off-red {
+            box-shadow:0 0 5px #5f0800,0 0 0 #5b0004, inset 0 20px 20px 40px #411515, inset 30px 0 35px 50px #311818;
+        }
+        .light-orange {
+            box-shadow:0 0 5px #ef7b00,0 0 0 #ffa742, inset 0 20px 20px 40px #ff7700, inset 30px 0 35px 50px #ffa84a;
+        }
+        .light-off-orange {
+            box-shadow:0 0 5px #5f3700,0 0 0 #5b4100, inset 0 20px 20px 40px #412d11, inset 30px 0 35px 50px #31230d;
+        }
+        .light-blue {
+            box-shadow:0 0 5px #0065ef,0 0 0 #3167ff, inset 0 20px 20px 40px #0046ff, inset 30px 0 35px 50px #2f5bff;
+        }
+        .light-off-blue {
+            box-shadow:0 0 5px #00075f,0 0 0 #00115b, inset 0 20px 20px 40px #181a41, inset 30px 0 35px 50px #202131;
+        }
+        .light-green {
+            box-shadow: 0 0 5px #00ff15,0 0 0 #55ff5a, inset 0 20px 20px 40px #04ca00, inset 30px 0 35px 50px #17ff00;
+        }
+        .light-off-green {
+            box-shadow:0 0 5px #003f07,0 0 0 #004209, inset 0 20px 20px 40px #192b14, inset 30px 0 35px 50px #203122;
+        }
+        .header-menu {
+            position: relative;
+            margin: 5px 10px 25px 25px;
+        }
+        .header-menu-item {
+            float: left;
+            vertical-align:  center;
+            margin: 0 10px 0 0;
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+<div class="header-menu">
+    <div class="header-menu-item">
+        <button id="reset-button" class="clk-button" onClick="resetCpu()">Reset CPU</button>
+    </div>
+    <div class="header-menu-item">
+        <div>Memory: <input id="memQuickLoad" size="34" maxlength=32 class="memoryInput"></div>
+    </div>
+</div>
+<div id="container" class="container" hidden>
+    <canvas width="900" height="900" class="canvas-style"></canvas>
+    <div id="value-bus" class="bus-value"></div>
+
+    <div class="block" style="height: 100px; top: 0; left: 0">
+        <div class="block-title">Clock</div>
+        <div class="block-content">
+            <div id="cpu-halted" class="halt"></div>
+            <div>
+                Auto Tick: <input autocomplete="off" id="clock-auto-tick" type="checkbox">  Rate: <span id="clk-rate"></span><br/>
+                <button id="clk-button" class="clk-button">Manual Pulse</button>
+            </div>
+            <div class="pin-hlt block-io block-io-1-left">HLT</div>
+			<div><input type="range" min="1" max="1000" value="100" class="slider" id="clk-range"></div>
+        </div>
+    </div>
+
+    <div class="block" style="height: 80px; top: 120px; left: 0">
+        <div class="block-title">Memory Address Register</div>
+        <div class="block-content">
+            <div class="block-io block-io-1-left">CE</div>
+            <div class="pin-mi block-io block-io-2-left">MI</div>
+            <div id="mar-lights" class="light-container" style="left: 110px; top: 35px"></div>
+            <div id="value-mar" class="big-value"></div>
+        </div>
+    </div>
+
+    <div class="block" style="height: 400px; top: 230px; left: 0">
+        <div class="block-title">Memory</div>
+        <div class="block-content">
+            <div class="pin-ri block-io block-io-1-left">RI</div>
+            <div class="pin-ro block-io block-io-2-left">RO</div>
+            <div style="margin-bottom:5px; text-decoration:underline" class="memory">
+                Addr:&nbspValue&nbsp&nbsp&nbsp&nbsp&nbsp
+            </div>
+            <form class="memory">
+                <div class="memory-row" id="mem-row-0">0x0: <input id="mem-input-0" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-1">0x1: <input id="mem-input-1" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-2">0x2: <input id="mem-input-2" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-3">0x3: <input id="mem-input-3" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-4">0x4: <input id="mem-input-4" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-5">0x5: <input id="mem-input-5" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-6">0x6: <input id="mem-input-6" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-7">0x7: <input id="mem-input-7" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-8">0x8: <input id="mem-input-8" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-9">0x9: <input id="mem-input-9" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-10">0xA: <input id="mem-input-10" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-11">0xB: <input id="mem-input-11" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-12">0xC: <input id="mem-input-12" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-13">0xD: <input id="mem-input-13" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-14">0xE: <input id="mem-input-14" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+                <div class="memory-row" id="mem-row-15">0xF: <input id="mem-input-15" size="9" maxlength=8 class="memoryInput" value="00000000"/></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="block" style="top: 660px; left: 0; height: 100px">
+        <div class="block-title">Instruction Register</div>
+        <div class="block-content">
+            <div class="pin-ii block-io block-io-1-left">II</div>
+            <div class="pin-io block-io block-io-2-left">IO</div>
+            <div id="ins-lights-opcode" class="light-container" style="left: 80px; top: 25px"></div>
+            <div id="ins-lights-data" class="light-container" style="left: 150px; top: 25px"></div>
+            <div style="position: absolute; font-size: 1.2em; left: 80px; top: 38px">
+                <pre>└———┘     └———┘</pre>
+            </div>
+            <div style="position: absolute; font-size: 1.2em; left: 80px; top: 50px">
+            <pre> OpCode         Data</pre>
+            </div>
+            <div id="current-ins-opcode" style="position: absolute; font-size: 1.5em; left: 85px; top: 72px"></div>
+            <div id="current-ins-data" style="position: absolute; font-size: 1.5em; left: 168px; top: 72px"></div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 0; left: 400px; height: 100px">
+        <div class="block-title">Program Counter</div>
+        <div class="block-content">
+            <div class="pin-ce block-io block-io-1-right">CE</div>
+            <div class="pin-j block-io block-io-2-right">Jmp</div>
+            <div class="pin-co block-io block-io-3-right">CO</div>
+            <div id="value-pc" class="big-value"></div>
+            <div id="pc-lights" class="light-container" style="left: 110px; top: 40px"></div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 125px; left: 400px; height: 80px">
+        <div class="block-title">Accumulator Register</div>
+        <div class="block-content">
+            <div class="pin-ai block-io block-io-1-right">AI</div>
+            <div class="pin-au block-io block-io-2-right">AU</div>
+            <div id="acc-lights" class="light-container" style="left: 80px; top: 40px"></div>
+            <div id="value-acc-reg" class="big-value"></div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 230px; left: 400px; height: 150px">
+        <div class="block-title">ALU</div>
+        <div class="block-content">
+            <div id="value-alu" class="big-value"></div>
+            <div id="alu-lights" class="light-container" style="left: 80px; top: 60px"></div>
+            <div style="font-family: Monospaced, monospace; position:absolute; left: 80px; top: 80px">Carry-Bit: <span id="carry-bit"></span></div>
+            <div style="font-family: Monospaced, monospace; position:absolute; left: 80px; top: 100px">&nbspZero-Bit: <span id="zero-bit"></span></div>
+            <div class="pin-eo block-io block-io-1-right">EO</div>
+            <div class="pin-su block-io block-io-2-right">SU</div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 410px; left: 400px; height: 80px">
+        <div class="block-title">B Register</div>
+        <div class="block-content">
+            <div id="value-tmp-reg" class="big-value"></div>
+            <div id="tmp-lights" class="light-container" style="left: 80px; top: 40px"></div>
+            <div class="pin-bi block-io block-io-1-right">BI</div>
+            <div class="pin-bo block-io block-io-2-right">BO</div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 520px; left: 400px; height: 110px">
+        <div class="block-title">Output Register</div>
+        <div class="block-content">
+            <div id="out-lights" class="light-container" style="left: 80px; top: 80px"></div>
+            <div class="pin-oi block-io block-io-1-right">OI</div>
+            <div id="vertical-center">
+                <div id="clock-container">
+                    <div id="display-1" class="display-container display-size-12 display-no-0">
+                        <div class="segment-x segment-a"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-b"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-c"><span class="segment-border"></span></div>
+                        <div class="segment-x segment-d"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-e"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-f"><span class="segment-border"></span></div>
+                        <div class="segment-x segment-g"><span class="segment-border"></span></div>
+                    </div>
+                    <div id="display-2" class="display-container display-size-12 display-no-0">
+                        <div class="segment-x segment-a"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-b"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-c"><span class="segment-border"></span></div>
+                        <div class="segment-x segment-d"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-e"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-f"><span class="segment-border"></span></div>
+                        <div class="segment-x segment-g"><span class="segment-border"></span></div>
+                    </div>
+                    <div id="display-3" class="display-container display-size-12 display-no-0">
+                        <div class="segment-x segment-a"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-b"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-c"><span class="segment-border"></span></div>
+                        <div class="segment-x segment-d"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-e"><span class="segment-border"></span></div>
+                        <div class="segment-y segment-f"><span class="segment-border"></span></div>
+                        <div class="segment-x segment-g"><span class="segment-border"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 660px; left: 400px; height: 100px; width: 325px">
+        <div class="block-title">Control Logic</div>
+        <div class="block-content">
+            <div id="value-control-logic" style="font-size: .95em; font-family: Monospaced, monospace; position: absolute; top: 25px; left: 10px">
+                <pre>HL MI RI RO IO II AI AO EO SU BI OI CE  CO  J FI RCR</pre>
+            </div>
+            <div id="control-lights" class="light-container" style="left: 10px; top: 50px"></div>
+            <div id="value-control-logic-dec" class="big-value"></div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 660px; left: 750px; height: 100px; width: 225px">
+        <div class="block-title">Flags</div>
+        <div class="block-content">
+            <div class="pin-fi block-io block-io-1-left">FI</div>
+            <div style="font-size: 1.2em; position: absolute; top: 25px; left: 35px;">Carry:</div>
+            <div style="font-size: 1.2em; position: absolute; top: 50px; left: 38px;">Zero:</div>
+            <div id="flag-carry-lights" class="light-container" style="left: 80px; top: 30px"></div>
+            <div id="flag-zero-lights" class="light-container" style="left: 80px; top: 55px"></div>
+        </div>
+    </div>
+
+    <div class="block" style="top: 0; left: 700px; height: 630px;">
+        <div class="block-title">Operation History</div>
+        <div class="block-content">
+            <table class="control-logic-table">
+                <thead>
+                    <tr>
+                        <th>Tick</th>
+                        <th>Cycle</th>
+                        <th>Ring</th>
+                        <th>Control Pins</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="cpu.js"></script>
+</body>
+</html>
