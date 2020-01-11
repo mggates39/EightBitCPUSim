@@ -29,7 +29,7 @@ let initialCPU = {
     reg_ins: 0b00000000,
     reg_out: 0b00000000,
     mar: 0b00000000,
-    memory: [
+    original_memory: [
         // LABEL: Top
         0b00011110, // LDA <14>
         0b00111100, // SUB <12>
@@ -51,6 +51,24 @@ let initialCPU = {
         0b00000011, // x
         0b00011101, // y
     ],
+	memory: [
+		0b00011110,  // top LDA x
+		0b00111100,  //  SUB One
+		0b01110110,  //  JC continue
+		0b00011101,  //  LDA product
+		0b11100000,  //  OUT None
+		0b11110000,  //  HLT None
+		0b01001110,  // continue STA x
+		0b00011101,  //  LDA product
+		0b00101111,  //  ADD y
+		0b01001101,  //  STA product
+		0b01100000,  //  JMP top
+		0b00000000,  // 
+		0b00000001,  // One
+		0b00000000,  // product
+		0b00000011,  // x
+		0b00011101,  // y
+	],
 	speed: 300
 };
 
