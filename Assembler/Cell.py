@@ -23,8 +23,10 @@ class Cell:
             self.opcode = instructions.lookupOpcode(self.operator)
             if self.operand is not None:
                 self.value = self.processLabel(self.operand, labels)
+                self.operand = "<{}> # {}".format(self.value, self.operand)
             else:
                 self.value = 0
+                self.operand = ''
         else:
             self.value = self.operand
 
