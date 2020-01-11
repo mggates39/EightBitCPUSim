@@ -1,7 +1,7 @@
 ###############
 # Multipy two numbers x and y
 ###############
-	.org 0
+	.corg 0
 Top:		LDA x
 			SUB One
 			JC Continue
@@ -14,7 +14,7 @@ Continue:	STA x
 			STA product
 			JMP Top
 
-	.org 12
+	.dorg 12
 # Constant Data
 One:		.byte 1
 #
