@@ -1,52 +1,35 @@
+import argparse
+
 from Memory import Memory
 from Instructions import Instructions
-from origin import origin
+from Parser import Parser
 
-def loadCodeFile():
-    fileOrigins = []
-    codeOrigin = origin(0,'C')
-    codeOrigin.addInstruction("top", "LDA", "x")
-    codeOrigin.addInstruction(None, "SUB", "One")
-    codeOrigin.addInstruction(None, "JC", "continue")
-    codeOrigin.addInstruction(None, "LDA", "product")
-    codeOrigin.addInstruction(None, "OUT")
-    codeOrigin.addInstruction(None, "HLT")
-    codeOrigin.addInstruction("continue", "STA", "x")
-    codeOrigin.addInstruction(None, "LDA", "product")
-    codeOrigin.addInstruction(None, "ADD", "y")
-    codeOrigin.addInstruction(None, "STA", "product")
-    codeOrigin.addInstruction(None, "JMP", "top")
-    fileOrigins.append(codeOrigin)
+def assemble(file_name):
+    labels = []
+    segments = []
+    m = Memory()
+    i = Instructions()
+    p = Parser()
 
-    dataOrigin = origin(12, 'D')
-    dataOrigin.addByte("One", 1)
-    dataOrigin.addByte("product", 0)
-    dataOrigin.addByte("x", 3)
-    dataOrigin.addByte("y", 29)
-    fileOrigins.append(dataOrigin)
+    print("Assemble {}".format(file_name))
+    segments = p.parseFile(file_name)
 
-    return fileOrigins
+    for segment in segments:
+        for label in segment.labels:
+            labels.append(label)
 
-labels = []
-origins = []
-m = Memory()
-i = Instructions()
+    for segment in segments:
+        segment.assemble(labels, i)
 
-origins = loadCodeFile()
+    for segment in segments:
+        if segment.isCode():
+            code_segment = segment
+        m = segment.loadMemory(m)
 
-for origin in origins:
-    for label in origin.labels:
-        labels.append(label)
+    m.dump(labels, code_segment.cell_list)
 
-for origin in origins:
-    if origin.isCode():
-        for cell in origin.cellList:
-            cell.assemble(labels, i)
+parser = argparse.ArgumentParser(description='Assemble a SAP-1 Assembler file to binary.')
+parser.add_argument('--file', dest="file_name", required=True, help='filename to assemble')
+args = parser.parse_args()
 
-for origin in origins:
-    if origin.isCode():
-        codeOrigin = origin
-    m = origin.loadMemory(m)
-
-m.dump(labels, codeOrigin.cellList)
-
+assemble(args.file_name)
