@@ -10,7 +10,7 @@ class Cell:
         self.opcode = None
         self.value = None
 
-    def processLabel(self, operand, labels):
+    def process_label(self, operand, labels):
         value = operand
         for label in labels:
             if operand == label[1]:
@@ -20,9 +20,9 @@ class Cell:
 
     def assemble(self, labels, instructions):
         if self.operator is not None:
-            self.opcode = instructions.lookupOpcode(self.operator)
+            self.opcode = instructions.lookup_opcode(self.operator)
             if self.operand is not None:
-                self.value = self.processLabel(self.operand, labels)
+                self.value = self.process_label(self.operand, labels)
                 self.operand = "<{}> # {}".format(self.value, self.operand)
             else:
                 self.value = 0
@@ -30,7 +30,7 @@ class Cell:
         else:
             self.value = self.operand
 
-    def getMemory(self):
+    def get_memory(self):
         if self.opcode is not None:
             memValue = self.opcode << 4 | (self.value & 0xF)
         else:

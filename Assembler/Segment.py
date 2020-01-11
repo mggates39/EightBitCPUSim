@@ -13,23 +13,23 @@ class Segment:
         self.cell_list = []
         self.labels = []
 
-    def getSize(self):
+    def get_size(self):
         return self.start + self.length
 
-    def isCode(self):
+    def is_code(self):
         return self.type == 'C'
 
     def overlaps(self, other):
         overlap = False
         if other.start < self.start:
-            if other.getSize() > self.start:
+            if other.get_size() > self.start:
                 overlap = True
         else:
-            if self.getSize() > other.start:
+            if self.get_size() > other.start:
                 overlap = True
         return overlap
 
-    def addCell(self, label=None, operator=None, operand=None):
+    def add_cell(self, label=None, operator=None, operand=None):
         if self.address <= MAX_ADDRSS:
             if self.label_cell is None:
                 cell = Cell(self.address, label, operator, operand)
@@ -39,7 +39,7 @@ class Segment:
                 cell.operand = operand
                 self.label_cell = None
         else:
-            print("ERROR: Maximum segment size exceeded")
+            print("ERROR: Segment will not fit in memory")
             exit(-1)
 
         self.cell_list.append(cell)
@@ -48,21 +48,25 @@ class Segment:
         self.address += 1
         self.length += 1
 
-    def addLabel(self, label):
-        self.label_cell = Cell(self.address, label)
+    def add_label(self, label):
+        if self.address <= MAX_ADDRSS:
+            self.label_cell = Cell(self.address, label)
+        else:
+            print("ERROR: Segment will not fit in memory")
+            exit(-1)
 
-    def addInstruction(self, label, operator, operand=None):
-        self.addCell(label, operator, operand)
+    def add_instruction(self, label, operator, operand=None):
+        self.add_cell(label, operator, operand)
 
-    def addByte(self, label, value):
-        self.addCell(label, None, value)
+    def add_byte(self, label, value):
+        self.add_cell(label, None, value)
 
     def assemble(self, labels, instructions):
         for cell in self.cell_list:
             cell.assemble(labels, instructions)
 
-    def loadMemory(self, memory):
+    def load_memory(self, memory):
         for cell in self.cell_list:
-            memory.setMemory(cell.address, cell.getMemory())
+            memory.set_memory(cell.address, cell.get_memory())
 
         return memory

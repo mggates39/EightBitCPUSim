@@ -20,7 +20,7 @@ class Instructions:
                           ("HLT", 15)]
 
 
-    def lookupOpcode(self, operator):
+    def lookup_opcode(self, operator):
         opCode = 0
         for o in self.operators:
             if o[0] == operator:
@@ -30,5 +30,5 @@ class Instructions:
         return opCode
 
     def is_operator(self, operator):
-        return self.lookupOpcode(operator) != 0
+        return self.lookup_opcode(operator) != 0
 

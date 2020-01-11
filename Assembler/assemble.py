@@ -12,7 +12,7 @@ def assemble(file_name):
     sap1_parser = Parser()
 
     print("Assemble {}".format(file_name))
-    segments = sap1_parser.parseFile(file_name)
+    segments = sap1_parser.parse_file(file_name)
 
     # Extract all the lables from the segments to create a symbol table
     for segment in segments:
@@ -24,9 +24,9 @@ def assemble(file_name):
 
     code_segment = None
     for segment in segments:
-        if segment.isCode():
+        if segment.is_code():
             code_segment = segment
-        memory = segment.loadMemory(memory)
+        memory = segment.load_memory(memory)
 
     memory.dump(labels, code_segment)
 

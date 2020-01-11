@@ -4,10 +4,10 @@ class Memory:
         super().__init__()
         self.mem = bytearray(16)
 
-    def setMemory(self, address, value):
+    def set_memory(self, address, value):
         self.mem[address] = value
 
-    def getLabel(self,lables, address):
+    def get_label(self, lables, address):
         label = ""
         for labelTuple in lables:
             if labelTuple[0] == address:
@@ -23,7 +23,7 @@ class Memory:
 
         address = 0
         for x in self.mem:
-            label = self.getLabel(labels, address)
+            label = self.get_label(labels, address)
             if address < len(code_cells):
                 print("0b{0:08b},".format(x), " //", label, code_cells[address].operator, code_cells[address].operand)
             else:
