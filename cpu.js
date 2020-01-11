@@ -52,17 +52,17 @@ let initialCPU = {
         0b00011101, // y
     ],
 	memory: [
-		0b00011110,  // top LDA x
-		0b00111100,  //  SUB One
-		0b01110110,  //  JC continue
-		0b00011101,  //  LDA product
-		0b11100000,  //  OUT None
-		0b11110000,  //  HLT None
-		0b01001110,  // continue STA x
-		0b00011101,  //  LDA product
-		0b00101111,  //  ADD y
-		0b01001101,  //  STA product
-		0b01100000,  //  JMP top
+		0b00011110,  // top LDA <14> # x
+		0b00111100,  //  SUB <12> # One
+		0b01110110,  //  JC <6> # continue
+		0b00011101,  //  LDA <13> # product
+		0b11100000,  //  OUT 
+		0b11110000,  //  HLT 
+		0b01001110,  // continue STA <14> # x
+		0b00011101,  //  LDA <13> # product
+		0b00101111,  //  ADD <15> # y
+		0b01001101,  //  STA <13> # product
+		0b01100000,  //  JMP <0> # top
 		0b00000000,  // 
 		0b00000001,  // One
 		0b00000000,  // product
