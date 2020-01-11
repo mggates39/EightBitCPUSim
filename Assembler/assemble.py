@@ -14,6 +14,10 @@ def assemble(file_name):
     print("Assemble {}".format(file_name))
     segments = sap1_parser.parse_file(file_name)
 
+    if segments == []:
+        print("ERROR: No code found in source file")
+        exit(-2)
+
     # Extract all the lables from the segments to create a symbol table
     for segment in segments:
         for label in segment.labels:

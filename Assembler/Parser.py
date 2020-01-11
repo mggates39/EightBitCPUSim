@@ -34,4 +34,5 @@ class Parser:
         if code_segment.overlaps(data_segment):
             print("ERROR: Segments overlap")
             exit(-1)
+
         return segments
