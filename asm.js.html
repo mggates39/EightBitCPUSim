@@ -59,6 +59,7 @@
             <option value="multiplication">Multiplication - 3 times 29</option>
             <option value="42">Display 42</option>
             <option value="fibonacci">Fibonacci Sequence</option>
+            <option value="fibonacci-2">Fibonacci Sequence 2</option>
         </select>
     </div>
     <div class="grid">
@@ -76,6 +77,10 @@
     <div class="grid">
         <h3>Machine Code</h3>
         <pre id="machine-debug"></pre>
+    </div>
+    <div class="grid">
+        <h3>Web Code</h3>
+        <pre id="web-debug"></pre>
     </div>
     <div>
         <h3>Card Output</h3>
@@ -130,6 +135,7 @@
 
         let machineCode = buildMachineCode(assembleResult);
         document.getElementById("machine-debug").innerText = printMachineCode(machineCode);
+        document.getElementById("web-debug").innerText = printWebMachineCode(machineCode);
         updateSyntaxErrorDisplay();
         drawPunchcard(machineCode);
     }
@@ -170,6 +176,16 @@
         return hole;
     }
 
+    function printWebMachineCode(machineCode) {
+        let output = 'memory: [\n';
+        machineCode.forEach(function (line) {
+            let tmp = line.toString(2).padStart(8, '0');
+            output += "0b" + tmp + ",\n";
+        });
+		output += "],\n\n";
+        return output;
+    }
+
     function printMachineCode(machineCode) {
         let output = '';
         machineCode.forEach(function (line) {
@@ -200,6 +216,9 @@
         let [operation, predicate] = opString.split(" ");
         let result = 0b00000000;
         switch (operation) {
+            case "nop":
+                result = 0b00000000;
+                break;
             case "lda":
                 result = 0b00010000 | parseInt(predicate);
                 break;
@@ -219,10 +238,10 @@
                 result = 0b01100000 | parseInt(predicate);
                 break;
             case "jc":
-                result = 0b01100000 | parseInt(predicate);
+                result = 0b01110000 | parseInt(predicate);
                 break;
             case "jz":
-                result = 0b01110000 | parseInt(predicate);
+                result = 0b10000000 | parseInt(predicate);
                 break;
             case "out":
                 result = 0b11100000;
@@ -499,6 +518,31 @@ Halt:
 X:
   .byte 0
 Y:
+  .byte 0
+`;
+                break;
+            case "fibonacci-2":
+                code = `; Endless Fibonacci Loop
+Top:
+  ld a,1
+  ld (Y),a
+  ld a,0
+Loop:
+  out
+  add (Y)
+  ld (Z),a
+  ld a,(Y)
+  ld (X),a
+  ld a,(Z)
+  ld (Y),a
+  ld a,(X)
+  jc  Top
+  jmp Loop
+X:
+  .byte 0
+Y:
+  .byte 0
+Z:
   .byte 0
 `;
                 break;
