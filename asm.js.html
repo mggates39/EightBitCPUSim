@@ -200,6 +200,9 @@
         let [operation, predicate] = opString.split(" ");
         let result = 0b00000000;
         switch (operation) {
+            case "nop":
+                result = 0b00000000;
+                break;
             case "lda":
                 result = 0b00010000 | parseInt(predicate);
                 break;
@@ -219,10 +222,10 @@
                 result = 0b01100000 | parseInt(predicate);
                 break;
             case "jc":
-                result = 0b01100000 | parseInt(predicate);
+                result = 0b01110000 | parseInt(predicate);
                 break;
             case "jz":
-                result = 0b01110000 | parseInt(predicate);
+                result = 0b10000000 | parseInt(predicate);
                 break;
             case "out":
                 result = 0b11100000;
