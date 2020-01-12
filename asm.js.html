@@ -134,7 +134,6 @@
         document.getElementById("assembler-debug").innerText = JSON.stringify(assembleResult, null, 2);
 
         let machineCode = buildMachineCode(assembleResult);
-        document.getElementById("machine-debug").innerText = printMachineCode(machineCode);
         document.getElementById("web-debug").innerText = printWebMachineCode(machineCode);
         updateSyntaxErrorDisplay();
         drawPunchcard(machineCode);
@@ -183,15 +182,6 @@
             output += "0b" + tmp + ",\n";
         });
 		output += "],\n\n";
-        return output;
-    }
-
-    function printMachineCode(machineCode) {
-        let output = '';
-        machineCode.forEach(function (line) {
-            let tmp = line.toString(2).padStart(8, '0');
-            output += tmp.substr(0, 4) + " " + tmp.substr(4, 4) + "\n";
-        });
         return output;
     }
 
