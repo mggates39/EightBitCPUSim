@@ -16,7 +16,7 @@ class Cell:
             if operand == label[1]:
                 value = label[0]
                 break
-        return value
+        return int(value)
 
     def assemble(self, labels, instructions):
         if self.operator is not None:

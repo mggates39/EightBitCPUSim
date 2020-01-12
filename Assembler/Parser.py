@@ -7,8 +7,10 @@ class Parser:
         self.active_segement = None
 
     def make_target(self, target):
-        fixed_target = target[:-1]
-        fixed_target = fixed_target[1:]
+        fixed_target = target
+        if fixed_target.startswith('<'):
+            fixed_target = fixed_target[:-1]
+            fixed_target = fixed_target[1:]
         return fixed_target
 
     def make_label(self, label):
