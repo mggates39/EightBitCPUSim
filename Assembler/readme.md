@@ -1,10 +1,10 @@
-###Overview
+### Overview
 This [SAP-1](https://deeprajbhujel.blogspot.com/2015/12/sap-1-architecture.html) assembler is just a quick and dirty one.
 
 The assembler can be run from inside the associated pyChaarm project or
 from the command line
 
-####Usage
+#### Usage
     usage: assemble.py [-h] --file FILE_NAME
     
     Assemble a SAP-1 Assembler file to binary
@@ -13,7 +13,7 @@ from the command line
     -h, --help        show this help message and exit.
     --file FILE_NAME  filename to assemble.
 
-####About
+#### About
 
 The assembler is for an **enhanced** [SAP-1](https://deeprajbhujel.blogspot.com/2015/12/sap-1-instructions-and-instruction-cycle.html) instruction set.  It understands the following OP Codes:
  - **NOP**       - No Operation
@@ -39,7 +39,7 @@ Assembler source file format notes:
 * Witespace should be infront of directives as well as between directives and any arguments
 * Address operands are enclosed in &lt; and &gt;, even if they refer to labels
 
-####Sample File
+#### Sample File
 This is a sample assembler file, multiply.asm.
 
 	###############
