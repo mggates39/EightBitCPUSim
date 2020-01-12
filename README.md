@@ -66,6 +66,32 @@ Y:
   .byte 6
 ```
 
+## Sample Program
+The following computes 3 * 29 and displays the output:
+```
+; Multiplies X by Y
+Top:
+  ld a,(X)
+  sub (Decrement)
+  jc Continue
+  ld a,(Product)
+  out
+  hlt
+Continue:
+  ld (X),a
+  ld a,(Product)
+  add (Y)
+  ld (Product),a
+  jmp Top
 
+Decrement:
+  .byte 1
+Product:
+  .byte 0
+X:
+  .byte 3
+Y:
+  .byte 29
+```
 
-
+![Screenshot](exammpleAsm.png)
