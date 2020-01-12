@@ -23,7 +23,8 @@ class Cell:
             self.opcode = instructions.lookup_opcode(self.operator)
             if self.operand is not None:
                 self.value = self.process_label(self.operand, labels)
-                self.operand = "<{}> # {}".format(self.value, self.operand)
+                if (self.operator != 'LDI'):
+                    self.operand = "({}) ; {}".format(self.value, self.operand)
             else:
                 self.value = 0
                 self.operand = ''
