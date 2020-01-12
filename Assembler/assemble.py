@@ -5,8 +5,7 @@ from Instructions import Instructions
 from Parser import Parser
 
 def assemble(file_name):
-    labels = []
-    segments = []
+    symbols = []
     memory = Memory()
     instructions = Instructions()
     sap1_parser = Parser()
@@ -21,10 +20,10 @@ def assemble(file_name):
     # Extract all the lables from the segments to create a symbol table
     for segment in segments:
         for label in segment.labels:
-            labels.append(label)
+            symbols.append(label)
 
     for segment in segments:
-        segment.assemble(labels, instructions)
+        segment.assemble(symbols, instructions)
 
     code_segment = None
     for segment in segments:
@@ -32,7 +31,7 @@ def assemble(file_name):
             code_segment = segment
         memory = segment.load_memory(memory)
 
-    memory.dump(labels, code_segment)
+    memory.dump(symbols, code_segment)
 
 
 parser = argparse.ArgumentParser(description='Assemble a SAP-1 Assembler file to binary.')
