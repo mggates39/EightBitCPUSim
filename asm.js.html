@@ -78,6 +78,10 @@
         <h3>Machine Code</h3>
         <pre id="machine-debug"></pre>
     </div>
+    <div class="grid">
+        <h3>Web Code</h3>
+        <pre id="web-debug"></pre>
+    </div>
     <div>
         <h3>Card Output</h3>
         <div id="punchcard-image" class="punchcard-image"><img src="card.png"></div>
@@ -131,6 +135,7 @@
 
         let machineCode = buildMachineCode(assembleResult);
         document.getElementById("machine-debug").innerText = printMachineCode(machineCode);
+        document.getElementById("web-debug").innerText = printWebMachineCode(machineCode);
         updateSyntaxErrorDisplay();
         drawPunchcard(machineCode);
     }
@@ -169,6 +174,16 @@
         hole.style.top = top.toString() + "px";
         hole.style.left = left.toString() + "px";
         return hole;
+    }
+
+    function printWebMachineCode(machineCode) {
+        let output = 'memory: [\n';
+        machineCode.forEach(function (line) {
+            let tmp = line.toString(2).padStart(8, '0');
+            output += "0b" + tmp + ",\n";
+        });
+		output += "],\n\n";
+        return output;
     }
 
     function printMachineCode(machineCode) {
