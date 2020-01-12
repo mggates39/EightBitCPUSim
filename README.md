@@ -93,5 +93,5 @@ X:
 Y:
   .byte 29
 ```
-
-![Screenshot](exammpleAsm.png)
+**Screenshot**
+![Screenshot](exampleAsm.png)
