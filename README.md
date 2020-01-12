@@ -41,7 +41,7 @@ Bar:
   hlt
 Foo:
   sub 1 
-  jc Bar
+  jz Bar
   ; This line is never executed
   hlt
 ```
