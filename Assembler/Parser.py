@@ -8,7 +8,7 @@ class Parser:
 
     def make_target(self, target):
         fixed_target = target
-        if fixed_target.startswith('<'):
+        if fixed_target.startswith('<') or fixed_target.startswith('('):
             fixed_target = fixed_target[:-1]
             fixed_target = fixed_target[1:]
         return fixed_target
@@ -50,7 +50,7 @@ class Parser:
         fl = f.readlines()
         for x in fl:
             # Ignore comment lines
-            if x.startswith('#'):
+            if x.startswith('#') or x.startswith(';'):
                 continue
 
             fields = x.split()
