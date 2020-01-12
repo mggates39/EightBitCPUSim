@@ -40,10 +40,12 @@ Bar:
   out
   hlt
 Foo:
-  sub 1 
+  sub (Decrement)
   jz Bar
-  ; This line is never executed
+; This line is never executed
   hlt
+Decrement:
+  .byte 1
 ```
 This program will output `1` then `2` then `3` since the zero flag is set. The following jumps are supported:
 
