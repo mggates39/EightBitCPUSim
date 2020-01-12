@@ -59,6 +59,7 @@
             <option value="multiplication">Multiplication - 3 times 29</option>
             <option value="42">Display 42</option>
             <option value="fibonacci">Fibonacci Sequence</option>
+            <option value="fibonacci-2">Fibonacci Sequence 2</option>
         </select>
     </div>
     <div class="grid">
@@ -502,6 +503,31 @@ Halt:
 X:
   .byte 0
 Y:
+  .byte 0
+`;
+                break;
+            case "fibonacci-2":
+                code = `; Endless Fibonacci Loop
+Top:
+  ld a,1
+  ld (Y),a
+  ld a,0
+Loop:
+  out
+  add (Y)
+  ld (Z),a
+  ld a,(Y)
+  ld (X),a
+  ld a,(Z)
+  ld (Y),a
+  ld a,(X)
+  jc  Top
+  jmp Loop
+X:
+  .byte 0
+Y:
+  .byte 0
+Z:
   .byte 0
 `;
                 break;
