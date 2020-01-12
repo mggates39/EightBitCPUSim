@@ -145,13 +145,13 @@
         const columns = [35, 46, 57, 68, 79, 90, 101, 112, 124, 135, 146, 157, 169, 180, 191, 202];
 
         let punchCard = document.getElementById('punchcard-image');
-        punchCard.innerHTML = '<img src="card.png">'; // Delete any children it might have
+        punchCard.innerHTML = '<img src="card.png" alt="punch card">'; // Delete any children it might have
 
         // Create "Optical Encoder" Lines on X / Y Rows
         machineCode.forEach(function(_, index) {
-            let top = 29;
+            let top = rows[8];
             if (index % 2) {
-                top = 62;
+                top = rows[9];
             }
             punchCard.appendChild(makeHole(top, columns[index]));
         });
