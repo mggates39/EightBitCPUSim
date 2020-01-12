@@ -1,6 +1,6 @@
 from Cell import Cell
 
-MAX_ADDRSS = 15
+MAX_ADDRESS = 15
 
 class Segment:
     def __init__(self, start, type) -> None:
@@ -30,7 +30,7 @@ class Segment:
         return overlap
 
     def add_cell(self, label=None, operator=None, operand=None):
-        if self.address <= MAX_ADDRSS:
+        if self.address <= MAX_ADDRESS:
             if self.label_cell is None:
                 cell = Cell(self.address, label, operator, operand)
             else:
@@ -49,7 +49,7 @@ class Segment:
         self.length += 1
 
     def add_label(self, label):
-        if self.address <= MAX_ADDRSS:
+        if self.address <= MAX_ADDRESS:
             self.label_cell = Cell(self.address, label)
         else:
             print("ERROR: Segment will not fit in memory")
