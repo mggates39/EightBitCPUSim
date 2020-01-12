@@ -2,8 +2,8 @@
 # Test Add
 ###############
 	.corg 0
-	LDA <x>
-	ADD <y>
+	LDA (x)
+	ADD (y)
 	OUT
 	HLT
 
