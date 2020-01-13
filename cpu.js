@@ -29,6 +29,11 @@ let initialCPU = {
     reg_ins: 0b00000000,
     reg_out: 0b00000000,
     mar: 0b00000000,
+    memory: [],
+	speed: 300
+};
+
+let initialProgram = {
     memory: [
         // LABEL: Top
         0b00011110, // LDA <14>
@@ -51,10 +56,20 @@ let initialCPU = {
         0b00000011, // x
         0b00011101, // y
     ],
-	speed: 300
 };
 
+/******************************************************
+ * Pull memory definition from the memory GET parameter
+ ******************************************************/
+var urlParams = new URLSearchParams(window.location.search);
+var str = urlParams.get('memory');
+var memory = initialProgram.memory;
+if (str != null) {
+	memory = JSON.parse('[' + str + ']');
+}
+
 let cpu = deepCopy(initialCPU);
+cpu.memory = memory;
 
 /*****************************************************************************
  * CPU Functions
@@ -253,6 +268,7 @@ async function executeTick() {
 
 function resetCpu() {
     cpu = deepCopy(initialCPU);
+	cpu.memory = memory;
     cpuState = [];
     cpuStateIndex = 0;
     autoTick = false;
