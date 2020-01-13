@@ -36,6 +36,8 @@ class Parser:
         return was_active
 
     def process_directives(self, label, directive, argument=None):
+        if argument is None:
+            argument = 0
         if directive == '.corg':
             self.start_segment(int(argument), 'C')
         elif directive == '.dorg':
@@ -66,7 +68,10 @@ class Parser:
                     if len(fields) == 1:
                         self.get_current_segment().add_label(label)
                     elif fields[1].startswith('.'):
-                        self.process_directives(label, fields[1], fields[2])
+                        if len(fields) == 3:
+                            self.process_directives(label, fields[1], fields[2])
+                        else:
+                            self.process_directives(label, fields[1], None)
                     elif len(fields) == 3:
                         self.get_current_segment().add_instruction(label, fields[1], self.make_target(fields[2]))
                     else:
@@ -78,16 +83,18 @@ class Parser:
                         self.get_current_segment().add_instruction(None, fields[0], None)
 
         if self.end_segment():
-            print("WARNING: Segment not properly ended")
+            print("WARNING: Source file does not have .end directive.")
 
-        previousSegment = None
+        previous_segment = None
         for segment in self.segments:
-            if previousSegment is None:
-                previousSegment = segment
+            if previous_segment is None:
+                previous_segment = segment
             else:
-                if previousSegment.overlaps(segment):
-                    print("ERROR: Segments overlap")
+                if previous_segment.overlaps(segment):
+                    print("ERROR: Segments overlap: {} segment at {} through {} and {} segment at {} through {}".format(
+                        previous_segment.type, previous_segment.start, previous_segment.address,
+                        segment.type, segment.start, segment.address,))
                     exit(-1)
-                previousSegment = segment
+                previous_segment = segment
 
         return self.segments
