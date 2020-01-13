@@ -76,7 +76,7 @@
     </div>
     <div class="grid">
         <h3>Machine Code</h3>
-        <pre id="machine-debug"></pre>
+        <span id="machine-debug"></span>
     </div>
     <div class="grid">
         <h3>Web Code</h3>
@@ -134,7 +134,10 @@
         document.getElementById("assembler-debug").innerText = JSON.stringify(assembleResult, null, 2);
 
         let machineCode = buildMachineCode(assembleResult);
+		
+        document.getElementById("machine-debug").innerHTML = printMachineCode(machineCode);
         document.getElementById("web-debug").innerText = printWebMachineCode(machineCode);
+		
         updateSyntaxErrorDisplay();
         drawPunchcard(machineCode);
     }
@@ -173,6 +176,23 @@
         hole.style.top = top.toString() + "px";
         hole.style.left = left.toString() + "px";
         return hole;
+    }
+
+    function printMachineCode(machineCode) {
+        let output = '<a href="./cpu.html?memory=';
+		let count = 0;
+ 		let comma = "";
+       machineCode.forEach(function (line) {
+            let tmp = line.toString(10);
+            output += comma + tmp;
+			comma = ",";
+			count++;
+        });
+		for(i=count;i<16;i++) {
+			output += comma + "0";
+		};
+		output += '">Launch Simulator</a>';
+        return output;
     }
 
     function printWebMachineCode(machineCode) {
