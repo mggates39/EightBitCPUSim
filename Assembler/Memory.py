@@ -25,8 +25,11 @@ class Memory:
         for x in self.mem:
             label = self.get_label(labels, address)
             if address < len(code_cells):
-                print("0b{0:08b},".format(x), " //", label, code_cells[address].operator, code_cells[address].operand)
+                if len(label):
+                    print("0b{0:08b},".format(x), " // {}: {} {}".format(label, code_cells[address].operator, code_cells[address].operand))
+                else:
+                    print("0b{0:08b},".format(x)," //   {} {}".format(code_cells[address].operator, code_cells[address].operand))
             else:
-                print("0b{0:08b},".format(x), " //", label)
+                print("0b{0:08b},".format(x), " // {}: {}".format(label, x))
             address += 1
 

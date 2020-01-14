@@ -3,13 +3,13 @@
 ###############
 	.corg 0
 top:	OUT
-		ADD	<data>
-		JC	<cont>
-		JMP	<top>
-cont:	SUB	<data>
+		ADD	(data)
+		JC	(cont)
+		JMP	(top)
+cont:	SUB	(data)
 		OUT
-		JZ	<top>
-		JMP	<cont>
+		JZ	(top)
+		JMP	(cont)
 
 	.dorg 15
 # Variables

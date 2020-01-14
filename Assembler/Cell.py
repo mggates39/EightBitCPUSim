@@ -10,20 +10,28 @@ class Cell:
         self.opcode = None
         self.value = None
 
-    def process_label(self, operand, labels):
+    def backpatch_label(self, operand, labels):
         value = operand
         for label in labels:
             if operand == label[1]:
                 value = label[0]
                 break
-        return int(value)
+
+        try:
+            value = int(value)
+        except ValueError:
+            print("ERROR: Lable {} not found.".format(value))
+            exit(-3)
+
+        return value
 
     def assemble(self, labels, instructions):
         if self.operator is not None:
             self.opcode = instructions.lookup_opcode(self.operator)
             if self.operand is not None:
-                self.value = self.process_label(self.operand, labels)
-                self.operand = "<{}> # {}".format(self.value, self.operand)
+                self.value = self.backpatch_label(self.operand, labels)
+                if (self.operator != 'LDI'):
+                    self.operand = "({}) ; {}".format(self.value, self.operand)
             else:
                 self.value = 0
                 self.operand = ''

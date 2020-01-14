@@ -17,14 +17,14 @@ from the command line
 
 The assembler is for an **enhanced** [SAP-1](https://deeprajbhujel.blogspot.com/2015/12/sap-1-instructions-and-instruction-cycle.html) instruction set.  It understands the following OP Codes:
  - **NOP**       - No Operation
- - LDA &lt;A&gt;   - Load accumulator from address A
- - ADD &lt;A&gt;   - Add value in address A to the accumulator
- - SUB &lt;A&gt;   - Subtract value in address A from the accumulator
- - **STA &lt;A&gt;**   - Store the accumulator in address A
+ - LDA (A)   - Load accumulator from address A
+ - ADD (A)   - Add value in address A to the accumulator
+ - SUB (A)   - Subtract value in address A from the accumulator
+ - **STA (A)**   - Store the accumulator in address A
  - **LDI N**  - Load accumulatore with the value N
- - **JMP &lt;A&gt;** - Jump to address A
- - **JC &lt;A&gt;** - Jump if Carry flag set to address A
- - **JZ &lt;A&gt;** - Jump if Zero flag set to address A
+ - **JMP (A)** - Jump to address A
+ - **JC (A)** - Jump if Carry flag set to address A
+ - **JZ (A)** - Jump if Zero flag set to address A
  - OUT - Display accumulator in output port
  - HLT - Halt the processor
 
@@ -37,7 +37,7 @@ Assembler source file format notes:
 * The .end directive is the last line of the file
 * Whitespace is required between lables, operators, and operands
 * Witespace should be infront of directives as well as between directives and any arguments
-* Address operands are enclosed in &lt; and &gt;, even if they refer to labels
+* Address operands are enclosed in ( and ), even if they refer to labels
 
 #### Sample File
 This is a sample assembler file, multiply.asm.
@@ -46,18 +46,18 @@ This is a sample assembler file, multiply.asm.
 	# Multipy two numbers x and y
 	###############
 		.corg 0
-	Top:	LDA <x>
-		SUB <One>
-		JC <Continue>
-		LDA <product>
+	Top:	LDA (x)
+		SUB (One)
+		JC (Continue)
+		LDA (product)
 		OUT
 		HLT
 	Continue:
-		STA <x>
-		LDA <product>
-		ADD <y>
-		STA <product>
-		JMP <Top>
+		STA (x)
+		LDA (product)
+		ADD (y)
+		STA (product)
+		JMP (Top)
 
 		.dorg 12
 	# Constant Data
@@ -76,21 +76,21 @@ When assembled, it  generates the following output, sutiable for inserting into 
 	C:\Dev\CPU\Assembler\venv\Scripts\python.exe C:/Dev/CPU/Assembler/assemble.py --file ../source/multiply.asm
 	
 	Assemble ../source/multiply.asm
-	0b00011110,  // Top LDA <14> # x
-	0b00111100,  //  SUB <12> # One
-	0b01110110,  //  JC <6> # Continue
-	0b00011101,  //  LDA <13> # product
-	0b11100000,  //  OUT 
-	0b11110000,  //  HLT 
-	0b01001110,  // Continue STA <14> # x
-	0b00011101,  //  LDA <13> # product
-	0b00101111,  //  ADD <15> # y
-	0b01001101,  //  STA <13> # product
-	0b01100000,  //  JMP <0> # Top
-	0b00000000,  // 
-	0b00000001,  // One
-	0b00000000,  // product
-	0b00000011,  // x
-	0b00011101,  // y
+    0b01010001,  // top: LDI 1
+    0b01001110,  //   STA (14) ; y
+    0b01010000,  //   LDI 0
+    0b11100000,  // loop: OUT 
+    0b00101110,  //   ADD (14) ; y
+    0b01001111,  //   STA (15) ; z
+    0b00011110,  //   LDA (14) ; y
+    0b01001101,  //   STA (13) ; x
+    0b00011111,  //   LDA (15) ; z
+    0b01001110,  //   STA (14) ; y
+    0b00011101,  //   LDA (13) ; x
+    0b01110000,  //   JC (0) ; top
+    0b01100011,  //   JMP (3) ; loop
+    0b00000000,  // x: 0
+    0b00000000,  // y: 0
+    0b00000000,  // z: 0
 
 	Process finished with exit code 0
