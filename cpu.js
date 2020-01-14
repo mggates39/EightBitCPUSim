@@ -63,13 +63,13 @@ let initialProgram = {
  ******************************************************/
 var urlParams = new URLSearchParams(window.location.search);
 var str = urlParams.get('memory');
-var memory = initialProgram.memory;
+var loadedMemory = deepCopy(initialProgram.memory);
 if (str != null) {
-	memory = JSON.parse('[' + str + ']');
+	loadedMemory = JSON.parse('[' + str + ']');
 }
 
 let cpu = deepCopy(initialCPU);
-cpu.memory = memory;
+cpu.memory = deepCopy(loadedMemory);
 
 /*****************************************************************************
  * CPU Functions
@@ -268,7 +268,7 @@ async function executeTick() {
 
 function resetCpu() {
     cpu = deepCopy(initialCPU);
-	cpu.memory = memory;
+	cpu.memory = deepCopy(loadedMemory);
     cpuState = [];
     cpuStateIndex = 0;
     autoTick = false;
