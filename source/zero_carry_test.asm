@@ -2,9 +2,9 @@
 # Test Carry and Zero Flags
 ###############
 	.corg 0
-	LDA <x>
+	LDA (x)
 	OUT
-	ADD <y>
+	ADD (y)
 	OUT
 	HLT
 
