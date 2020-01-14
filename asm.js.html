@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>8-Bit CPU Assembler</title>
+    <link rel="stylesheet" type="text/css" href="yui.css">
+    <style>
+        /**
+         * Page-Specific CSS.
+         */
+        body {
+            font-family: sans-serif;
+            background: #f6f6f6;
+        }
+
+        * {
+            font-size: 16px;
+        }
+
+        textarea {
+            font-family: Monospaced, monospace;
+        }
+
+        .container {
+            margin: 1em;
+        }
+
+        h3 {
+            font-size: 1.5em;
+        }
+
+        div {
+            vertical-align: top;
+        }
+
+        .grid {
+            min-height: 625px;
+            background: #f6f6f6;
+            width: 300px;
+            display: inline-block;
+        }
+        .punchcard-image {
+            position:relative;
+        }
+        .hole {
+            position: absolute;
+            width: 7px;
+            height: 14px;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, .75);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div>
+        <label for="samples">Load a sample</label>
+        <select id="samples" name="samples" onchange="loadSample(this.value);">
+            <option value="multiplication">Multiplication - 3 times 29</option>
+            <option value="42">Display 42</option>
+            <option value="fibonacci">Fibonacci Sequence</option>
+            <option value="fibonacci-2">Fibonacci Sequence 2</option>
+        </select>
+    </div>
+    <div class="grid">
+        <h3>Assembly Input</h3>
+        <textarea id="asm" rows="24" cols="24" spellcheck="false" onInput="runAssemble()"></textarea>
+    </div>
+    <div class="grid">
+        <h3>Lexer Debug</h3>
+        <pre id="lexer-debug"></pre>
+    </div>
+    <div class="grid">
+        <h3>Assembler Debug</h3>
+        <pre id="assembler-debug"></pre>
+    </div>
+    <div class="grid">
+        <h3>Machine Code</h3>
+        <span id="machine-debug"></span>
+    </div>
+    <div class="grid">
+        <h3>Web Code</h3>
+        <pre id="web-debug"></pre>
+    </div>
+    <div>
+        <h3>Card Output</h3>
+        <div id="punchcard-image" class="punchcard-image"><img src="card.png"></div>
+    </div>
+    <div>
+        <p><b>Assembly Errors</b><br/>
+            <span id="syntax-errors" style="color: #ff0000"></span>
+        </p>
+    </div>
+</div>
+<script>
+
+    /**
+     * Global for Error messages.
+     * TODO: This feels like a bad way to do this. What's the idiomatic way to do this in JS?
+     */
+    errors = [];
+
+    function resetErrors() {
+        errors.length = 0;
+    }
+
+    function addError(module, msg) {
+        errors.push(module + ": " + msg);
+    }
+
+    /**
+     * Refreshes the front-end error display.
+     */
+    function updateSyntaxErrorDisplay() {
+        let outString = '';
+        errors.forEach(function (error) {
+            outString = outString + "\n" + error;
+        });
+        document.getElementById("syntax-errors").innerText = outString;
+    }
+
+    /**
+     * Triggers an assembly of the ASM code from the input box.
+     */
+    function runAssemble() {
+        resetErrors();
+        let contents = document.getElementById("asm");
+        let asm = contents.value;
+
+        let lexResult = lexer(asm);
+        document.getElementById("lexer-debug").innerText = JSON.stringify(lexResult, null, 2);
+
+        let assembleResult = assemble(lexResult);
+        document.getElementById("assembler-debug").innerText = JSON.stringify(assembleResult, null, 2);
+
+        let machineCode = buildMachineCode(assembleResult);
+		
+        document.getElementById("machine-debug").innerHTML = printMachineCode(machineCode);
+        document.getElementById("web-debug").innerText = printWebMachineCode(machineCode);
+		
+        updateSyntaxErrorDisplay();
+        drawPunchcard(machineCode);
+    }
+
+    function drawPunchcard(machineCode) {
+        const rows = [95, 128, 161, 194, 226, 259, 291, 323, 356, 389];
+        const columns = [35, 46, 57, 68, 79, 90, 101, 112, 124, 135, 146, 157, 169, 180, 191, 202];
+
+        let punchCard = document.getElementById('punchcard-image');
+        punchCard.innerHTML = '<img src="card.png" alt="punch card">'; // Delete any children it might have
+
+        // Create "Optical Encoder" Lines on X / Y Rows
+        machineCode.forEach(function(_, index) {
+            let top = rows[8];
+            if (index % 2) {
+                top = rows[9];
+            }
+            punchCard.appendChild(makeHole(top, columns[index]));
+        });
+
+        // Encode Punchcard
+        machineCode.forEach(function(data, column) {
+            let binary = Array.from(data.toString(2).padStart(8, "0")).reverse();
+            binary.forEach(function(bit, row) {
+                console.log(row);
+                if ("1" === bit) {
+                    punchCard.appendChild(makeHole(rows[row], columns[column]));
+                }
+            });
+        });
+    }
+
+    function makeHole(top, left) {
+        let hole = document.createElement('div');
+        hole.className = 'hole';
+        hole.style.top = top.toString() + "px";
+        hole.style.left = left.toString() + "px";
+        return hole;
+    }
+
+    function printMachineCode(machineCode) {
+        let output = '<a href="./cpu.html?memory=';
+		let count = 0;
+ 		let comma = "";
+       machineCode.forEach(function (line) {
+            let tmp = line.toString(10);
+            output += comma + tmp;
+			comma = ",";
+			count++;
+        });
+		for(i=count;i<16;i++) {
+			output += comma + "0";
+		};
+		output += '" target="_blank">Launch Simulator</a>';
+        return output;
+    }
+
+    function printWebMachineCode(machineCode) {
+        let output = 'memory: [\n';
+        machineCode.forEach(function (line) {
+            let tmp = line.toString(2).padStart(8, '0');
+            output += "0b" + tmp + ",\n";
+        });
+		output += "],\n\n";
+        return output;
+    }
+
+    function buildMachineCode(assembleResult) {
+        const {labels, memoryMap} = assembleResult;
+        let machineCode = [];
+        memoryMap.forEach(function (row) {
+            let encodedOp = encodeOp(row, labels);
+            machineCode.push(encodedOp);
+        });
+        return machineCode;
+    }
+
+    /**
+     * Encodes an operation into machine code. Maybe it was more efficient to do this in the lexer?
+     */
+    function encodeOp(opString) {
+        // Variables return immediately.
+        if (/^\d+$/.test(opString)) {
+            return parseInt(opString);
+        }
+        let [operation, predicate] = opString.split(" ");
+        let result = 0b00000000;
+        switch (operation) {
+            case "nop":
+                result = 0b00000000;
+                break;
+            case "lda":
+                result = 0b00010000 | parseInt(predicate);
+                break;
+            case "add":
+                result = 0b00100000 | parseInt(predicate);
+                break;
+            case "sub":
+                result = 0b00110000 | parseInt(predicate);
+                break;
+            case "sta":
+                result = 0b01000000 | parseInt(predicate);
+                break;
+            case "ldi":
+                result = 0b01010000 | parseInt(predicate);
+                break;
+            case "jmp":
+                result = 0b01100000 | parseInt(predicate);
+                break;
+            case "jc":
+                result = 0b01110000 | parseInt(predicate);
+                break;
+            case "jz":
+                result = 0b10000000 | parseInt(predicate);
+                break;
+            case "out":
+                result = 0b11100000;
+                break;
+            case "hlt":
+                result = 0b11110000;
+                break;
+            default:
+                addError("machineGenerator", "Unknown Operation in machine encoding: " + opString);
+        }
+        return result;
+    }
+
+    /**
+     *
+     */
+    function assemble(lexerResult) {
+        const {variables, blocks} = lexerResult;
+        let pointers = {};
+        let idx = 0;  // Program will fill down. PC always starts at 0x00
+        // Build a list of memory locations for each block's start. - Used for Jumps later.
+        Object.keys(blocks).forEach(function (key) {
+            pointers[key] = idx;
+            blocks[key].forEach(function (line) {
+                idx++;
+            });
+        });
+        // Add the pointers to variable memory locations.
+        Object.keys(variables).forEach(function (key) {
+            pointers[key] = idx;
+            idx++;
+        });
+
+        // Replace all references to memory locations with the proper addresses.
+        let memoryMap = [];
+        Object.keys(blocks).forEach(function (key) {
+            blocks[key].forEach(function (line) {
+                // Load direction detection for proper op-code - RAM -> Acc (LDA) or Acc -> RAM (STA)
+                if (line.includes("ld")) {
+                    if (/[a-z],\(.*\)/.test(line)) {
+                        memoryMap.push("lda " + getPointerForVariable(line, pointers));
+                    } else if (/\(.*\),[a-z]/.test(line)) {
+                        memoryMap.push("sta " + getPointerForVariable(line, pointers));
+                    } else {
+                        memoryMap.push("ldi " + line.split(',')[1]);
+                    }
+                } else if (line.includes("add")) {
+                    memoryMap.push("add " + getPointerForVariable(line, pointers));
+                } else if (line.includes("sub")) {
+                    memoryMap.push("sub " + getPointerForVariable(line, pointers));
+                } else if (line.includes("jmp")) {
+                    memoryMap.push("jmp " + getAddressForJump(line, pointers));
+                } else if (line.includes("jz")) {
+                    memoryMap.push("jz " + getAddressForJump(line, pointers));
+                } else if (line.includes("jc")) {
+                    memoryMap.push("jc " + getAddressForJump(line, pointers));
+                } else {
+                    memoryMap.push(line.trim());
+                }
+            });
+        });
+
+        // Add the variables at the end of memory.
+        Object.keys(variables).forEach(function (key) {
+            memoryMap.push(variables[key]);
+        });
+
+        if (16 < memoryMap.length) {
+            addError("assembler", "Memory Exhausted! Program requires " + memoryMap.length + " bytes of memory.");
+        }
+        return {"pointers": pointers, "memoryMap": memoryMap};
+    }
+
+    function getAddressForJump(varName, pointers) {
+        let requestedLabel = varName.match(/.*\s(.*)/)[1];
+        if (Object.keys(pointers).includes(requestedLabel)) {
+            return parseInt(pointers[requestedLabel]);
+        } else {
+            addError("assembler", "Could not find definition for label: " + requestedLabel);
+            return 15;
+        }
+    }
+
+    function getPointerForVariable(varName, pointers) {
+        let requestedLabel = varName.match(/\((.*)\)/)[1];
+        if (Object.keys(pointers).includes(requestedLabel)) {
+            return parseInt(pointers[requestedLabel]);
+        } else {
+            addError("assembler", "Could not find definition for label: " + requestedLabel);
+            return 15;
+        }
+    }
+
+    /**
+     * Parses the ASM input string into variables and code blocks.
+     *
+     * TODO: Split this rather large function into parts.
+     *
+     * This also performs some basic syntax checking
+     * @param input string The ASM code to parse.
+     * @result object An object containing the following data format:
+     *   {
+     *     "variables": {"X": "3", "Y","5"},
+     *     "blocks": {
+     *         "Start": ["nop", "nop"],
+     *         "Loop":["jmp Loop"]}
+     *     }
+     *   }
+     */
+    function lexer(input) {
+        // Find all labels and break into sections
+        let variables = {};
+        // Default to unlabelled if there is no starting label on code.
+        let blocks = {"Unlabelled" : []};
+        let currentBlock = "Unlabelled";
+        input.split(/\r?\n/).forEach(function (line) {
+            // Ignore Comments
+            if (line.startsWith(";")) {
+                return;
+            }
+            // Break code into sections based on labels.
+            if (line.includes(":")) {
+                currentBlock = line.split(":", 1)[0];
+                blocks[currentBlock] = [];
+                return;
+            }
+            // Only add non-whitespace lines and trim leading whitespace.
+            if (/\S/.test(line)) {
+                blocks[currentBlock].push(line.trim());
+            }
+        });
+
+        // Does the label have a byte after it? If so make it a variable and remove it from the object.
+        Object.keys(blocks).forEach(function (key) {
+            blocks[key].forEach(function (line) {
+                if (line.includes(".byte")) {
+                    if (blocks[key].length > 1) {
+                        addError("lexer", "Variable '" + key + "' has more than one line. Ignoring beyond the first line.");
+                    }
+                    variables[key] = line.split(" ")[1].trim();
+                    delete blocks[key]; // Remove the key from the blocks so it's not code.
+                }
+            });
+        });
+
+        // Clean up formatting and remove invalid op-codes and throw errors for badly formatted lines.
+        let validOps = ["ld", "add", "sub", "jmp", "jc", "jz", "jnz", "out", "hlt"];
+        Object.keys(blocks).forEach(function (key) {
+            blocks[key].forEach(function (line, index) {
+                // Clean up predicates if there's extra white space.
+                let [op, ...predicate] = line.split(" ");
+                predicate = predicate.join("").replace(/ /g,'');
+                blocks[key][index] = op + " " + predicate;
+                // Scrub unknown op-codes
+                if (!validOps.includes(op)) {
+                    addError("lexer", "Operation '" + op + "' is unsupported. Ignoring line.");
+                    blocks[key].splice(index, 1);
+                }
+                // Validate op-code formats
+                switch (op) {
+                    case "ld":
+                        if (! hasPredicateCount(predicate, 2)) {
+                            addError("lexer", "ld operator must have a 'target,source' in the predicate. Example: ld (X),a");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    case "add":
+                        if (! hasPredicateCount(predicate, 1)) {
+                            addError("lexer", "add operator must have a 'target' in the predicate. Example: add (X)");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    case "sub":
+                        if (! hasPredicateCount(predicate, 1)) {
+                            addError("lexer", "add operator must have a 'target' in the predicate. Example: sub (Decrement)");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    case "jmp":
+                        if (! hasPredicateCount(predicate, 1)) {
+                            addError("lexer", "jmp operator must have a 'target' in the predicate. Example: jmp (Loop)");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    case "jz":
+                        if (! hasPredicateCount(predicate, 1)) {
+                            addError("lexer", "jz operator must have a 'target' in the predicate. Example: jz (Loop)");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    case "jc":
+                        if (! hasPredicateCount(predicate, 1)) {
+                            addError("lexer", "jc operator must have a 'target' in the predicate. Example: jc (Loop)");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    case "out":
+                        if (! hasPredicateCount(predicate, 0)) {
+                            addError("lexer", "out operator must not have a predicate. Example: out");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    case "hlt":
+                        if (! hasPredicateCount(predicate, 0)) {
+                            addError("lexer", "hlt operator must not have a predicate. Example: hlt");
+                            blocks[key].splice(index, 1);
+                        }
+                        break;
+                    default:
+                }
+            });
+        });
+
+        return {"variables": variables, "blocks": blocks};
+    }
+
+    function hasPredicateCount(input, count) {
+        if (input) {
+            return count === input.split(",").length;
+        } else {
+            return true;
+        }
+    }
+
+    function loadSample(value) {
+        console.log(value);
+        let code = '';
+        switch (value) {
+            case "multiplication":
+                code = `; Multiplies X by Y
+Top:
+  ld a,(X)
+  sub (Decrement)
+  jc Continue
+  ld a,(Product)
+  out
+  hlt
+Continue:
+  ld (X),a
+  ld a,(Product)
+  add (Y)
+  ld (Product),a
+  jmp Top
+
+Decrement:
+  .byte 1
+Product:
+  .byte 0
+X:
+  .byte 3
+Y:
+  .byte 29`;
+                break;
+            case "fibonacci":
+                code = `; Endless Fibonacci Loop
+Top:
+  ld a,1
+  ld (X),a
+  ld a,0
+Loop:
+  ld (Y),a
+  out
+  ld a,(X)
+  add (X)
+  ld (X),a
+  out
+  ld a,(Y)
+  add (X)
+  jc Top
+  jmp Loop
+; Not used for now
+Halt:
+  hlt
+X:
+  .byte 0
+Y:
+  .byte 0
+`;
+                break;
+            case "fibonacci-2":
+                code = `; Endless Fibonacci Loop
+Top:
+  ld a,1
+  ld (Y),a
+  ld a,0
+Loop:
+  out
+  add (Y)
+  ld (Z),a
+  ld a,(Y)
+  ld (X),a
+  ld a,(Z)
+  ld (Y),a
+  ld a,(X)
+  jc  Top
+  jmp Loop
+X:
+  .byte 0
+Y:
+  .byte 0
+Z:
+  .byte 0
+`;
+                break;
+            case "42":
+                code = `; Displays 42
+  ld a,(X)
+  out
+  hlt
+X:
+  .byte 42`;
+                break;
+            default:
+                code = '';
+        }
+        document.getElementById("asm").value = code;
+        runAssemble();
+    }
+    loadSample("multiplication");
+    runAssemble();
+</script>
+</body>
+</html>

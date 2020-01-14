@@ -29,28 +29,47 @@ let initialCPU = {
     reg_ins: 0b00000000,
     reg_out: 0b00000000,
     mar: 0b00000000,
-	memory: [
-		0b01010001,  // top LDI <1> # 1
-		0b01001110,  //  STA <14> # y
-		0b01010000,  //  LDI <0> # 0
-		0b11100000,  // loop OUT 
-		0b00101110,  //  ADD <14> # y
-		0b01001111,  //  STA <15> # z
-		0b00011110,  //  LDA <14> # y
-		0b01001101,  //  STA <13> # x
-		0b00011111,  //  LDA <15> # z
-		0b01001110,  //  STA <14> # y
-		0b00011101,  //  LDA <13> # x
-		0b01110000,  //  JC <0> # top
-		0b01100011,  //  JMP <3> # loop
-		0b00000000,  // x
-		0b00000000,  // y
-		0b00000000,  // z
-	],
+    memory: [],
 	speed: 300
 };
 
+let initialProgram = {
+    memory: [
+        // LABEL: Top
+        0b00011110, // LDA <14>
+        0b00111100, // SUB <12>
+        0b01110110, // JC <6> - Continue
+        0b00011101, // LDA <13>
+        0b11100000, // OUT
+        0b11110000, // HLT
+        // LABEL: Continue
+        0b01001110, // STA <14>
+        0b00011101, // LDA <13>
+        0b00101111, // ADD <15>
+        0b01001101, // STA <13>
+        0b01100000, // JMP 0 - Top
+        0b00000000, //
+        // Data
+        0b00000001, // 1
+        // Variables
+        0b00000000, // product
+        0b00000011, // x
+        0b00011101, // y
+    ]
+};
+
+/******************************************************
+ * Pull memory definition from the memory GET parameter
+ ******************************************************/
+var urlParams = new URLSearchParams(window.location.search);
+var str = urlParams.get('memory');
+var loadedMemory = deepCopy(initialProgram.memory);
+if (str != null) {
+	loadedMemory = JSON.parse('[' + str + ']');
+}
+
 let cpu = deepCopy(initialCPU);
+cpu.memory = deepCopy(loadedMemory);
 
 /*****************************************************************************
  * CPU Functions
@@ -249,6 +268,7 @@ async function executeTick() {
 
 function resetCpu() {
     cpu = deepCopy(initialCPU);
+	cpu.memory = deepCopy(loadedMemory);
     cpuState = [];
     cpuStateIndex = 0;
     autoTick = false;
@@ -532,6 +552,6 @@ document.getElementById('clk-button').addEventListener('click', function() {
 // BOOT IT!
 erase();
 // executeTick();
-    document.getElementById('container').removeAttribute('hidden');
-    drawAll();
+document.getElementById('container').removeAttribute('hidden');
+drawAll();
 
