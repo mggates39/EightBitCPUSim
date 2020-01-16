@@ -16,7 +16,7 @@ Lines that start with `;` are considered comments and ignored.
 
 #### Registers
 The A register (Accumulator) is the only register available in the `ld` command. The output register is considered 
-unique and populated via the `out` opcode which moves the contents of the `ALU` into the display register.
+unique and populated via the `out` opcode which moves the contents of the `Accumulator` into the display register.
 
 #### Behavior of `ld` - Load
 There are three situations for the use of the load command:
@@ -25,7 +25,7 @@ There are three situations for the use of the load command:
 
 `ld a,(X)` Loads the value at memory location (X) into the accumulator. Uses the `LDA` opcode
 
-`ld (X),a` Loads the value in the **ALU** into memory location (X). Uses the `STA` opcode.
+`ld (X),a` Loads the value in the accumulator into memory location (X). Uses the `STA` opcode.
 
 #### Labels and Branching
 There is basic support for labels and jumps which allows for conditional branching. Labels start with `:` . Memory
