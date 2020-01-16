@@ -30,7 +30,7 @@ let initialCPU = {
     reg_out: 0b00000000,
     mar: 0b00000000,
     memory: [],
-	speed: 300
+	speed: 301
 };
 
 let initialProgram = {
@@ -300,8 +300,8 @@ function drawClock() {
         document.getElementById('cpu-halted').innerText = "";
     }
     document.getElementById("clock-auto-tick").checked = autoTick;
-	document.getElementById("clk-range").value = cpu.speed;
-	document.getElementById("clk-rate").innerText = cpu.speed;
+	document.getElementById("clk-range").value = (1001-cpu.speed);
+	document.getElementById("clk-rate").innerText = (1001-cpu.speed);
 }
 
 function drawHistory() {
@@ -542,7 +542,7 @@ document.getElementById('clock-auto-tick').addEventListener('change', function()
 });
 
 document.getElementById('clk-range').oninput = function() {
-    cpu.speed = this.value;
+    cpu.speed = (1000 - this.value);
 };
 
 document.getElementById('clk-button').addEventListener('click', function() {
