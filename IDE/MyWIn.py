@@ -8,12 +8,13 @@ from Sap1Assembler.Parser import is_label
 from Sap1Assembler.Parser import make_label
 from Sap1Assembler.Parser import make_target
 
+
 # Define the tab content as classes:
 class TabOne(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         # self.control = wx.stc.StyledTextCtrl(self, style=wx.TE_MULTILINE)
-        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_RICH)
+        self.control = wx.TextCtrl(self, style=wx.TE_PROCESS_TAB | wx.TE_RICH | wx.TE_MULTILINE)
         # Use some sizers to see layout options
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.control, 1, wx.EXPAND)
@@ -22,11 +23,12 @@ class TabOne(wx.Panel):
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
+
 
 class TabTwo(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE|wx.TE_READONLY)
+        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
         # Use some sizers to see layout options
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.control, 1, wx.EXPAND)
@@ -36,11 +38,11 @@ class TabTwo(wx.Panel):
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
 
+
 class TabThree(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        t = wx.StaticText(self, -1, "This is the third tab", (20,20))
-
+        t = wx.StaticText(self, -1, "This is the third tab", (20, 20))
 
 
 class MainWindow(wx.Frame):
@@ -48,11 +50,11 @@ class MainWindow(wx.Frame):
         self.directory_name = ''
         self.filename = ''
         self.color_database = wx.ColourDatabase()
-        self.labels = []
+        self.symbol_table = []
 
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
-        wx.Frame.__init__(self, parent, title=title, size=(200, -1))
+        wx.Frame.__init__(self, parent, title=title, size=(400, 400))
         # self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
         self.CreateStatusBar()  # A Status bar in the bottom of the window
 
@@ -101,17 +103,28 @@ class MainWindow(wx.Frame):
         self.Show()
 
     def on_about(self, e):
-        # Create a message dialog box
-        dlg = wx.MessageDialog(self, " A sample editor \n in wxPython", "About Sample Editor",
+        """
+        Create an about message dialog box
+
+        :param e:
+        """
+        dlg = wx.MessageDialog(self, " A SAP-1 code editor, assembler, and simulator \n in wxPython", "About SAP-1 IDE",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()  # Shows it
         dlg.Destroy()  # finally destroy it when finished.
 
     def on_exit(self, e):
+        """
+        Exit the application by closing the frame
+
+        :param e:
+        """
         self.Close(True)  # Close the frame.
 
     def on_open(self, e):
-        """ Open a file"""
+        """ Open a file. Copy contents to the first tab text control and perform syntax highlighting
+        :param e:
+        """
 
         dlg = wx.FileDialog(self, "Choose a file", self.directory_name, "", "*.*", wx.FD_OPEN)
         if dlg.ShowModal() == wx.ID_OK:
@@ -124,6 +137,10 @@ class MainWindow(wx.Frame):
         dlg.Destroy()
 
     def on_assemble(self, e):
+        """
+
+        :param e:
+        """
         a = Assembler()
         lines = self.tab1.control.GetValue()
         text = lines.split("\n")
@@ -132,17 +149,26 @@ class MainWindow(wx.Frame):
         for line in listing:
             self.tab2.control.AppendText(line)
 
-
     def is_valid_label(self, label):
+        """
+        Is this a valid label in the local symbol table
+
+        :rtype: bool
+        :param label: String Label to lookup in symbol table
+        :return: true if label is found
+        """
         found = False
-        for x in self.labels:
+        for x in self.symbol_table:
             if x == label:
                 found = True
                 break
         return found
 
     def highlight_code(self, e):
-        self.labels = []
+        """ need to make this be characater based to better handle the attributes when typing.
+            this would also fix the off by one errors I am seeing here and there
+            :param e: """
+        self.symbol_table = []
         font = self.tab1.control.GetFont()
         comment_attr = wx.TextAttr(self.color_database.Find("LIGHT GREY"), wx.WHITE, font=font)
         label_attr = wx.TextAttr(self.color_database.Find("NAVY"), wx.WHITE, font=font)
@@ -165,7 +191,7 @@ class MainWindow(wx.Frame):
                 if len(fields) > 0:
                     if fields[0].endswith(':'):
                         label = make_label(fields[0])
-                        self.labels.append(label)
+                        self.symbol_table.append(label)
 
         for i in range(0, max_line):
             line = self.tab1.control.GetLineText(i)
@@ -176,47 +202,52 @@ class MainWindow(wx.Frame):
                 fields = line.split()
                 if len(fields) > 0:
                     if fields[0].startswith('.'):
-                        self.tab1.control.SetStyle(start_of_line, (start_of_line + (len(fields[0]) + 1)), directive_attr)
+                        self.tab1.control.SetStyle(start_of_line, (start_of_line + (len(fields[0]) + 1)),
+                                                   directive_attr)
                     elif fields[0].endswith(':'):
                         self.tab1.control.SetStyle(start_of_line, (start_of_line + (len(fields[0]))), label_attr)
                         if len(fields) > 1:
                             if fields[1].startswith('.'):
                                 self.tab1.control.SetStyle((start_of_line + len(fields[0]) + 1),
-                                                      (start_of_line + (len(fields[0]) + 1) + (len(fields[1]) + 1)),
-                                                      directive_attr)
+                                                           (start_of_line + (len(fields[0]) + 1) + (
+                                                                       len(fields[1]) + 1)),
+                                                           directive_attr)
                             else:
                                 self.tab1.control.SetStyle((start_of_line + len(fields[0]) + 1),
-                                                      (start_of_line + (len(fields[0]) + 1) + (len(fields[1]) + 1)),
-                                                      operator_attr)
+                                                           (start_of_line + (len(fields[0]) + 1) + (
+                                                                       len(fields[1]) + 1)),
+                                                           operator_attr)
                                 if len(fields) == 3:
                                     target = make_target(fields[2])
                                     if is_label(fields[2]):
                                         if self.is_valid_label(target):
-                                            self.tab1.control.SetStyle((start_of_line + len(fields[0]) + len(fields[1]) + 3),
-                                                                  (start_of_line + len(fields[0]) + len(
-                                                                      fields[1]) + 3 + len(target)),
-                                                                  label_attr)
+                                            self.tab1.control.SetStyle(
+                                                (start_of_line + len(fields[0]) + len(fields[1]) + 3),
+                                                (start_of_line + len(fields[0]) + len(
+                                                    fields[1]) + 3 + len(target)),
+                                                label_attr)
                                         else:
-                                            self.tab1.control.SetStyle((start_of_line + len(fields[0]) + len(fields[1]) + 3),
-                                                                  (start_of_line + len(fields[0]) + len(
-                                                                      fields[1]) + 3 + len(target)),
-                                                                  error_attr)
+                                            self.tab1.control.SetStyle(
+                                                (start_of_line + len(fields[0]) + len(fields[1]) + 3),
+                                                (start_of_line + len(fields[0]) + len(
+                                                    fields[1]) + 3 + len(target)),
+                                                error_attr)
 
                     else:
                         self.tab1.control.SetStyle((start_of_line + 1),
-                                              (start_of_line + 1 + (len(fields[0]) + 1)),
-                                              operator_attr)
+                                                   (start_of_line + 1 + (len(fields[0]) + 1)),
+                                                   operator_attr)
                         if len(fields) == 2:
                             target = make_target(fields[1])
                             if is_label(fields[1]):
                                 if self.is_valid_label(target):
                                     self.tab1.control.SetStyle((start_of_line + len(fields[0]) + 4),
-                                                          (start_of_line + len(fields[0]) + 4 + len(target)),
-                                                          label_attr)
+                                                               (start_of_line + len(fields[0]) + 4 + len(target)),
+                                                               label_attr)
                                 else:
                                     self.tab1.control.SetStyle((start_of_line + len(fields[0]) + 4),
-                                                          (start_of_line + len(fields[0]) + 4 + len(target)),
-                                                          error_attr)
+                                                               (start_of_line + len(fields[0]) + 4 + len(target)),
+                                                               error_attr)
 
             start_of_line += length + 1
 
