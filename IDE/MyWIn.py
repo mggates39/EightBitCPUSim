@@ -1,6 +1,7 @@
 import os
 
 import wx
+import wx.stc
 
 from Sap1Assembler.Assembler import Assembler
 from Sap1Assembler.Parser import is_label
@@ -11,7 +12,8 @@ from Sap1Assembler.Parser import make_target
 class TabOne(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
+        # self.control = wx.stc.StyledTextCtrl(self, style=wx.TE_MULTILINE)
+        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_RICH)
         # Use some sizers to see layout options
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.control, 1, wx.EXPAND)
@@ -141,14 +143,16 @@ class MainWindow(wx.Frame):
 
     def highlight_code(self, e):
         self.labels = []
-        comment_attr = wx.TextAttr(self.color_database.Find("LIGHT GREY"), wx.WHITE)
-        label_attr = wx.TextAttr(self.color_database.Find("NAVY"), wx.WHITE)
-        error_attr = wx.TextAttr(wx.WHITE, wx.RED)
-        directive_attr = wx.TextAttr(self.color_database.Find("GOLD"), wx.WHITE)
-
         font = self.tab1.control.GetFont()
-        font.SetWeight(wx.FONTWEIGHT_BOLD)
-        operator_attr = wx.TextAttr(wx.BLACK, font=font)
+        comment_attr = wx.TextAttr(self.color_database.Find("LIGHT GREY"), wx.WHITE, font=font)
+        label_attr = wx.TextAttr(self.color_database.Find("NAVY"), wx.WHITE, font=font)
+        error_attr = wx.TextAttr(wx.WHITE, wx.RED, font=font)
+        directive_attr = wx.TextAttr(self.color_database.Find("GOLD"), wx.WHITE, font=font)
+
+        operator_font = self.tab1.control.GetFont()
+        operator_font.SetWeight(wx.FONTWEIGHT_BOLD)
+        operator_attr = wx.TextAttr(wx.BLACK, wx.WHITE, font=operator_font)
+
         max_line = self.tab1.control.GetNumberOfLines()
         start_of_line = 0
 
