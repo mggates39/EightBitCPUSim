@@ -210,12 +210,12 @@ class MainWindow(wx.Frame):
                             if fields[1].startswith('.'):
                                 self.tab1.control.SetStyle((start_of_line + len(fields[0]) + 1),
                                                            (start_of_line + (len(fields[0]) + 1) + (
-                                                                       len(fields[1]) + 1)),
+                                                                   len(fields[1]) + 1)),
                                                            directive_attr)
                             else:
                                 self.tab1.control.SetStyle((start_of_line + len(fields[0]) + 1),
                                                            (start_of_line + (len(fields[0]) + 1) + (
-                                                                       len(fields[1]) + 1)),
+                                                                   len(fields[1]) + 1)),
                                                            operator_attr)
                                 if len(fields) == 3:
                                     target = make_target(fields[2])

@@ -5,11 +5,13 @@ def make_label(label):
     fixed_label = label[:-1]
     return fixed_label
 
+
 def is_label(target):
     label_found = False
     if target.startswith('<') or target.startswith('('):
         label_found = True
     return label_found
+
 
 def make_target(target):
     fixed_target = target
