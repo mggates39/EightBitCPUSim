@@ -38,6 +38,12 @@ class TabTwo(wx.Panel):
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
 
+        self.ResetListing()
+
+    def ResetListing(self):
+        self.control.Clear()
+        self.control.AppendText("\n\n\tAssemble Source to see listing!")
+
 
 class TabThree(wx.Panel):
     def __init__(self, parent):
@@ -135,6 +141,7 @@ class MainWindow(wx.Frame):
             f.close()
             self.highlight_code(e)
         dlg.Destroy()
+        self.tab2.ResetListing()
 
     def on_assemble(self, e):
         """
@@ -171,7 +178,8 @@ class MainWindow(wx.Frame):
         self.symbol_table = []
         font = self.tab1.control.GetFont()
         comment_attr = wx.TextAttr(self.color_database.Find("LIGHT GREY"), wx.WHITE, font=font)
-        label_attr = wx.TextAttr(self.color_database.Find("NAVY"), wx.WHITE, font=font)
+        # label_attr = wx.TextAttr(self.color_database.Find("NAVY"), wx.WHITE, font=font)
+        label_attr = wx.TextAttr(wx.BLUE, wx.WHITE, font=font)
         error_attr = wx.TextAttr(wx.WHITE, wx.RED, font=font)
         directive_attr = wx.TextAttr(self.color_database.Find("GOLD"), wx.WHITE, font=font)
 
