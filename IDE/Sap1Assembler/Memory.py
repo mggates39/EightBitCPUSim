@@ -33,7 +33,7 @@ class Memory:
                     else:
                         print("0b{0:08b},".format(x), " // {}: {}".format(label, x))
                         lines.append(
-                            "{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + " {}: {}\n".format(label, x))
+                            "{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + " {}: .byte {}\n".format(label, x))
                 elif code_cells[address].operator is not None:
                     print("0b{0:08b},".format(x),
                           " //   {} {}".format(code_cells[address].operator, code_cells[address].operand))
@@ -41,10 +41,15 @@ class Memory:
                         code_cells[address].operator, code_cells[address].operand))
                 else:
                     print("0b{0:08b},".format(x), " // {}: {}".format(label, x))
-                    lines.append("{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + " {}: {}\n".format(label, x))
+                    lines.append("{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + " {}: .byte {}\n".format(label, x))
             else:
-                print("0b{0:08b},".format(x), " // {}: {}".format(label, x))
-                lines.append("{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + " {}: {}\n".format(label, x))
+                if len(label):
+                    print("0b{0:08b},".format(x), " // {}: {}".format(label, x))
+                    lines.append("{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + " {}: .byte {}\n".format(label, x))
+                else:
+                    print("0b{0:08b},".format(x), " //   {}".format(x))
+                    lines.append("{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + "    .byte {}\n".format(x))
+
             address += 1
 
         return lines
