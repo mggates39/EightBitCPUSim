@@ -1,15 +1,13 @@
 ###############
-# Test Add
+# Test Add             #
 ###############
 	.corg 0
-	LDA (x)
+start:	LDA (x)
 	ADD (y)
 	OUT
 	HLT
-
-	.dorg 14
 # Variables
-x:	.byte 28
+x:	.byte 15
 y:	.byte 14
 
 	.end

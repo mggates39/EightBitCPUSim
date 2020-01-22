@@ -6,7 +6,7 @@ class Cell:
         self.label = label
         self.operator = operator
         self.operand = operand
-        self.opcode = None
+        self.op_code = None
         self.value = None
 
     @staticmethod
@@ -27,7 +27,7 @@ class Cell:
 
     def assemble(self, labels, instructions):
         if self.operator is not None:
-            self.opcode = instructions.lookup_opcode(self.operator)
+            self.op_code = instructions.lookup_op_code(self.operator)
             if self.operand is not None:
                 self.value = self.back_patch_label(self.operand, labels)
                 if self.operator != 'LDI':
@@ -39,8 +39,8 @@ class Cell:
             self.value = self.operand
 
     def get_memory(self):
-        if self.opcode is not None:
-            mem_value = self.opcode << 4 | (self.value & 0xF)
+        if self.op_code is not None:
+            mem_value = self.op_code << 4 | (self.value & 0xF)
         else:
             mem_value = self.value & 0xFF
 

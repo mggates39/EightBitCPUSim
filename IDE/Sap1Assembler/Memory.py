@@ -31,11 +31,8 @@ class Memory:
                         print("0b{0:08b},".format(x),
                               " // {}: {} {}".format(label, code_cells[address].operator, code_cells[address].operand))
                         lines.append(
-                            "{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) + " {}: {} {}\n".format(label,
-                                                                                                           code_cells[
-                                                                                                               address].operator,
-                                                                                                           code_cells[
-                                                                                                               address].operand))
+                            "{0:02} - ".format(address) + " 0b{0:08b}\t".format(x) +
+                            " {}: {} {}\n".format(label, code_cells[address].operator, code_cells[address].operand))
                     else:
                         print("0b{0:08b},".format(x), " // {}: {}".format(label, x))
                         lines.append(

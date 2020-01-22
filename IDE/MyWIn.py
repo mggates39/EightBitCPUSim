@@ -13,8 +13,8 @@ from Sap1Assembler.Parser import make_target
 class TabOne(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        # self.control = wx.stc.StyledTextCtrl(self, style=wx.TE_MULTILINE)
         self.control = wx.TextCtrl(self, style=wx.TE_PROCESS_TAB | wx.TE_RICH | wx.TE_MULTILINE)
+
         # Use some sizers to see layout options
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.control, 1, wx.EXPAND)
@@ -38,9 +38,9 @@ class TabTwo(wx.Panel):
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
 
-        self.ResetListing()
+        self.reset_listing()
 
-    def ResetListing(self):
+    def reset_listing(self):
         self.control.Clear()
         self.control.AppendText("\n\n\tAssemble Source to see listing!")
 
@@ -48,13 +48,13 @@ class TabTwo(wx.Panel):
 class TabThree(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        t = wx.StaticText(self, -1, "This is the third tab", (20, 20))
+        wx.StaticText(self, -1, "This is the third tab", (20, 20))
 
 
 class MainWindow(wx.Frame):
     def __init__(self, parent, title):
         self.directory_name = ''
-        self.filename = ''
+        self.filename = 'untitled'
         self.base_title = title
         self.color_database = wx.ColourDatabase()
         self.symbol_table = []
@@ -62,7 +62,6 @@ class MainWindow(wx.Frame):
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
         wx.Frame.__init__(self, parent, title=title, size=(400, 400))
-        # self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
         self.CreateStatusBar()  # A Status bar in the bottom of the window
 
         # Create a panel and notebook (tabs holder)
@@ -79,7 +78,7 @@ class MainWindow(wx.Frame):
         nb.AddPage(self.tab2, "Listing")
         nb.AddPage(self.tab3, "Execution")
 
-        # Set noteboook in a sizer to create the layout
+        # Set notebook in a sizer to create the layout
         sizer = wx.BoxSizer()
         sizer.Add(nb, 1, wx.EXPAND)
         p.SetSizer(sizer)
@@ -88,8 +87,10 @@ class MainWindow(wx.Frame):
         file_menu = wx.Menu()
         menu_new = file_menu.Append(wx.ID_NEW, "&New", " Create a new edit window")
         menu_open = file_menu.Append(wx.ID_OPEN, "&Open", " Open a file to edit")
+        menu_save = file_menu.Append(wx.ID_SAVE, "&Save", " Save the file")
+        menu_save_as = file_menu.Append(wx.ID_SAVEAS, "Save As", " Save the file with a new name")
         file_menu.AppendSeparator()
-        menu_assemble = file_menu.Append(wx.ID_ANY, "A&ssemble", " Assemble text in editor")
+        menu_assemble = file_menu.Append(wx.ID_ANY, "Assemble", " Assemble text in editor")
         file_menu.AppendSeparator()
         menu_exit = file_menu.Append(wx.ID_EXIT, "E&xit", " Terminate the program")
 
@@ -106,12 +107,15 @@ class MainWindow(wx.Frame):
         # Events.
         self.Bind(wx.EVT_MENU, self.on_new, menu_new)
         self.Bind(wx.EVT_MENU, self.on_open, menu_open)
+        self.Bind(wx.EVT_MENU, self.on_save, menu_save)
+        self.Bind(wx.EVT_MENU, self.on_save_as, menu_save_as)
         self.Bind(wx.EVT_MENU, self.on_assemble, menu_assemble)
         self.Bind(wx.EVT_MENU, self.on_exit, menu_exit)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
         self.Bind(wx.EVT_TEXT, self.highlight_code, self.tab1.control)
 
         self.Show()
+        self.on_new()
 
     def on_about(self, e):
         """
@@ -132,10 +136,20 @@ class MainWindow(wx.Frame):
         """
         self.Close(True)  # Close the frame.
 
-    def on_new(self, e):
-        self.tab2.ResetListing()
+    def on_new(self, e=None):
+        self.tab2.reset_listing()
         self.tab1.control.Clear()
-        self.SetTitle(self.base_title)
+        self.filename = 'untitled'
+        self.SetTitle(self.generate_title(self.filename))
+
+    def generate_title(self, filename):
+        new_title = self.base_title
+        if filename != '':
+            new_title += " - "
+            if self.tab1.control.IsModified():
+                new_title += "*"
+            new_title += filename
+        return new_title
 
     def on_open(self, e):
         """ Open a file. Copy contents to the first tab text control and perform syntax highlighting
@@ -149,10 +163,44 @@ class MainWindow(wx.Frame):
             f = open(os.path.join(self.directory_name, self.filename), 'r')
             self.tab1.control.SetValue(f.read())
             f.close()
-            self.SetTitle(self.base_title+" - "+self.filename)
             self.highlight_code(e)
+            self.tab1.control.SetModified(False)
+            self.tab1.control.DiscardEdits()
+            self.SetTitle(self.generate_title(self.filename))
+            self.tab2.reset_listing()
         dlg.Destroy()
-        self.tab2.ResetListing()
+
+    def on_save(self, e):
+        """ Save a file. Copy contents to the first tab text control and perform syntax highlighting
+        :param e:
+        """
+
+        f = open(os.path.join(self.directory_name, self.filename), 'w')
+        lines = self.tab1.control.GetValue()
+        f.write(lines)
+        f.close()
+        self.tab1.control.SetModified(False)
+        self.tab1.control.DiscardEdits()
+        self.SetTitle(self.generate_title(self.filename))
+
+    def on_save_as(self, e):
+        """ Open a file. Copy contents to the first tab text control and perform syntax highlighting
+        :param e:
+        """
+
+        dlg = wx.FileDialog(self, "Choose a file", self.directory_name, "", "*.*", wx.FD_SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            self.filename = dlg.GetFilename()
+            self.directory_name = dlg.GetDirectory()
+            if os.path.exists(os.path.join(self.directory_name, self.filename)):
+                exist_dlg = wx.MessageDialog(self, "Overwrite existing file?", "Save As " + self.filename,
+                                             wx.YES_NO | wx.ICON_WARNING)
+                if exist_dlg.ShowModal() == wx.ID_YES:
+                    self.on_save(e)
+                exist_dlg.Destroy()  # finally destroy it when finished.
+            else:
+                self.on_save(e)
+        dlg.Destroy()
 
     def on_assemble(self, e):
         """
@@ -183,7 +231,7 @@ class MainWindow(wx.Frame):
         return found
 
     def highlight_code(self, e):
-        """ need to make this be characater based to better handle the attributes when typing.
+        """ need to make this be character based to better handle the attributes when typing.
             this would also fix the off by one errors I am seeing here and there
             :param e: """
         self.symbol_table = []
@@ -221,82 +269,84 @@ class MainWindow(wx.Frame):
             else:
                 fields = line.split()
 
-                try:
-                    if len(fields) > 0:
-                        if fields[0].startswith('.'):
-                            current_position = start_of_line + line.find(fields[0])
-                            self.tab1.control.SetStyle(current_position, (current_position + (len(fields[0]))),
-                                                       directive_attr)
-                            if len(fields) > 1:
+                if len(fields) > 0:
+                    if fields[0].startswith('.'):
+                        current_position = start_of_line + line.find(fields[0])
+                        self.tab1.control.SetStyle(current_position, (current_position + (len(fields[0]))),
+                                                   directive_attr)
+                        if len(fields) > 1:
+                            current_position = start_of_line + line.find(fields[1])
+                            self.tab1.control.SetStyle(
+                                current_position,
+                                (current_position + len(fields[1])),
+                                operand_attr)
+
+                    elif fields[0].endswith(':'):
+                        current_position = start_of_line + line.find(fields[0])
+                        self.tab1.control.SetStyle(current_position, (current_position + len(fields[0])),
+                                                   label_attr)
+                        if len(fields) > 1:
+                            if fields[1].startswith('.'):
                                 current_position = start_of_line + line.find(fields[1])
-                                self.tab1.control.SetStyle(
-                                    current_position,
-                                    (current_position + len(fields[1])),
-                                    operand_attr)
+                                self.tab1.control.SetStyle(current_position,
+                                                           (current_position + len(fields[1])),
+                                                           directive_attr)
+                                if len(fields) > 2:
+                                    current_position = start_of_line + line.find(fields[2])
+                                    self.tab1.control.SetStyle(
+                                        current_position,
+                                        (current_position + len(fields[2])),
+                                        operand_attr)
 
-                        elif fields[0].endswith(':'):
-                            current_position = start_of_line + line.find(fields[0])
-                            self.tab1.control.SetStyle(current_position, (current_position + len(fields[0])), label_attr)
-                            if len(fields) > 1:
-                                if fields[1].startswith('.'):
-                                    current_position = start_of_line + line.find(fields[1])
-                                    self.tab1.control.SetStyle(current_position,
-                                                               (current_position + len(fields[1])),
-                                                               directive_attr)
-                                    if len(fields) > 2:
-                                        current_position = start_of_line + line.find(fields[2])
-                                        self.tab1.control.SetStyle(
-                                            current_position,
-                                            (current_position + len(fields[2])),
-                                            operand_attr)
-
-                                else:
-                                    current_position = start_of_line + line.find(fields[1])
-                                    self.tab1.control.SetStyle(current_position,
-                                                               (current_position + len(fields[1])),
-                                                               operator_attr)
-                                    if len(fields) == 3:
-                                        target = make_target(fields[2])
-                                        current_position = start_of_line + line.find(fields[2])
-                                        if is_label(fields[2]):
-                                            if self.is_valid_label(target):
-                                                self.tab1.control.SetStyle(
-                                                    (current_position + 1),
-                                                    (current_position + len(target) + 1),
-                                                    label_attr)
-                                            else:
-                                                self.tab1.control.SetStyle(
-                                                    (current_position + 1),
-                                                    (current_position + len(target) + 1),
-                                                    error_attr)
+                            else:
+                                current_position = start_of_line + line.find(fields[1])
+                                self.tab1.control.SetStyle(current_position,
+                                                           (current_position + len(fields[1])),
+                                                           operator_attr)
+                                if len(fields) == 3:
+                                    target = make_target(fields[2])
+                                    current_position = start_of_line + line.find(fields[2])
+                                    if is_label(fields[2]):
+                                        if self.is_valid_label(target):
+                                            self.tab1.control.SetStyle(
+                                                (current_position + 1),
+                                                (current_position + len(target) + 1),
+                                                label_attr)
                                         else:
                                             self.tab1.control.SetStyle(
                                                 (current_position + 1),
                                                 (current_position + len(target) + 1),
-                                                operand_attr)
-
-                        else:
-                            current_position = start_of_line + line.find(fields[0])
-                            self.tab1.control.SetStyle(current_position,
-                                                       (current_position + len(fields[0])),
-                                                       operator_attr)
-                            if len(fields) == 2:
-                                target = make_target(fields[1])
-                                current_position = start_of_line + line.find(fields[1])
-                                if is_label(fields[1]):
-                                    if self.is_valid_label(target):
-                                        self.tab1.control.SetStyle((current_position + 1), (current_position + len(target) + 1), label_attr)
+                                                error_attr)
                                     else:
-                                        self.tab1.control.SetStyle((current_position + 1), (current_position + len(target) + 1), error_attr)
+                                        self.tab1.control.SetStyle(
+                                            (current_position + 1),
+                                            (current_position + len(target) + 1),
+                                            operand_attr)
+
+                    else:
+                        current_position = start_of_line + line.find(fields[0])
+                        self.tab1.control.SetStyle(current_position,
+                                                   (current_position + len(fields[0])),
+                                                   operator_attr)
+                        if len(fields) == 2:
+                            target = make_target(fields[1])
+                            current_position = start_of_line + line.find(fields[1])
+                            if is_label(fields[1]):
+                                if self.is_valid_label(target):
+                                    self.tab1.control.SetStyle((current_position + 1),
+                                                               (current_position + len(target) + 1), label_attr)
                                 else:
-                                    self.tab1.control.SetStyle(
-                                        (current_position + 1),
-                                        (current_position + len(target)),
-                                        operand_attr)
-                except:
-                    None
+                                    self.tab1.control.SetStyle((current_position + 1),
+                                                               (current_position + len(target) + 1), error_attr)
+                            else:
+                                self.tab1.control.SetStyle(
+                                    (current_position + 1),
+                                    (current_position + len(target)),
+                                    operand_attr)
 
             start_of_line += length + 1
+
+        self.SetTitle(self.generate_title(self.filename))
 
 
 if __name__ == "__main__":
