@@ -1,4 +1,7 @@
 .settings
+.project
+
+*/.idea
 
 # Created by https://www.gitignore.io/api/phpstorm
 # Edit at https://www.gitignore.io/?templates=phpstorm
