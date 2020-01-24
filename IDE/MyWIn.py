@@ -115,6 +115,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_TEXT, self.highlight_code, self.tab1.control)
 
         self.Show()
+        self.tab1.control.DiscardEdits()
         self.on_new()
 
     def on_about(self, e):
@@ -128,19 +129,31 @@ class MainWindow(wx.Frame):
         dlg.ShowModal()  # Shows it
         dlg.Destroy()  # finally destroy it when finished.
 
+    def check_and_save(self, e):
+        saved = wx.ID_OK
+        if self.tab1.control.IsModified():
+            exist_dlg = wx.MessageDialog(self, "Save current changes?", "Save changes " + self.filename,
+                                         wx.YES_NO | wx.ICON_WARNING)
+            if exist_dlg.ShowModal() == wx.ID_YES:
+                saved = self.on_save(e)
+            exist_dlg.Destroy()  # finally destroy it when finished.
+        return saved
+
     def on_exit(self, e):
         """
         Exit the application by closing the frame
 
         :param e:
         """
-        self.Close(True)  # Close the frame.
+        if self.check_and_save(e) == wx.ID_OK:
+            self.Close(True)  # Close the frame.
 
     def on_new(self, e=None):
-        self.tab2.reset_listing()
-        self.tab1.control.Clear()
-        self.filename = 'untitled'
-        self.SetTitle(self.generate_title(self.filename))
+        if self.check_and_save(e) == wx.ID_OK:
+            self.tab2.reset_listing()
+            self.tab1.control.Clear()
+            self.filename = 'untitled'
+            self.SetTitle(self.generate_title(self.filename))
 
     def generate_title(self, filename):
         new_title = self.base_title
@@ -155,24 +168,25 @@ class MainWindow(wx.Frame):
         """ Open a file. Copy contents to the first tab text control and perform syntax highlighting
         :param e:
         """
+        if self.check_and_save(e) == wx.ID_OK:
+            dlg = wx.FileDialog(self, "Choose a file", self.directory_name, "", "*.*", wx.FD_OPEN)
+            if dlg.ShowModal() == wx.ID_OK:
+                self.filename = dlg.GetFilename()
+                self.directory_name = dlg.GetDirectory()
+                f = open(os.path.join(self.directory_name, self.filename), 'r')
+                self.tab1.control.SetValue(f.read())
+                f.close()
+                self.highlight_code(e)
+                self.tab1.control.SetModified(False)
+                self.tab1.control.DiscardEdits()
+                self.SetTitle(self.generate_title(self.filename))
+                self.tab2.reset_listing()
+            dlg.Destroy()
 
-        dlg = wx.FileDialog(self, "Choose a file", self.directory_name, "", "*.*", wx.FD_OPEN)
-        if dlg.ShowModal() == wx.ID_OK:
-            self.filename = dlg.GetFilename()
-            self.directory_name = dlg.GetDirectory()
-            f = open(os.path.join(self.directory_name, self.filename), 'r')
-            self.tab1.control.SetValue(f.read())
-            f.close()
-            self.highlight_code(e)
-            self.tab1.control.SetModified(False)
-            self.tab1.control.DiscardEdits()
-            self.SetTitle(self.generate_title(self.filename))
-            self.tab2.reset_listing()
-        dlg.Destroy()
-
-    def on_save(self, e):
-        """ Save a file. Copy contents to the first tab text control and perform syntax highlighting
-        :param e:
+    def write_file(self):
+        """
+        Save a file. Copy contents to the first tab text control and perform syntax highlighting
+        :rtype: object
         """
 
         f = open(os.path.join(self.directory_name, self.filename), 'w')
@@ -182,13 +196,24 @@ class MainWindow(wx.Frame):
         self.tab1.control.SetModified(False)
         self.tab1.control.DiscardEdits()
         self.SetTitle(self.generate_title(self.filename))
+        return wx.ID_OK
+
+    def on_save(self, e):
+        """ Save a file. Copy contents to the first tab text control and perform syntax highlighting
+        :param e:
+        """
+        if self.filename == "untitled":
+            saved = self.on_save_as(e)
+        else:
+            saved = self.write_file()
+        return saved
 
     def on_save_as(self, e):
         """ Open a file. Copy contents to the first tab text control and perform syntax highlighting
         :param e:
         """
-
-        dlg = wx.FileDialog(self, "Choose a file", self.directory_name, "", "*.*", wx.FD_SAVE)
+        saved = wx.ID_CANCEL
+        dlg = wx.FileDialog(self, "Save file as...", self.directory_name, "", "*.*", wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             self.filename = dlg.GetFilename()
             self.directory_name = dlg.GetDirectory()
@@ -196,11 +221,12 @@ class MainWindow(wx.Frame):
                 exist_dlg = wx.MessageDialog(self, "Overwrite existing file?", "Save As " + self.filename,
                                              wx.YES_NO | wx.ICON_WARNING)
                 if exist_dlg.ShowModal() == wx.ID_YES:
-                    self.on_save(e)
+                    saved = self.write_file()
                 exist_dlg.Destroy()  # finally destroy it when finished.
             else:
-                self.on_save(e)
+                saved = self.write_file()
         dlg.Destroy()
+        return saved
 
     def on_assemble(self, e):
         """
