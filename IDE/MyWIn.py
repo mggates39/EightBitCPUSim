@@ -152,6 +152,7 @@ class MainWindow(wx.Frame):
         if self.check_and_save(e) == wx.ID_OK:
             self.tab2.reset_listing()
             self.tab1.control.Clear()
+            self.tab1.control.DiscardEdits()
             self.filename = 'untitled'
             self.SetTitle(self.generate_title(self.filename))
 
