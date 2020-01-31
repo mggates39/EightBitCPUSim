@@ -356,7 +356,7 @@ function blinkenLights() {
     drawLights(document.getElementById('tmp-lights'), printBinary(cpu.reg_tmp, 8).split(''), 'green');
     drawLights(document.getElementById('alu-lights'), printBinary(cpu.alu, 8).split(''));
     drawLights(document.getElementById('out-lights'), printBinary(cpu.reg_out, 8).split(''), 'blue');
-    drawLights(document.getElementById('control-lights'), printBinary(cpu.controlPins, 17).split(''), 'blue', 18);
+    drawLights(document.getElementById('control-lights'), printBinary(cpu.controlPins, 17).split(''), 'blue', 19);
     drawLights(document.getElementById('flag-carry-lights'), printBinary(cpu.carryFlag, 1).split(''), 'orange', 1);
     drawLights(document.getElementById('flag-zero-lights'), printBinary(cpu.zeroFlag, 1).split(''), 'orange', 1);
 
