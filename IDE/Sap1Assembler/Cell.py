@@ -30,7 +30,9 @@ class Cell:
             self.op_code = instructions.lookup_op_code(self.operator)
             if self.operand is not None:
                 self.value = self.back_patch_label(self.operand, labels)
-                if self.operator != 'LDI':
+                if instructions.is_operand_numeric(self.operator):
+                    self.operand = "{}".format(self.value)
+                else:
                     self.operand = "({}) ; {}".format(self.value, self.operand)
             else:
                 self.value = 0
