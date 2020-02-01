@@ -133,6 +133,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_save_as, menu_save_as)
         self.Bind(wx.EVT_MENU, self.on_assemble, menu_assemble)
         self.Bind(wx.EVT_MENU, self.on_exit, menu_exit)
+        self.Bind(wx.EVT_CLOSE, self.on_close, self)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
         self.Bind(wx.EVT_TEXT, self.highlight_code, self.tab1.control)
 
@@ -161,14 +162,22 @@ class MainWindow(wx.Frame):
             exist_dlg.Destroy()  # finally destroy it when finished.
         return saved
 
-    def on_exit(self, e):
+    def on_close(self, e):
         """
         Exit the application by closing the frame
 
         :param e:
         """
         if self.check_and_save(e) == wx.ID_OK:
-            self.Close(True)  # Close the frame.
+            self.Destroy()
+
+    def on_exit(self, e):
+        """
+        Exit the application by closing the frame
+
+        :param e:
+        """
+        self.Close(True)  # Close the frame.
 
     def on_new(self, e=None):
         if self.check_and_save(e) == wx.ID_OK:
