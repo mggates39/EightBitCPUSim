@@ -47,3 +47,22 @@ class Cell:
             mem_value = self.value & 0xFF
 
         return mem_value
+
+    def get_listing(self):
+        if self.label is None:
+            if self.operator is None:
+                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
+                    self.get_memory()) + "    .byte {}\n".format(self.get_memory())
+            else:
+                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
+                    self.get_memory()) + "    {} {}\n".format(
+                    self.operator, self.operand)
+        else:
+            if self.operator is None:
+                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
+                    self.get_memory()) + " {}: .byte {}\n".format(self.label, self.get_memory())
+            else:
+                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
+                    self.get_memory()) + " {}: {} {}\n".format(self.label, self.operator, self.operand)
+
+        return listing

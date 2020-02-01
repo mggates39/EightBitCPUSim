@@ -48,7 +48,27 @@ class TabTwo(wx.Panel):
 class TabThree(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        wx.StaticText(self, -1, "This is the third tab", (20, 20))
+        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        # Use some sizers to see layout options
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer.Add(self.control, 1, wx.EXPAND)
+
+        # Layout sizers
+        self.SetSizer(self.sizer)
+        self.SetAutoLayout(1)
+        self.sizer.Fit(self)
+
+        self.reset_memory()
+
+    def reset_memory(self):
+        self.control.Clear()
+        self.control.AppendText("\n\n\tAssemble Source to see memory!")
+
+
+class TabFour(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        wx.StaticText(self, -1, "This is the fourth tab", (20, 20))
 
 
 class MainWindow(wx.Frame):
@@ -66,21 +86,23 @@ class MainWindow(wx.Frame):
 
         # Create a panel and notebook (tabs holder)
         p = wx.Panel(self)
-        nb = wx.Notebook(p)
+        self.nb = wx.Notebook(p)
 
         # Create the tab windows
-        self.tab1 = TabOne(nb)
-        self.tab2 = TabTwo(nb)
-        self.tab3 = TabThree(nb)
+        self.tab1 = TabOne(self.nb)
+        self.tab2 = TabTwo(self.nb)
+        self.tab3 = TabThree(self.nb)
+        self.tab4 = TabFour(self.nb)
 
         # Add the windows to tabs and name them.
-        nb.AddPage(self.tab1, "Source")
-        nb.AddPage(self.tab2, "Listing")
-        nb.AddPage(self.tab3, "Execution")
+        self.nb.AddPage(self.tab1, "Source")
+        self.nb.AddPage(self.tab2, "Listing")
+        self.nb.AddPage(self.tab3, "Memory")
+        self.nb.AddPage(self.tab4, "Execution")
 
         # Set notebook in a sizer to create the layout
         sizer = wx.BoxSizer()
-        sizer.Add(nb, 1, wx.EXPAND)
+        sizer.Add(self.nb, 1, wx.EXPAND)
         p.SetSizer(sizer)
 
         # Setting up the file menu.
@@ -151,10 +173,12 @@ class MainWindow(wx.Frame):
     def on_new(self, e=None):
         if self.check_and_save(e) == wx.ID_OK:
             self.tab2.reset_listing()
+            self.tab3.reset_memory()
             self.tab1.control.Clear()
             self.tab1.control.DiscardEdits()
             self.filename = 'untitled'
             self.SetTitle(self.generate_title(self.filename))
+            self.nb.SetSelection(0)
 
     def generate_title(self, filename):
         new_title = self.base_title
@@ -182,6 +206,8 @@ class MainWindow(wx.Frame):
                 self.tab1.control.DiscardEdits()
                 self.SetTitle(self.generate_title(self.filename))
                 self.tab2.reset_listing()
+                self.tab3.reset_memory()
+                self.nb.SetSelection(0)
             dlg.Destroy()
 
     def write_file(self):
@@ -237,10 +263,20 @@ class MainWindow(wx.Frame):
         a = Assembler()
         lines = self.tab1.control.GetValue()
         text = lines.split("\n")
-        listing = a.assemble(text)
+        listing, memory_dump, errors = a.assemble(text)
         self.tab2.control.Clear()
         for line in listing:
             self.tab2.control.AppendText(line)
+        if len(errors):
+            self.tab2.control.AppendText("\n")
+            self.tab2.control.AppendText("ERRORS:\n")
+            self.tab2.control.AppendText("\n")
+            for line in errors:
+                self.tab2.control.AppendText(line)
+            self.nb.SetSelection(1)
+        self.tab3.control.Clear()
+        for line in memory_dump:
+            self.tab3.control.AppendText(line)
 
     def is_valid_label(self, label):
         """

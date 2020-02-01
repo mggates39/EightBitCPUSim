@@ -11,37 +11,43 @@ class Assembler:
     @staticmethod
     def assemble_segments(segments):
         symbols = []
+        errors = []
+        listing = ""
+        memory_dump = []
         memory = Memory()
         instructions = Instructions()
 
         if not segments:
-            print("ERROR: No code found in source file")
-            exit(-2)
+            errors.append("ERROR: No code found in source code\n")
+        else:
 
-        # Extract all the labels from the segments to create a symbol table
-        for segment in segments:
-            for label in segment.labels:
-                symbols.append(label)
+            # Extract all the labels from the segments to create a symbol table
+            for segment in segments:
+                for label in segment.labels:
+                    symbols.append(label)
 
-        for segment in segments:
-            segment.assemble(symbols, instructions)
+            for segment in segments:
+                segment.assemble(symbols, instructions)
 
-        code_segment = None
-        for segment in segments:
-            if segment.is_code():
-                code_segment = segment
-            memory = segment.load_memory(memory)
+            code_segment = None
+            for segment in segments:
+                if segment.is_code():
+                    code_segment = segment
+                memory = segment.load_memory(memory)
 
-        return memory.dump(symbols, code_segment)
+            memory_dump = memory.dump(symbols, code_segment)
+
+            for segment in segments:
+                listing += segment.get_listing()
+            listing += "\n\t.end"
+        return listing, memory_dump, errors
 
     def assemble_file(self, file_name):
-        print("Assemble {}".format(file_name))
         segments = self.sap1_parser.parse_file(file_name)
 
-        self.assemble_segments(segments)
+        return self.assemble_segments(segments)
 
     def assemble(self, text):
-        print("Assemble {}".format(text))
         segments = self.sap1_parser.parse_strings(text)
 
         return self.assemble_segments(segments)

@@ -72,3 +72,10 @@ class Segment:
             memory.set_memory(cell.address, cell.get_memory())
 
         return memory
+
+    def get_listing(self):
+        listing = "\n\t.org {}\n".format(self.start)
+        for cell in self.cell_list:
+            listing += cell.get_listing()
+
+        return listing
