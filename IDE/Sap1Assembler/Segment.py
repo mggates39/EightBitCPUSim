@@ -13,6 +13,7 @@ class Segment:
         self.label_cell = None
         self.cell_list = []
         self.labels = []
+        self.errors = []
 
     def get_size(self):
         return self.start + self.length
@@ -40,22 +41,22 @@ class Segment:
                 cell.operator = operator
                 cell.operand = operand
                 self.label_cell = None
-        else:
-            print("ERROR: Segment will not fit in memory")
-            exit(-1)
 
-        self.cell_list.append(cell)
-        if cell.label is not None:
-            self.labels.append((cell.address, cell.label))
-        self.address += 1
-        self.length += 1
+            self.cell_list.append(cell)
+            if cell.label is not None:
+                self.labels.append((cell.address, cell.label))
+            self.address += 1
+            self.length += 1
+
+        else:
+            self.errors.append("ERROR: Segment will not fit in memory at address {}!|".format(self.address))
+
 
     def add_label(self, label):
         if self.address <= MAX_ADDRESS:
             self.label_cell = Cell(self.address, label)
         else:
-            print("ERROR: Segment will not fit in memory")
-            exit(-1)
+            self.errors.append("ERROR: Segment will not fit in memory at address {}!|".format(self.address))
 
     def add_instruction(self, label, operator, operand=None):
         self.add_cell(label, operator, operand)
@@ -65,7 +66,10 @@ class Segment:
 
     def assemble(self, labels, instructions):
         for cell in self.cell_list:
-            cell.assemble(labels, instructions)
+            error = cell.assemble(labels, instructions)
+            if error != "":
+                self.errors.append(error)
+
 
     def load_memory(self, memory):
         for cell in self.cell_list:
@@ -79,3 +83,6 @@ class Segment:
             listing += cell.get_listing()
 
         return listing
+
+    def get_errors(self):
+        return self.errors

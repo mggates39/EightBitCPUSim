@@ -8,9 +8,10 @@ class Cell:
         self.operand = operand
         self.op_code = None
         self.value = None
+        self.good = True
 
-    @staticmethod
-    def back_patch_label(operand, labels):
+    def back_patch_label(self, operand, labels):
+        error = ""
         value = operand
         for label in labels:
             if operand == label[1]:
@@ -20,16 +21,17 @@ class Cell:
         try:
             value = int(value)
         except ValueError:
-            print("ERROR: Label {} not found.".format(value))
-            exit(-3)
+            error = "ERROR: Label {} not found at address {}.\n".format(value, self.address)
+            self.good = False
 
-        return value
+        return value, error
 
     def assemble(self, labels, instructions):
+        error = ""
         if self.operator is not None:
             self.op_code = instructions.lookup_op_code(self.operator)
             if self.operand is not None:
-                self.value = self.back_patch_label(self.operand, labels)
+                self.value, error = self.back_patch_label(self.operand, labels)
                 if instructions.is_operand_numeric(self.operator):
                     self.operand = "{}".format(self.value)
                 else:
@@ -39,12 +41,15 @@ class Cell:
                 self.operand = ''
         else:
             self.value = self.operand
+        return error
 
     def get_memory(self):
-        if self.op_code is not None:
-            mem_value = self.op_code << 4 | (self.value & 0xF)
-        else:
-            mem_value = self.value & 0xFF
+        mem_value = 0
+        if self.good:
+            if self.op_code is not None:
+                mem_value = self.op_code << 4 | (self.value & 0xF)
+            else:
+                mem_value = self.value & 0xFF
 
         return mem_value
 

@@ -25,6 +25,7 @@ class Parser:
     def __init__(self) -> None:
         super().__init__()
         self.segments = []
+        self.errors = []
         self.active_segment = None
 
     def get_current_segment(self):
@@ -68,10 +69,10 @@ class Parser:
                 previous_segment = segment
             else:
                 if previous_segment.overlaps(segment):
-                    print("ERROR: Segments overlap: {} segment at {} through {} and {} segment at {} through {}".format(
-                        previous_segment.type, previous_segment.start, previous_segment.address,
-                        segment.type, segment.start, segment.address, ))
                     overlap = True
+                    self.errors.append("ERROR: Segments overlap: {} segment at {} through {} and {} segment at {} through {}!\n".format(
+                        previous_segment.type, previous_segment.start, previous_segment.address,
+                        segment.type, segment.start, segment.address))
                 previous_segment = segment
 
         return overlap
@@ -112,10 +113,9 @@ class Parser:
             self.parse_fields(fields)
 
         if self.end_segment():
-            print("WARNING: Source file does not have .end directive.")
+            self.errors.append("WARNING: Source file does not have .end directive.")
 
-        if self.check_for_overlap():
-            exit(-1)
+        self.check_for_overlap()
 
         return self.segments
 
@@ -124,3 +124,6 @@ class Parser:
         lines = file.readlines()
 
         return self.parse_strings(lines)
+
+    def get_errors(self):
+        return self.errors

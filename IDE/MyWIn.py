@@ -263,7 +263,8 @@ class MainWindow(wx.Frame):
         a = Assembler()
         lines = self.tab1.control.GetValue()
         text = lines.split("\n")
-        listing, memory_dump, errors = a.assemble(text)
+        listing, memory_dump = a.assemble(text)
+        errors = a.get_errors()
         self.tab2.control.Clear()
         for line in listing:
             self.tab2.control.AppendText(line)

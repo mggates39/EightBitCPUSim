@@ -6,19 +6,18 @@ from Sap1Assembler.Parser import Parser
 class Assembler:
     def __init__(self, ) -> None:
         super().__init__()
+        self.errors = []
         self.sap1_parser = Parser()
 
-    @staticmethod
-    def assemble_segments(segments):
+    def assemble_segments(self,segments):
         symbols = []
-        errors = []
         listing = ""
         memory_dump = []
         memory = Memory()
         instructions = Instructions()
 
         if not segments:
-            errors.append("ERROR: No code found in source code\n")
+            self.errors.append("ERROR: No code found in source code\n")
         else:
 
             # Extract all the labels from the segments to create a symbol table
@@ -28,6 +27,9 @@ class Assembler:
 
             for segment in segments:
                 segment.assemble(symbols, instructions)
+                segment_errors = segment.get_errors()
+                for error in segment_errors:
+                    self.errors.append(error)
 
             code_segment = None
             for segment in segments:
@@ -40,7 +42,7 @@ class Assembler:
             for segment in segments:
                 listing += segment.get_listing()
             listing += "\n\t.end"
-        return listing, memory_dump, errors
+        return listing, memory_dump
 
     def assemble_file(self, file_name):
         segments = self.sap1_parser.parse_file(file_name)
@@ -51,3 +53,9 @@ class Assembler:
         segments = self.sap1_parser.parse_strings(text)
 
         return self.assemble_segments(segments)
+
+    def get_errors(self):
+        parse_errors = self.sap1_parser.get_errors()
+        for error in parse_errors:
+            self.errors.append(error)
+        return self.errors
