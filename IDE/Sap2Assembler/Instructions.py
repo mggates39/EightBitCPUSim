@@ -120,7 +120,7 @@ class Instructions:
         return return_value
 
     def lookup_op_code(self, operator):
-        op_code = 0
+        op_code = -1
         if self.is_operator(operator):
             op_code = self.operators[operator]["opcode"]
         return op_code
