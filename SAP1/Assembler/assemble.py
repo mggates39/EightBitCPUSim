@@ -1,38 +1,24 @@
 import argparse
 
-from Memory import Memory
-from Instructions import Instructions
-from Parser import Parser
+from Assembler import Assembler
+
 
 def assemble(file_name):
-    symbols = []
-    memory = Memory()
-    instructions = Instructions()
-    sap1_parser = Parser()
+    a = Assembler()
+    listing, memory_dump = a.assemble_file(file_name)
+    errors = a.get_errors()
 
-    print("Assemble {}".format(file_name))
-    segments = sap1_parser.parse_file(file_name)
+    print(listing)
 
-    if segments == []:
-        print("ERROR: No code found in source file")
-        exit(-2)
+    if len(errors):
+        print("\nErrors:")
+        for line in errors:
+            print(line[:-1])
 
-    # Extract all the lables from the segments to create a symbol table
-    for segment in segments:
-        for label in segment.labels:
-            symbols.append(label)
+    print("")
 
-    for segment in segments:
-        segment.assemble(symbols, instructions)
-
-    code_segment = None
-    for segment in segments:
-        if segment.is_code():
-            code_segment = segment
-        memory = segment.load_memory(memory)
-
-    memory.dump(symbols, code_segment)
-
+    for line in memory_dump:
+        print(line[:-1])
 
 parser = argparse.ArgumentParser(description='Assemble a SAP-1 Assembler file to binary.')
 parser.add_argument('--file', dest="file_name", required=True, help='filename to assemble')
