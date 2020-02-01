@@ -48,13 +48,13 @@ class Segment:
             self.length += 1
 
         else:
-            self.errors.append("ERROR: Segment will not fit in memory at address {}!|".format(self.address))
+            self.errors.append("ERROR: Segment will not fit in memory at address {}!\n".format(self.address))
 
     def add_label(self, label):
         if self.address <= MAX_ADDRESS:
             self.label_cell = Cell(self.address, label)
         else:
-            self.errors.append("ERROR: Segment will not fit in memory at address {}!|".format(self.address))
+            self.errors.append("ERROR: Segment will not fit in memory at address {}!\n".format(self.address))
 
     def add_instruction(self, label, operator, operand=None):
         self.add_cell(label, operator, operand)

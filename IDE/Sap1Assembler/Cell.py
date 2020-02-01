@@ -30,15 +30,21 @@ class Cell:
         error = ""
         if self.operator is not None:
             self.op_code = instructions.lookup_op_code(self.operator)
-            if self.operand is not None:
-                self.value, error = self.back_patch_label(self.operand, labels)
-                if instructions.is_operand_numeric(self.operator):
-                    self.operand = "{}".format(self.value)
-                else:
-                    self.operand = "({}) ; {}".format(self.value, self.operand)
-            else:
+            if self.op_code == -1:
+                error = "ERROR: Unknown operator {} at {}.\n".format(self.operator, self.address)
+                self.op_code = 0
                 self.value = 0
                 self.operand = ''
+            else:
+                if self.operand is not None:
+                    self.value, error = self.back_patch_label(self.operand, labels)
+                    if instructions.is_operand_numeric(self.operator):
+                        self.operand = "{}".format(self.value)
+                    else:
+                        self.operand = "({}) ; {}".format(self.value, self.operand)
+                else:
+                    self.value = 0
+                    self.operand = ''
         else:
             self.value = self.operand
         return error

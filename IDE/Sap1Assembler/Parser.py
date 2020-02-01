@@ -30,7 +30,7 @@ class Parser:
 
     def get_current_segment(self):
         if self.active_segment is None:
-            print("WARNING: No segment has been defined")
+            self.errors.append("WARNING: No segment has been defined!\n")
             self.active_segment = Segment(0, 'C')
         return self.active_segment
 
@@ -113,7 +113,7 @@ class Parser:
             self.parse_fields(fields)
 
         if self.end_segment():
-            self.errors.append("WARNING: Source file does not have .end directive.")
+            self.errors.append("WARNING: Source file does not have .end directive.\n")
 
         self.check_for_overlap()
 
