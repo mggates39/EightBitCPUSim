@@ -70,9 +70,9 @@ class Parser:
             else:
                 if previous_segment.overlaps(segment):
                     overlap = True
-                    self.errors.append("ERROR: Segments overlap: {} segment at {} through {} and {} segment at {} through {}!\n".format(
-                        previous_segment.type, previous_segment.start, previous_segment.address,
-                        segment.type, segment.start, segment.address))
+                    self.errors.append(
+                        "ERROR: Segments overlap: Segment at {} through {} and segment at {} through {}!\n".format(
+                            previous_segment.start, previous_segment.address, segment.start, segment.address))
                 previous_segment = segment
 
         return overlap

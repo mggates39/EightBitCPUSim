@@ -32,7 +32,6 @@ class Segment:
         return overlap
 
     def add_cell(self, label=None, operator=None, operand=None):
-        cell = None
         if self.address <= MAX_ADDRESS:
             if self.label_cell is None:
                 cell = Cell(self.address, label, operator, operand)
@@ -51,7 +50,6 @@ class Segment:
         else:
             self.errors.append("ERROR: Segment will not fit in memory at address {}!|".format(self.address))
 
-
     def add_label(self, label):
         if self.address <= MAX_ADDRESS:
             self.label_cell = Cell(self.address, label)
@@ -69,7 +67,6 @@ class Segment:
             error = cell.assemble(labels, instructions)
             if error != "":
                 self.errors.append(error)
-
 
     def load_memory(self, memory):
         for cell in self.cell_list:

@@ -9,7 +9,7 @@ class Assembler:
         self.errors = []
         self.sap1_parser = Parser()
 
-    def assemble_segments(self,segments):
+    def assemble_segments(self, segments):
         symbols = []
         listing = ""
         memory_dump = []

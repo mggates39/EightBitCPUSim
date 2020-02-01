@@ -105,9 +105,9 @@ class Instructions:
                                     "addressing": "Reg", "bytes": 1},
 
                           "XRA B": {"operator": "XRA B", "opcode": 0x90, "operand1": None, "operand2": None,
-                                  "addressing": "Reg", "bytes": 1},
+                                    "addressing": "Reg", "bytes": 1},
                           "XRA C": {"operator": "XRA C", "opcode": 0x91, "operand1": None, "operand2": None,
-                                  "addressing": "Reg", "bytes": 1},
+                                    "addressing": "Reg", "bytes": 1},
 
                           "XRI": {"operator": "XRI", "opcode": 0xEE, "operand1": "N", "operand2": None,
                                   "addressing": "Imm", "bytes": 2}

@@ -28,18 +28,21 @@ class Memory:
             if address < len(code_cells):
                 if len(label):
                     if code_cells[address].operator is not None:
-                        lines.append("0b{0:08b},".format(x)+" // {}: {} {}\n".format(label, code_cells[address].operator, code_cells[address].operand))
+                        lines.append(
+                            "0b{0:08b},".format(x) + " // {}: {} {}\n".format(label, code_cells[address].operator,
+                                                                              code_cells[address].operand))
                     else:
-                        lines.append("0b{0:08b},".format(x)+" // {}: {}\n".format(label, x))
+                        lines.append("0b{0:08b},".format(x) + " // {}: {}\n".format(label, x))
                 elif code_cells[address].operator is not None:
-                    lines.append("0b{0:08b},".format(x)+" //   {} {}\n".format(code_cells[address].operator, code_cells[address].operand))
+                    lines.append("0b{0:08b},".format(x) + " //   {} {}\n".format(code_cells[address].operator,
+                                                                                 code_cells[address].operand))
                 else:
-                    lines.append("0b{0:08b},".format(x)+" // {}: {}\n".format(label, x))
+                    lines.append("0b{0:08b},".format(x) + " // {}: {}\n".format(label, x))
             else:
                 if len(label):
-                    lines.append("0b{0:08b},".format(x)+" // {}: {}\n".format(label, x))
+                    lines.append("0b{0:08b},".format(x) + " // {}: {}\n".format(label, x))
                 else:
-                    lines.append("0b{0:08b},".format(x)+" //   {}\n".format(x))
+                    lines.append("0b{0:08b},".format(x) + " //   {}\n".format(x))
 
             address += 1
 
