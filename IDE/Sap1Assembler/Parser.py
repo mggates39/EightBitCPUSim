@@ -48,7 +48,9 @@ class Parser:
     def process_directives(self, label, directive, argument=None):
         if argument is None:
             argument = 0
-        if directive == '.corg':
+        if directive == '.org':
+            self.start_segment(int(argument), 'C')
+        elif directive == '.corg':
             self.start_segment(int(argument), 'C')
         elif directive == '.dorg':
             self.start_segment(int(argument), 'D')

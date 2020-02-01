@@ -1,7 +1,7 @@
 ###############
 # Test Add             #
 ###############
-	.corg 0
+	.org 0
 start:	LDA (x)
 	ADD (y)
 	OUT
