@@ -349,58 +349,43 @@ class MainWindow(wx.Frame):
                                                    directive_attr)
                         if len(fields) > 1:
                             current_position = start_of_line + line.find(fields[1])
-                            self.tab1.control.SetStyle(
-                                current_position,
-                                (current_position + len(fields[1])),
-                                operand_attr)
+                            self.tab1.control.SetStyle(current_position, (current_position + len(fields[1])),
+                                                       operand_attr)
 
                     elif fields[0].endswith(':'):
                         current_position = start_of_line + line.find(fields[0])
-                        self.tab1.control.SetStyle(current_position, (current_position + len(fields[0])),
-                                                   label_attr)
+                        self.tab1.control.SetStyle(current_position, (current_position + len(fields[0])), label_attr)
                         if len(fields) > 1:
                             if fields[1].startswith('.'):
                                 current_position = start_of_line + line.find(fields[1])
-                                self.tab1.control.SetStyle(current_position,
-                                                           (current_position + len(fields[1])),
+                                self.tab1.control.SetStyle(current_position, (current_position + len(fields[1])),
                                                            directive_attr)
                                 if len(fields) > 2:
                                     current_position = start_of_line + line.find(fields[2])
-                                    self.tab1.control.SetStyle(
-                                        current_position,
-                                        (current_position + len(fields[2])),
-                                        operand_attr)
+                                    self.tab1.control.SetStyle(current_position, (current_position + len(fields[2])),
+                                                               operand_attr)
 
                             else:
                                 current_position = start_of_line + line.find(fields[1])
-                                self.tab1.control.SetStyle(current_position,
-                                                           (current_position + len(fields[1])),
+                                self.tab1.control.SetStyle(current_position, (current_position + len(fields[1])),
                                                            operator_attr)
                                 if len(fields) == 3:
                                     target = make_target(fields[2])
                                     current_position = start_of_line + line.find(fields[2])
                                     if is_label(fields[2]):
                                         if self.is_valid_label(target):
-                                            self.tab1.control.SetStyle(
-                                                (current_position + 1),
-                                                (current_position + len(target) + 1),
-                                                label_attr)
+                                            self.tab1.control.SetStyle((current_position + 1),
+                                                                       (current_position + len(target) + 1), label_attr)
                                         else:
-                                            self.tab1.control.SetStyle(
-                                                (current_position + 1),
-                                                (current_position + len(target) + 1),
-                                                error_attr)
+                                            self.tab1.control.SetStyle((current_position + 1),
+                                                                       (current_position + len(target) + 1), error_attr)
                                     else:
-                                        self.tab1.control.SetStyle(
-                                            (current_position + 1),
-                                            (current_position + len(target) + 1),
-                                            operand_attr)
+                                        self.tab1.control.SetStyle((current_position + 1),
+                                                                   (current_position + len(target) + 1), operand_attr)
 
                     else:
                         current_position = start_of_line + line.find(fields[0])
-                        self.tab1.control.SetStyle(current_position,
-                                                   (current_position + len(fields[0])),
-                                                   operator_attr)
+                        self.tab1.control.SetStyle(current_position, (current_position + len(fields[0])), operator_attr)
                         if len(fields) == 2:
                             target = make_target(fields[1])
                             current_position = start_of_line + line.find(fields[1])
@@ -412,10 +397,8 @@ class MainWindow(wx.Frame):
                                     self.tab1.control.SetStyle((current_position + 1),
                                                                (current_position + len(target) + 1), error_attr)
                             else:
-                                self.tab1.control.SetStyle(
-                                    (current_position + 1),
-                                    (current_position + len(target)),
-                                    operand_attr)
+                                self.tab1.control.SetStyle((current_position + 1), (current_position + len(target)),
+                                                           operand_attr)
 
             start_of_line += length + 1
 
