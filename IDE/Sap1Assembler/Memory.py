@@ -1,4 +1,4 @@
-def get_label(labels, address):
+def get_label_for_address(labels, address):
     label = ""
     for labelTuple in labels:
         if labelTuple[0] == address:
@@ -24,7 +24,7 @@ class Memory:
 
         address = 0
         for x in self.mem:
-            label = get_label(labels, address)
+            label = get_label_for_address(labels, address)
             if address < len(code_cells):
                 if len(label):
                     if code_cells[address].operator is not None:
