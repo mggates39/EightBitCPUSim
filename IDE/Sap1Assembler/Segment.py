@@ -15,7 +15,7 @@ class Segment:
         self.labels = []
         self.errors = []
 
-    def get_size(self):
+    def get_last_address(self):
         return self.start + self.length
 
     def is_code(self):
@@ -24,10 +24,10 @@ class Segment:
     def overlaps(self, other):
         overlap = False
         if other.start < self.start:
-            if other.get_size() > self.start:
+            if other.get_last_address() > self.start:
                 overlap = True
         else:
-            if self.get_size() > other.start:
+            if self.get_last_address() > other.start:
                 overlap = True
         return overlap
 
