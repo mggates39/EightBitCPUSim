@@ -10,7 +10,7 @@ from Sap1Assembler.Parser import make_target
 
 
 # Define the tab content as classes:
-class TabOne(wx.Panel):
+class SourceTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.control = wx.TextCtrl(self, style=wx.TE_PROCESS_TAB | wx.TE_RICH | wx.TE_MULTILINE)
@@ -25,7 +25,7 @@ class TabOne(wx.Panel):
         self.sizer.Fit(self)
 
 
-class TabTwo(wx.Panel):
+class ListingTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
@@ -45,7 +45,7 @@ class TabTwo(wx.Panel):
         self.control.AppendText("\n\n\tAssemble Source to see listing!")
 
 
-class TabThree(wx.Panel):
+class MemoryTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
@@ -65,7 +65,7 @@ class TabThree(wx.Panel):
         self.control.AppendText("\n\n\tAssemble Source to see memory!")
 
 
-class TabFour(wx.Panel):
+class ExecutionTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         wx.StaticText(self, -1, "This is the fourth tab", (20, 20))
@@ -81,7 +81,7 @@ class MainWindow(wx.Frame):
 
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
-        wx.Frame.__init__(self, parent, title=title, size=(400, 400))
+        wx.Frame.__init__(self, parent, title=title, size=(600, 600))
         self.CreateStatusBar()  # A Status bar in the bottom of the window
 
         # Create a panel and notebook (tabs holder)
@@ -89,16 +89,16 @@ class MainWindow(wx.Frame):
         self.nb = wx.Notebook(p)
 
         # Create the tab windows
-        self.tab1 = TabOne(self.nb)
-        self.tab2 = TabTwo(self.nb)
-        self.tab3 = TabThree(self.nb)
-        self.tab4 = TabFour(self.nb)
+        self.source_code_tab = SourceTab(self.nb)
+        self.listing_tab = ListingTab(self.nb)
+        self.memory_tab = MemoryTab(self.nb)
+        self.execution_tab = ExecutionTab(self.nb)
 
         # Add the windows to tabs and name them.
-        self.nb.AddPage(self.tab1, "Source")
-        self.nb.AddPage(self.tab2, "Listing")
-        self.nb.AddPage(self.tab3, "Memory")
-        self.nb.AddPage(self.tab4, "Execution")
+        self.nb.AddPage(self.source_code_tab, "Source")
+        self.nb.AddPage(self.listing_tab, "Listing")
+        self.nb.AddPage(self.memory_tab, "Memory")
+        self.nb.AddPage(self.execution_tab, "Execution")
 
         # Set notebook in a sizer to create the layout
         sizer = wx.BoxSizer()
@@ -135,10 +135,10 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_exit, menu_exit)
         self.Bind(wx.EVT_CLOSE, self.on_close, self)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
-        self.Bind(wx.EVT_TEXT, self.highlight_code, self.tab1.control)
+        self.Bind(wx.EVT_TEXT, self.highlight_code, self.source_code_tab.control)
 
         self.Show()
-        self.tab1.control.DiscardEdits()
+        self.source_code_tab.control.DiscardEdits()
         self.on_new()
 
     def on_about(self, e):
@@ -154,7 +154,7 @@ class MainWindow(wx.Frame):
 
     def check_and_save(self, e):
         saved = wx.ID_OK
-        if self.tab1.control.IsModified():
+        if self.source_code_tab.control.IsModified():
             exist_dlg = wx.MessageDialog(self, "Save current changes?", "Save changes " + self.filename,
                                          wx.YES_NO | wx.ICON_WARNING)
             if exist_dlg.ShowModal() == wx.ID_YES:
@@ -181,10 +181,10 @@ class MainWindow(wx.Frame):
 
     def on_new(self, e=None):
         if self.check_and_save(e) == wx.ID_OK:
-            self.tab2.reset_listing()
-            self.tab3.reset_memory()
-            self.tab1.control.Clear()
-            self.tab1.control.DiscardEdits()
+            self.listing_tab.reset_listing()
+            self.memory_tab.reset_memory()
+            self.source_code_tab.control.Clear()
+            self.source_code_tab.control.DiscardEdits()
             self.filename = 'untitled'
             self.SetTitle(self.generate_title(self.filename))
             self.nb.SetSelection(0)
@@ -193,7 +193,7 @@ class MainWindow(wx.Frame):
         new_title = self.base_title
         if filename != '':
             new_title += " - "
-            if self.tab1.control.IsModified():
+            if self.source_code_tab.control.IsModified():
                 new_title += "*"
             new_title += filename
         return new_title
@@ -208,14 +208,14 @@ class MainWindow(wx.Frame):
                 self.filename = dlg.GetFilename()
                 self.directory_name = dlg.GetDirectory()
                 f = open(os.path.join(self.directory_name, self.filename), 'r')
-                self.tab1.control.SetValue(f.read())
+                self.source_code_tab.control.SetValue(f.read())
                 f.close()
                 self.highlight_code(e)
-                self.tab1.control.SetModified(False)
-                self.tab1.control.DiscardEdits()
+                self.source_code_tab.control.SetModified(False)
+                self.source_code_tab.control.DiscardEdits()
                 self.SetTitle(self.generate_title(self.filename))
-                self.tab2.reset_listing()
-                self.tab3.reset_memory()
+                self.listing_tab.reset_listing()
+                self.memory_tab.reset_memory()
                 self.nb.SetSelection(0)
             dlg.Destroy()
 
@@ -226,11 +226,11 @@ class MainWindow(wx.Frame):
         """
 
         f = open(os.path.join(self.directory_name, self.filename), 'w')
-        lines = self.tab1.control.GetValue()
+        lines = self.source_code_tab.control.GetValue()
         f.write(lines)
         f.close()
-        self.tab1.control.SetModified(False)
-        self.tab1.control.DiscardEdits()
+        self.source_code_tab.control.SetModified(False)
+        self.source_code_tab.control.DiscardEdits()
         self.SetTitle(self.generate_title(self.filename))
         return wx.ID_OK
 
@@ -270,23 +270,23 @@ class MainWindow(wx.Frame):
         :param e:
         """
         a = Assembler()
-        lines = self.tab1.control.GetValue()
+        lines = self.source_code_tab.control.GetValue()
         text = lines.split("\n")
         listing, memory_dump = a.assemble(text)
         errors = a.get_errors()
-        self.tab2.control.Clear()
+        self.listing_tab.control.Clear()
         for line in listing:
-            self.tab2.control.AppendText(line)
+            self.listing_tab.control.AppendText(line)
         if len(errors):
-            self.tab2.control.AppendText("\n")
-            self.tab2.control.AppendText("ERRORS:\n")
-            self.tab2.control.AppendText("\n")
+            self.listing_tab.control.AppendText("\n")
+            self.listing_tab.control.AppendText("ERRORS:\n")
+            self.listing_tab.control.AppendText("\n")
             for line in errors:
-                self.tab2.control.AppendText(line)
+                self.listing_tab.control.AppendText(line)
             self.nb.SetSelection(1)
-        self.tab3.control.Clear()
+        self.memory_tab.control.Clear()
         for line in memory_dump:
-            self.tab3.control.AppendText(line)
+            self.memory_tab.control.AppendText(line)
 
     def is_valid_label(self, label):
         """
@@ -308,7 +308,7 @@ class MainWindow(wx.Frame):
             this would also fix the off by one errors I am seeing here and there
             :param e: """
         self.symbol_table = []
-        font = self.tab1.control.GetFont()
+        font = self.source_code_tab.control.GetFont()
         comment_attr = wx.TextAttr(self.color_database.Find("LIGHT GREY"), wx.WHITE, font=font)
         # label_attr = wx.TextAttr(self.color_database.Find("NAVY"), wx.WHITE, font=font)
         label_attr = wx.TextAttr(wx.BLUE, wx.WHITE, font=font)
@@ -316,15 +316,15 @@ class MainWindow(wx.Frame):
         directive_attr = wx.TextAttr(self.color_database.Find("GOLD"), wx.WHITE, font=font)
         operand_attr = wx.TextAttr(wx.BLACK, wx.WHITE, font=font)
 
-        operator_font = self.tab1.control.GetFont()
+        operator_font = self.source_code_tab.control.GetFont()
         operator_font.SetWeight(wx.FONTWEIGHT_BOLD)
         operator_attr = wx.TextAttr(wx.BLACK, wx.WHITE, font=operator_font)
 
-        max_line = self.tab1.control.GetNumberOfLines()
+        max_line = self.source_code_tab.control.GetNumberOfLines()
         start_of_line = 0
 
         for i in range(0, max_line):
-            line = self.tab1.control.GetLineText(i)
+            line = self.source_code_tab.control.GetLineText(i)
             if line.startswith('#') or line.startswith(';'):
                 continue
             else:
@@ -335,70 +335,70 @@ class MainWindow(wx.Frame):
                         self.symbol_table.append(label)
 
         for i in range(0, max_line):
-            line = self.tab1.control.GetLineText(i)
-            length = self.tab1.control.GetLineLength(i)
+            line = self.source_code_tab.control.GetLineText(i)
+            length = self.source_code_tab.control.GetLineLength(i)
             if line.startswith('#') or line.startswith(';'):
-                self.tab1.control.SetStyle(start_of_line, (start_of_line + length), comment_attr)
+                self.source_code_tab.control.SetStyle(start_of_line, (start_of_line + length), comment_attr)
             else:
                 fields = line.split()
 
                 if len(fields) > 0:
                     if fields[0].startswith('.'):
                         current_position = start_of_line + line.find(fields[0])
-                        self.tab1.control.SetStyle(current_position, (current_position + (len(fields[0]))),
-                                                   directive_attr)
+                        self.source_code_tab.control.SetStyle(current_position, (current_position + (len(fields[0]))),
+                                                              directive_attr)
                         if len(fields) > 1:
                             current_position = start_of_line + line.find(fields[1])
-                            self.tab1.control.SetStyle(current_position, (current_position + len(fields[1])),
-                                                       operand_attr)
+                            self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[1])),
+                                                                  operand_attr)
 
                     elif fields[0].endswith(':'):
                         current_position = start_of_line + line.find(fields[0])
-                        self.tab1.control.SetStyle(current_position, (current_position + len(fields[0])), label_attr)
+                        self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[0])), label_attr)
                         if len(fields) > 1:
                             if fields[1].startswith('.'):
                                 current_position = start_of_line + line.find(fields[1])
-                                self.tab1.control.SetStyle(current_position, (current_position + len(fields[1])),
-                                                           directive_attr)
+                                self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[1])),
+                                                                      directive_attr)
                                 if len(fields) > 2:
                                     current_position = start_of_line + line.find(fields[2])
-                                    self.tab1.control.SetStyle(current_position, (current_position + len(fields[2])),
-                                                               operand_attr)
+                                    self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[2])),
+                                                                          operand_attr)
 
                             else:
                                 current_position = start_of_line + line.find(fields[1])
-                                self.tab1.control.SetStyle(current_position, (current_position + len(fields[1])),
-                                                           operator_attr)
+                                self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[1])),
+                                                                      operator_attr)
                                 if len(fields) == 3:
                                     target = make_target(fields[2])
                                     current_position = start_of_line + line.find(fields[2])
                                     if is_label(fields[2]):
                                         if self.is_valid_label(target):
-                                            self.tab1.control.SetStyle((current_position + 1),
-                                                                       (current_position + len(target) + 1), label_attr)
+                                            self.source_code_tab.control.SetStyle((current_position + 1),
+                                                                                  (current_position + len(target) + 1), label_attr)
                                         else:
-                                            self.tab1.control.SetStyle((current_position + 1),
-                                                                       (current_position + len(target) + 1), error_attr)
+                                            self.source_code_tab.control.SetStyle((current_position + 1),
+                                                                                  (current_position + len(target) + 1), error_attr)
                                     else:
-                                        self.tab1.control.SetStyle((current_position + 1),
-                                                                   (current_position + len(target) + 1), operand_attr)
+                                        self.source_code_tab.control.SetStyle((current_position + 1),
+                                                                              (current_position + len(target) + 1), operand_attr)
 
                     else:
                         current_position = start_of_line + line.find(fields[0])
-                        self.tab1.control.SetStyle(current_position, (current_position + len(fields[0])), operator_attr)
+                        self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[0])), operator_attr)
                         if len(fields) == 2:
                             target = make_target(fields[1])
                             current_position = start_of_line + line.find(fields[1])
                             if is_label(fields[1]):
                                 if self.is_valid_label(target):
-                                    self.tab1.control.SetStyle((current_position + 1),
-                                                               (current_position + len(target) + 1), label_attr)
+                                    self.source_code_tab.control.SetStyle((current_position + 1),
+                                                                          (current_position + len(target) + 1), label_attr)
                                 else:
-                                    self.tab1.control.SetStyle((current_position + 1),
-                                                               (current_position + len(target) + 1), error_attr)
+                                    self.source_code_tab.control.SetStyle((current_position + 1),
+                                                                          (current_position + len(target) + 1), error_attr)
                             else:
-                                self.tab1.control.SetStyle((current_position + 1), (current_position + len(target)),
-                                                           operand_attr)
+                                self.source_code_tab.control.SetStyle((current_position + 1), (current_position + len(target)),
+                                                                      operand_attr)
 
             start_of_line += length + 1
 
