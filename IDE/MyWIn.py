@@ -272,11 +272,12 @@ class MainWindow(wx.Frame):
         a = Assembler()
         lines = self.source_code_tab.control.GetValue()
         text = lines.split("\n")
-        listing, memory_dump = a.assemble(text)
-        errors = a.get_errors()
+        listing = a.assemble(text)
         self.listing_tab.control.Clear()
         for line in listing:
             self.listing_tab.control.AppendText(line)
+
+        errors = a.get_errors()
         if len(errors):
             self.listing_tab.control.AppendText("\n")
             self.listing_tab.control.AppendText("ERRORS:\n")
@@ -284,6 +285,10 @@ class MainWindow(wx.Frame):
             for line in errors:
                 self.listing_tab.control.AppendText(line)
             self.nb.SetSelection(1)
+        else:
+            self.nb.SetSelection(0)
+
+        memory_dump = a.get_memory_dump()
         self.memory_tab.control.Clear()
         for line in memory_dump:
             self.memory_tab.control.AppendText(line)

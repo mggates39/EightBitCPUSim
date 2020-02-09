@@ -8,13 +8,16 @@ class Assembler:
         super().__init__()
         self.errors = []
         self.sap1_parser = Parser()
+        self.memory = None
+        self.memory_dump = []
+        self.symbols = []
 
     def assemble_segments(self, segments):
-        symbols = []
-        listing = ""
-        memory_dump = []
-        memory = Memory()
+        self.symbols = []
+        self.memory = Memory()
+        self.memory_dump = []
         instructions = Instructions()
+        listing = ""
 
         if not segments:
             self.errors.append("ERROR: No code found in source code\n")
@@ -23,10 +26,10 @@ class Assembler:
             # Extract all the labels from the segments to create a symbol table
             for segment in segments:
                 for label in segment.labels:
-                    symbols.append(label)
+                    self.symbols.append(label)
 
             for segment in segments:
-                segment.assemble(symbols, instructions)
+                segment.assemble(self.symbols, instructions)
                 segment_errors = segment.get_errors()
                 for error in segment_errors:
                     self.errors.append(error)
@@ -35,23 +38,23 @@ class Assembler:
             for segment in segments:
                 if segment.is_code():
                     code_segment = segment
-                memory = segment.load_memory(memory)
+                self.memory = segment.load_memory(self.memory)
 
-            memory_dump = memory.dump(symbols, code_segment)
+            self.memory_dump = self.memory.dump(self.symbols, code_segment)
 
             for segment in segments:
                 listing += segment.get_listing()
             listing += "\n\t.end"
-        return listing, memory_dump
+
+        return listing
 
     def assemble_file(self, file_name):
-        segments = self.sap1_parser.parse_file(file_name)
-
-        return self.assemble_segments(segments)
+        file = open(file_name, "r")
+        lines = file.readlines()
+        return self.assemble(lines)
 
     def assemble(self, text):
         segments = self.sap1_parser.parse_strings(text)
-
         return self.assemble_segments(segments)
 
     def get_errors(self):
@@ -59,3 +62,9 @@ class Assembler:
         for error in parse_errors:
             self.errors.append(error)
         return self.errors
+
+    def get_memory_dump(self):
+        return self.memory_dump
+
+    def get_memory(self):
+        return self.memory
