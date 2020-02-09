@@ -1,7 +1,7 @@
 import os
 
-import wx
-import wx.stc
+import wx, wx.adv, wx.stc
+import sys
 
 from Sap1Assembler.Assembler import Assembler
 from Sap1Assembler.Parser import is_label
@@ -147,10 +147,46 @@ class MainWindow(wx.Frame):
 
         :param e:
         """
-        dlg = wx.MessageDialog(self, " A SAP-1 code editor, assembler, and simulator \n in wxPython", "About SAP-1 IDE",
-                               wx.OK | wx.ICON_INFORMATION)
-        dlg.ShowModal()  # Shows it
-        dlg.Destroy()  # finally destroy it when finished.
+        vers = {}
+        vers["python"] = sys.version.split()[0]
+        vers["wxpy"] = wx.VERSION_STRING
+
+        description = """
+        SAP-1 IDE is an basic SAP assebly code editor, assembler, and 
+        simulator.  It provides interactive syntax highlighting, listings 
+        and memory dumps sutiable for including in the JavaScript simulator.
+        
+        It is running on version %(wxpy)s of wxPython and %(python)s of Python.
+        """
+
+        licence = """
+        SAP-1 IDE is free software; you can redistribute it and/or modify it under 
+        the terms of the GNU General Public License as published by 
+        the Free Software Foundation; either version 2 of the License, 
+        or (at your option) any later version.
+
+        SAP-1 IDE is distributed in the hope that it will be useful, 
+        but WITHOUT ANY WARRANTY; without even the implied warranty of 
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+        See the GNU General Public License for more details. 
+        You should have received a copy of the GNU General Public License 
+        along with SAP-1 IDE; if not, write to the Free Software Foundation, Inc., 
+        59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"""
+
+        info = wx.adv.AboutDialogInfo()
+
+        # info.SetIcon(wx.Icon('hunter.png', wx.BITMAP_TYPE_PNG))
+        info.SetName('SAP-1 IDE')
+        info.SetVersion('Alpha 0.9')
+        info.SetDescription(description % vers)
+        info.SetWebSite("https://github.com/mggates39/EightBitCPUSim", "GitHub Repository")
+        info.SetCopyright('(C) 2019 - 2020 Marshall Gates')
+        info.SetLicence(licence)
+        info.AddDeveloper('Marshall Gates')
+        info.AddDocWriter('Marshall Gates')
+        info.AddTranslator('Marshall Gates')
+
+        wx.adv.AboutBox(info, self)
 
     def check_and_save(self, e):
         saved = wx.ID_OK
