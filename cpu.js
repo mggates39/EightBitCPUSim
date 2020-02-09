@@ -350,8 +350,8 @@ function updateMemoryInputBoxes() {
 function blinkenLights() {
     drawLights(document.getElementById('pc-lights'), printBinary(cpu.pc).split(''), 'blue');
     drawLights(document.getElementById('acc-lights'), printBinary(cpu.reg_acc, 8).split(''), 'green');
-    drawLights(document.getElementById('mar-lights'), printBinary(cpu.mar).split(''));
-    drawLights(document.getElementById('ins-lights-data'), printBinary(cpu.reg_ins & (0b00001111), 4).split(''));
+    drawLights(document.getElementById('mar-lights'), printBinary(cpu.mar).split(''), 'red');
+    drawLights(document.getElementById('ins-lights-data'), printBinary(cpu.reg_ins & (0b00001111), 4).split(''), 'red');
     drawLights(document.getElementById('ins-lights-opcode'), printBinary((cpu.reg_ins >> 4), 4).split(''), 'orange');
     drawLights(document.getElementById('tmp-lights'), printBinary(cpu.reg_tmp, 8).split(''), 'green');
     drawLights(document.getElementById('alu-lights'), printBinary(cpu.alu, 8).split(''));
