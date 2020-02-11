@@ -29,7 +29,12 @@ class LEDArray(wx.Panel):
         if topic is not None:
             pub.subscribe(self.set_value, topic)
 
-    def set_value(self, new_value):
+    def set_value(self, new_value: int) -> None:
+        """
+        Set the value to be displayed by the LED Array.
+        :type new_value: int
+        :rtype: None
+        """
         i = self.number_leds - 1
         if self.value != new_value:
             self.value = new_value

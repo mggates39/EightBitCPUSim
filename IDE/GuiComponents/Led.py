@@ -11,7 +11,12 @@ class LED(wx.Panel):
         self.light_color = light_color
         self.dark_color = dark_color
 
-    def light(self, on_off: bool):
+    def light(self, on_off: bool) -> None:
+        """Turn the LED On or Off
+
+        Keyword Arguments:
+        on_off - True to turn on the LED
+        """
         self.lit = on_off
         self.Refresh()
 
