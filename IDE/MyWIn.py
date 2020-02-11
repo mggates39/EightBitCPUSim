@@ -1,7 +1,9 @@
 import os
-
-import wx, wx.adv, wx.stc
 import sys
+
+import wx
+import wx.adv
+import wx.stc
 
 from Sap1Assembler.Assembler import Assembler
 from Sap1Assembler.Parser import is_label
@@ -147,16 +149,14 @@ class MainWindow(wx.Frame):
 
         :param e:
         """
-        vers = {}
-        vers["python"] = sys.version.split()[0]
-        vers["wxpy"] = wx.VERSION_STRING
+        versions = {"python": sys.version.split()[0], "wx_version": wx.VERSION_STRING}
 
         description = """
-        SAP-1 IDE is an basic SAP assebly code editor, assembler, and 
+        SAP-1 IDE is an basic SAP assembly code editor, assembler, and 
         simulator.  It provides interactive syntax highlighting, listings 
-        and memory dumps sutiable for including in the JavaScript simulator.
+        and memory dumps suitable for including in the JavaScript simulator.
         
-        It is running on version %(wxpy)s of wxPython and %(python)s of Python.
+        It is running on version %(wx_version)s of wxPython and %(python)s of Python.
         """
 
         licence = """
@@ -178,7 +178,7 @@ class MainWindow(wx.Frame):
         # info.SetIcon(wx.Icon('hunter.png', wx.BITMAP_TYPE_PNG))
         info.SetName('SAP-1 IDE')
         info.SetVersion('Alpha 0.9')
-        info.SetDescription(description % vers)
+        info.SetDescription(description % versions)
         info.SetWebSite("https://github.com/mggates39/EightBitCPUSim", "GitHub Repository")
         info.SetCopyright('(C) 2019 - 2020 Marshall Gates')
         info.SetLicence(licence)
@@ -395,20 +395,24 @@ class MainWindow(wx.Frame):
 
                     elif fields[0].endswith(':'):
                         current_position = start_of_line + line.find(fields[0])
-                        self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[0])), label_attr)
+                        self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[0])),
+                                                              label_attr)
                         if len(fields) > 1:
                             if fields[1].startswith('.'):
                                 current_position = start_of_line + line.find(fields[1])
-                                self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[1])),
+                                self.source_code_tab.control.SetStyle(current_position,
+                                                                      (current_position + len(fields[1])),
                                                                       directive_attr)
                                 if len(fields) > 2:
                                     current_position = start_of_line + line.find(fields[2])
-                                    self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[2])),
+                                    self.source_code_tab.control.SetStyle(current_position,
+                                                                          (current_position + len(fields[2])),
                                                                           operand_attr)
 
                             else:
                                 current_position = start_of_line + line.find(fields[1])
-                                self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[1])),
+                                self.source_code_tab.control.SetStyle(current_position,
+                                                                      (current_position + len(fields[1])),
                                                                       operator_attr)
                                 if len(fields) == 3:
                                     target = make_target(fields[2])
@@ -416,29 +420,36 @@ class MainWindow(wx.Frame):
                                     if is_label(fields[2]):
                                         if self.is_valid_label(target):
                                             self.source_code_tab.control.SetStyle((current_position + 1),
-                                                                                  (current_position + len(target) + 1), label_attr)
+                                                                                  (current_position + len(target) + 1),
+                                                                                  label_attr)
                                         else:
                                             self.source_code_tab.control.SetStyle((current_position + 1),
-                                                                                  (current_position + len(target) + 1), error_attr)
+                                                                                  (current_position + len(target) + 1),
+                                                                                  error_attr)
                                     else:
                                         self.source_code_tab.control.SetStyle((current_position + 1),
-                                                                              (current_position + len(target) + 1), operand_attr)
+                                                                              (current_position + len(target) + 1),
+                                                                              operand_attr)
 
                     else:
                         current_position = start_of_line + line.find(fields[0])
-                        self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[0])), operator_attr)
+                        self.source_code_tab.control.SetStyle(current_position, (current_position + len(fields[0])),
+                                                              operator_attr)
                         if len(fields) == 2:
                             target = make_target(fields[1])
                             current_position = start_of_line + line.find(fields[1])
                             if is_label(fields[1]):
                                 if self.is_valid_label(target):
                                     self.source_code_tab.control.SetStyle((current_position + 1),
-                                                                          (current_position + len(target) + 1), label_attr)
+                                                                          (current_position + len(target) + 1),
+                                                                          label_attr)
                                 else:
                                     self.source_code_tab.control.SetStyle((current_position + 1),
-                                                                          (current_position + len(target) + 1), error_attr)
+                                                                          (current_position + len(target) + 1),
+                                                                          error_attr)
                             else:
-                                self.source_code_tab.control.SetStyle((current_position + 1), (current_position + len(target)),
+                                self.source_code_tab.control.SetStyle((current_position + 1),
+                                                                      (current_position + len(target)),
                                                                       operand_attr)
 
             start_of_line += length + 1
