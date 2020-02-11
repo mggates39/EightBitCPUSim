@@ -1,11 +1,12 @@
 import wx
 
+
 class LED(wx.Panel):
     def __init__(self, parent, light_color='#36ff27', dark_color='#077100'):
-        wx.Panel.__init__(self, parent, size=(15, 15))
+        wx.Panel.__init__(self, parent, size=(14, 14))
         self.parent = parent
         # self.SetBackgroundColour('#000000')
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_PAINT, self.on_paint)
         self.lit = False
         self.light_color = light_color
         self.dark_color = dark_color
@@ -14,7 +15,7 @@ class LED(wx.Panel):
         self.lit = on_off
         self.Refresh()
 
-    def OnPaint(self, e):
+    def on_paint(self, e):
         dc = wx.PaintDC(self)
 
         if self.lit:
@@ -23,4 +24,4 @@ class LED(wx.Panel):
             color = self.dark_color
 
         dc.SetBrush(wx.Brush(color))
-        dc.DrawEllipse(0, 0, 14, 14)
+        dc.DrawEllipse(0, 0, 13, 13)

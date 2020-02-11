@@ -1,6 +1,7 @@
 import wx
+from pubsub import pub
 
-from GuiComponents.Led_Array import LED_Array
+from GuiComponents.LedArray import LEDArray
 
 
 class CPU(wx.Panel):
@@ -10,9 +11,9 @@ class CPU(wx.Panel):
 
         self.parent = parent
         self.SetBackgroundColour('#000000')
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_PAINT, self.on_paint)
 
-    def OnPaint(self, e):
+    def on_paint(self, e):
 
         dc = wx.PaintDC(self)
 
@@ -44,41 +45,62 @@ class Example(wx.Frame):
 
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
+        self.sel = 0
+        self.cpu = None
+        self.slider = None
+        self.blue_leds = None
+        self.green_leds = None
+        self.orange_leds = None
+        self.red_leds = None
 
-        self.InitUI()
+        self.init_ui()
 
-    def InitUI(self):
+    def init_ui(self):
         self.sel = 0
 
         panel = wx.Panel(self)
-        centerPanel = wx.Panel(panel)
-        rightPanel = wx.Panel(panel)
+        center_panel = wx.Panel(panel)
+        right_panel = wx.Panel(panel)
 
-        self.cpu = CPU(centerPanel)
+        self.cpu = CPU(center_panel)
 
-        hbox = wx.BoxSizer(wx.HORIZONTAL)
+        horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
+        vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.slider = wx.Slider(panel, value=self.sel, maxValue=100, size=(-1, 100),
                                 style=wx.VERTICAL | wx.SL_INVERSE)
         self.slider.SetFocus()
 
-        self.leds = LED_Array(rightPanel, 8)
+        self.blue_leds = LEDArray(right_panel, 8, '#0065ef', '#00075f', topic='cpu.slide')
+        self.green_leds = LEDArray(right_panel, 8, topic='cpu.slide')
+        self.orange_leds = LEDArray(right_panel, 8, '#ef7b00', '#5f3700', topic='cpu.slide')
+        self.red_leds = LEDArray(right_panel, 8, '#ef0600', '#5b0004', topic='cpu.slide')
 
-        hbox.Add(centerPanel, 0, wx.LEFT | wx.TOP, 20)
-        hbox.Add(self.slider, 0, wx.LEFT | wx.TOP, 30)
-        hbox.Add(rightPanel, 0, wx.LEFT | wx.TOP, 40)
+        vertical_box.Add(self.blue_leds, 1, wx.ALIGN_CENTER | wx.EXPAND)
+        vertical_box.Add(self.green_leds, 1, wx.ALIGN_CENTER | wx.EXPAND)
+        vertical_box.Add(self.orange_leds, 1, wx.ALIGN_CENTER | wx.EXPAND)
+        vertical_box.Add(self.red_leds, 1, wx.ALIGN_CENTER | wx.EXPAND)
+        right_panel.SetSizer(vertical_box)
+        right_panel.SetAutoLayout(1)
+        vertical_box.Fit(right_panel)
 
-        self.Bind(wx.EVT_SCROLL, self.OnScroll)
+        horizontal_box.Add(center_panel, 0, wx.LEFT | wx.TOP, 20)
+        horizontal_box.Add(self.slider, 0, wx.LEFT | wx.TOP, 30)
+        horizontal_box.Add(right_panel, 1, wx.LEFT | wx.TOP | wx.EXPAND, 30)
 
-        panel.SetSizer(hbox)
+        self.Bind(wx.EVT_SCROLL, self.on_scroll)
+
+        panel.SetSizer(horizontal_box)
+        panel.SetAutoLayout(1)
+        horizontal_box.Fit(panel)
 
         self.SetTitle("CPU")
         self.Centre()
 
-    def OnScroll(self, e):
+    def on_scroll(self, e):
         self.sel = e.GetInt()
         self.cpu.Refresh()
-        self.leds.SetValue(self.sel)
+        pub.sendMessage('cpu.slide', new_value=self.sel)
 
 
 def main():
