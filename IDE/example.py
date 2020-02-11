@@ -1,8 +1,8 @@
 import wx
-import wx.gizmos as gizmos
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedSegments import LEDSegment
 
 
 class CPU(wx.Panel):
@@ -87,13 +87,7 @@ class Example(wx.Frame):
         right_panel.SetAutoLayout(1)
         vertical_box.Fit(right_panel)
 
-        pos = wx.DefaultPosition
-        size = (100,50) #wx.DefaultSize
-        style = gizmos.LED_ALIGN_RIGHT # | gizmos.LED_DRAW_FADED
-        self.segment = gizmos.LEDNumberCtrl(far_right_panel, -1, pos, size, style)
-        # default colours are green on black
-        self.segment.SetBackgroundColour("black")
-        self.segment.SetForegroundColour("orange")
+        self.segment = LEDSegment(far_right_panel, 'green', 'black', topic='cpu.slide'),
 
         horizontal_box.Add(center_panel, 0, wx.LEFT | wx.TOP, 20)
         horizontal_box.Add(self.slider, 0, wx.LEFT | wx.TOP, 30)
@@ -113,7 +107,6 @@ class Example(wx.Frame):
         self.sel = e.GetInt()
         self.cpu.Refresh()
         pub.sendMessage('cpu.slide', new_value=self.sel)
-        self.segment.SetValue("{}".format(self.sel))
 
 
 def main():
