@@ -1,4 +1,5 @@
 import wx
+import wx.gizmos as gizmos
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
@@ -52,6 +53,7 @@ class Example(wx.Frame):
         self.green_leds = None
         self.orange_leds = None
         self.red_leds = None
+        self.segment = None
 
         self.init_ui()
 
@@ -61,6 +63,7 @@ class Example(wx.Frame):
         panel = wx.Panel(self)
         center_panel = wx.Panel(panel)
         right_panel = wx.Panel(panel)
+        far_right_panel = wx.Panel(panel)
 
         self.cpu = CPU(center_panel)
 
@@ -84,9 +87,18 @@ class Example(wx.Frame):
         right_panel.SetAutoLayout(1)
         vertical_box.Fit(right_panel)
 
+        pos = wx.DefaultPosition
+        size = (100,50) #wx.DefaultSize
+        style = gizmos.LED_ALIGN_RIGHT # | gizmos.LED_DRAW_FADED
+        self.segment = gizmos.LEDNumberCtrl(far_right_panel, -1, pos, size, style)
+        # default colours are green on black
+        self.segment.SetBackgroundColour("black")
+        self.segment.SetForegroundColour("orange")
+
         horizontal_box.Add(center_panel, 0, wx.LEFT | wx.TOP, 20)
         horizontal_box.Add(self.slider, 0, wx.LEFT | wx.TOP, 30)
         horizontal_box.Add(right_panel, 1, wx.LEFT | wx.TOP | wx.EXPAND, 30)
+        horizontal_box.Add(far_right_panel,1,wx.LEFT | wx.TOP | wx.EXPAND, 20)
 
         self.Bind(wx.EVT_SCROLL, self.on_scroll)
 
@@ -101,6 +113,7 @@ class Example(wx.Frame):
         self.sel = e.GetInt()
         self.cpu.Refresh()
         pub.sendMessage('cpu.slide', new_value=self.sel)
+        self.segment.SetValue("{}".format(self.sel))
 
 
 def main():
