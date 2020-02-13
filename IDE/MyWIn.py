@@ -338,6 +338,8 @@ class MainWindow(wx.Frame):
         for line in memory_dump:
             self.memory_tab.control.AppendText(line)
 
+        self.execution_tab.cpu.load_memory(a.get_memory())
+
     def is_valid_label(self, label):
         """
         Is this a valid label in the local symbol table

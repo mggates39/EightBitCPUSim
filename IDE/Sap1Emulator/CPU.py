@@ -65,3 +65,12 @@ class CPU(wx.Panel):
         # Demo push a value to the bus and tell the output buffer to display the bus value
         pub.sendMessage('CPU.ChangeBus', new_value=142)
         pub.sendMessage('CPU.OutputWrite')
+
+    def load_memory(self, memory):
+        data = []
+        idx = 0
+        for mem in memory.get_memory_array():
+            data.append( ("0x{0:X}:".format(idx), "{0:08b}".format(mem)) )
+            idx += 1
+
+        self.mem.load_data(data)
