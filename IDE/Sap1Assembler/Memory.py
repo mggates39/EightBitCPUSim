@@ -16,6 +16,9 @@ class Memory:
     def set_memory(self, address, value):
         self.mem[address] = value
 
+    def get_memory_array(self):
+        return self.mem
+
     def dump(self, labels, code_segment):
         lines = []
         code_cells = {}
