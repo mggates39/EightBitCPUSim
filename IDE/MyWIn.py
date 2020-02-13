@@ -12,9 +12,7 @@ from Sap1Assembler.Parser import make_target
 
 
 # Define the tab content as classes:
-from Sap1Emulator.Bus import Bus
-from Sap1Emulator.Clock import Clock
-from Sap1Emulator.ProgramCounter import ProgramCounter
+from Sap1Emulator.CPU import CPU
 
 
 class SourceTab(wx.Panel):
@@ -75,14 +73,9 @@ class MemoryTab(wx.Panel):
 class ExecutionTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        wx.StaticText(self, -1, "This is the fourth tab", (20, 20))
-        self.bus = Bus(self)
-        self.clock = Clock(self)
-        self.pc = ProgramCounter(self)
-        self.sizer = wx.GridSizer(4,3,2,2)
-        self.sizer.Add(self.clock, 1, wx.EXPAND)
-        self.sizer.Add(self.bus, 1, wx.EXPAND)
-        self.sizer.Add(self.pc, 1, wx.EXPAND)
+        self.cpu = CPU(self)
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer.Add(self.cpu, 1, wx.EXPAND)
 
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
