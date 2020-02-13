@@ -61,5 +61,7 @@ class CPU(wx.Panel):
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
         self.SetSizer(nmSizer)
+
+        # Demo push a value to the bus and tell the output buffer to display the bus value
         pub.sendMessage('CPU.ChangeBus', new_value=142)
         pub.sendMessage('CPU.OutputWrite')
