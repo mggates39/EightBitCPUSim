@@ -40,21 +40,21 @@ class CPU(wx.Panel):
         self.sizer = wx.GridBagSizer(10, 10)
         self.sizer.Add(self.clock, pos=(0, 0), flag=wx.EXPAND)
         self.sizer.Add(self.mar, pos=(1, 0), flag=wx.EXPAND)
-        self.sizer.Add(self.mem, pos=(2, 0), span=(3, 1), flag=wx.EXPAND)
-        self.sizer.Add(self.ir, pos=(5, 0), flag=wx.EXPAND)
+        self.sizer.Add(self.mem, pos=(2, 0), span=(9, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.ir, pos=(11, 0), flag=wx.EXPAND)
 
-        self.sizer.Add(self.bus, pos=(0, 1), span=(6, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.bus, pos=(0, 1), span=(12, 1), flag=wx.EXPAND)
 
         self.sizer.Add(self.pc, pos=(0, 2), flag=wx.EXPAND)
         self.sizer.Add(self.acc, pos=(1, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.alu, pos=(2, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.tmp, pos=(3, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.out, pos=(4, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.cl, pos=(5, 2), span=(1, 3), flag=wx.EXPAND)
+        self.sizer.Add(self.alu, pos=(2, 2), span=(7, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.tmp, pos=(9, 2), flag=wx.EXPAND)
+        self.sizer.Add(self.out, pos=(10, 2), flag=wx.EXPAND)
+        self.sizer.Add(self.cl, pos=(11, 2), span=(1, 3), flag=wx.EXPAND)
 
-        self.sizer.Add(self.history, pos=(0,3), span=(5,3), flag=wx.EXPAND)
+        self.sizer.Add(self.history, pos=(0,3), span=(11,3), flag=wx.EXPAND)
 
-        self.sizer.Add(self.sr, pos=(5,5), flag=wx.EXPAND)
+        self.sizer.Add(self.sr, pos=(11,5), flag=wx.EXPAND)
 
 
         self.SetSizer(self.sizer)
