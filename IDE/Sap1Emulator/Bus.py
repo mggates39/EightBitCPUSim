@@ -5,9 +5,9 @@ from GuiComponents.LedArray import LEDArray
 
 class Bus(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(75, 199))
+        wx.Panel.__init__(self, parent, size=(100, 75))
         self.parent = parent
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (75,100))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (100, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         light_color='#36ff27'
