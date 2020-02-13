@@ -23,6 +23,6 @@ class Bus(wx.Panel):
         if new_value != self.value:
             self.value = new_value
             pub.sendMessage('bus.set_lights', new_value=self.value)
-            pub.sendMessage("CPU.BusChanged", new_value=self.value)
+            pub.sendMessage('CPU.BusChanged', new_value=self.value)
 
 

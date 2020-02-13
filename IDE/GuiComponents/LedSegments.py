@@ -23,7 +23,7 @@ class LEDSegment(wx.Panel):
         self.segment.SetValue('0')
 
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.sizer.Add(self.segment)
+        self.sizer.Add(self.segment, 1, wx.ALIGN_CENTER_HORIZONTAL)
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
         self.sizer.Fit(self)

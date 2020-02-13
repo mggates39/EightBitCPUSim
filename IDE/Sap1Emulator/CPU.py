@@ -1,4 +1,5 @@
 import wx
+from pubsub import pub
 
 from Sap1Emulator.ALU import Alu
 from Sap1Emulator.Accumulator import Accumulator
@@ -11,6 +12,8 @@ from Sap1Emulator.MemoryAddressRegister import MemoryAddressRegister
 from Sap1Emulator.OutputRegister import OutputRegister
 from Sap1Emulator.ProgramCounter import ProgramCounter
 from Sap1Emulator.TempRegister import TempRegister
+from Sap1Emulator.StatusRegister import StatusRegister
+from Sap1Emulator.History import ExecutionHistory
 
 
 class CPU(wx.Panel):
@@ -31,6 +34,8 @@ class CPU(wx.Panel):
         self.tmp = TempRegister(self.box)
         self.out = OutputRegister(self.box)
         self.cl = ControlLogic(self.box)
+        self.sr = StatusRegister(self.box)
+        self.history = ExecutionHistory(self.box)
 
         self.sizer = wx.GridBagSizer(10, 10)
         self.sizer.Add(self.clock, pos=(0, 0), flag=wx.EXPAND)
@@ -45,10 +50,16 @@ class CPU(wx.Panel):
         self.sizer.Add(self.alu, pos=(2, 2), flag=wx.EXPAND)
         self.sizer.Add(self.tmp, pos=(3, 2), flag=wx.EXPAND)
         self.sizer.Add(self.out, pos=(4, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.cl, pos=(5, 2), flag=wx.EXPAND)
+        self.sizer.Add(self.cl, pos=(5, 2), span=(1, 3), flag=wx.EXPAND)
+
+        self.sizer.Add(self.history, pos=(0,3), span=(5,3), flag=wx.EXPAND)
+
+        self.sizer.Add(self.sr, pos=(5,5), flag=wx.EXPAND)
 
 
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
         self.SetSizer(nmSizer)
+        pub.sendMessage('CPU.ChangeBus', new_value=142)
+        pub.sendMessage('CPU.OutputWrite')

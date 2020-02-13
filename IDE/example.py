@@ -92,7 +92,7 @@ class Example(wx.Frame):
         horizontal_box.Add(center_panel, 0, wx.LEFT | wx.TOP, 20)
         horizontal_box.Add(self.slider, 0, wx.LEFT | wx.TOP, 30)
         horizontal_box.Add(right_panel, 1, wx.LEFT | wx.TOP | wx.EXPAND, 30)
-        horizontal_box.Add(far_right_panel,1,wx.LEFT | wx.TOP | wx.EXPAND, 20)
+        horizontal_box.Add(far_right_panel, 1, wx.LEFT | wx.TOP | wx.EXPAND, 20)
 
         self.Bind(wx.EVT_SCROLL, self.on_scroll)
 
