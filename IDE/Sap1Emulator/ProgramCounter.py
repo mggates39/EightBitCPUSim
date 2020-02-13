@@ -12,7 +12,7 @@ class ProgramCounter(wx.Panel):
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = LEDArray(self.box, 8, topic="pc.set_value")
+        self.leds = LEDArray(self.box, 4, topic="pc.set_value")
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND, 10)
 
