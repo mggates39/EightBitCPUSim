@@ -80,14 +80,18 @@ class Memory(wx.Panel):
         self.buffer = 0
         data = self.reset_data
         self.load_data(data)
-        self.on_set_address(0)
+        self.list.Select(self.address, 0)
+        self.address = 0
         self.on_clock()
 
     def on_bus_change(self, new_value):
         self.buffer = new_value
 
     def on_set_address(self, new_value):
+        self.list.Select(self.address, 0)
+
         self.address = new_value & 15
+
         self.list.Focus(self.address)
         self.list.Select(self.address)
 
