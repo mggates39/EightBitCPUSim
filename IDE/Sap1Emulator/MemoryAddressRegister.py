@@ -47,6 +47,6 @@ class MemoryAddressRegister(wx.Panel):
 
     def on_in(self):
         self.value = self.buffer
-        self.set_jmp_display_flag()
+        self.set_in_display_flag()
         pub.sendMessage('mar.set_value', new_value=self.value)
         pub.sendMessage('mem.set_address', new_value=self.value)

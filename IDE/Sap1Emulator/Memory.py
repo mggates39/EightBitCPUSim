@@ -95,10 +95,10 @@ class Memory(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
 
-        self.data[self.address][1] = self.value
-        self.list.SetItem(self.address, 1, self.value)
+        self.data[self.address][1] = "0:08b".format(self.value)
+        self.list.SetItem(self.address, 1, self.data[self.address][1] )
 
     def on_out(self):
         self.set_out_display_flag()
-        self.value = self.data[self.address][1]
+        self.value = int( self.data[self.address][1], 2)
         pub.sendMessage('CPU.ChangeBus', new_value=self.value)
