@@ -36,7 +36,6 @@ class Memory(wx.Panel):
         hbox.Add(self.list, 1, wx.EXPAND)
         nmSizer.Add(hbox, 1, wx.EXPAND)
         self.SetSizer(nmSizer)
-        self.Centre()
 
     def load_data(self, data):
         self.list.DeleteAllItems()
