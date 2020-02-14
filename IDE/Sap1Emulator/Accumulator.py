@@ -54,6 +54,7 @@ class Accumulator(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         pub.sendMessage('acc.set_value', new_value=self.value)
+        pub.sendMessage('alu.set_value_1', new_value=self.value)
 
     def on_out(self):
         self.set_out_display_flag()
