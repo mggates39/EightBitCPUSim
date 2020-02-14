@@ -62,9 +62,6 @@ class CPU(wx.Panel):
         self.sizer.Fit(self)
         self.SetSizer(nmSizer)
 
-        # Demo push a value to the bus and tell the output buffer to display the bus value
-        pub.sendMessage('CPU.Reset')
-
     def load_memory(self, memory):
         data = []
         idx = 0
@@ -73,3 +70,4 @@ class CPU(wx.Panel):
             idx += 1
 
         self.mem.load_data(data)
+        pub.sendMessage('CPU.Reset')
