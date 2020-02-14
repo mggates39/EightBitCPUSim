@@ -10,6 +10,7 @@ class OutputRegister(wx.Panel):
         wx.Panel.__init__(self, parent, size=(100, 100))
         self.parent = parent
         self.value = 0
+        self.buffer = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Output Register", wx.DefaultPosition, (100, 100))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
@@ -24,13 +25,30 @@ class OutputRegister(wx.Panel):
 
         self.SetSizer(nmSizer)
 
-        pub.subscribe(self.SetValue, 'CPU.BusChanged')
-        pub.subscribe(self.Display, 'CPU.OutputWrite')
+        pub.subscribe(self.on_clock, 'CPU.Clock')
+        pub.subscribe(self.on_reset, 'CPU.Reset')
+        pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
+        pub.subscribe(self.on_out, 'CPU.OutputWrite')
 
-    def SetValue(self, new_value):
-        if new_value != self.value:
-            self.value = new_value
+    def set_out_display_flag(self):
+        return True
 
-    def Display(self):
+    def clear_display_flags(self):
+        return True
+
+    def on_bus_change(self, new_value):
+        self.buffer = new_value
+
+    def on_out(self):
+        self.value = self.buffer
+        self.set_out_display_flag()
         pub.sendMessage('out.set_value', new_value=self.value)
-        pub.sendMessage('out.set_value', new_value=self.value)
+
+    def on_reset(self):
+        self.value = 0
+        self.buffer = 0
+        self.on_clock()
+        self.on_out()
+
+    def on_clock(self):
+        self.clear_display_flags()

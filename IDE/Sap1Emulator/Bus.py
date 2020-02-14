@@ -21,12 +21,19 @@ class Bus(wx.Panel):
         nmSizer.Add(vertical_box, 1, wx.ALL | wx.EXPAND)
         self.SetSizer(nmSizer)
 
-        pub.subscribe(self.SetValue, "CPU.ChangeBus")
+        pub.subscribe(self.on_clock, 'CPU.Clock')
+        pub.subscribe(self.on_reset, 'CPU.Reset')
+        pub.subscribe(self.on_bus_write, "CPU.ChangeBus")
 
-    def SetValue(self, new_value):
+    def on_bus_write(self, new_value):
         if new_value != self.value:
             self.value = new_value
             pub.sendMessage('bus.set_lights', new_value=self.value)
             pub.sendMessage('CPU.BusChanged', new_value=self.value)
 
+    def on_reset(self):
+        self.value = 0
+        pub.sendMessage('bus.set_lights', new_value=self.value)
 
+    def on_clock(self):
+        return True
