@@ -19,8 +19,43 @@ steps = [['CPU.Clock',
           'CPU.AccIn'],
 
          ['CPU.Clock',
+          'CPU.PcOut',
+          'CPU.MarIn'],
+
+         ['CPU.Clock',
+          'CPU.MemOut',
+          'CPU.IrIn',
+          'CPU.PcInc'],
+
+         ['CPU.Clock',
+          'CPU.IrOut',
+          'CPU.MarIn'],
+
+         ['CPU.Clock',
+          'CPU.MemOut',
+          'CPU.TempIn'],
+
+         ['CPU.Clock',
+          'CPU.PcOut',
+          'CPU.MarIn'],
+
+         ['CPU.Clock',
+          'CPU.MemOut',
+          'CPU.IrIn',
+          'CPU.PcInc'],
+
+         ['CPU.Clock',
           'CPU.AccOut',
           'CPU.OutputWrite'],
+
+         ['CPU.Clock',
+          'CPU.PcOut',
+          'CPU.MarIn'],
+
+         ['CPU.Clock',
+          'CPU.MemOut',
+          'CPU.IrIn',
+          'CPU.PcInc'],
 
          ['CPU.Clock',
           'CPU.Halt']
