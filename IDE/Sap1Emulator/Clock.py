@@ -36,6 +36,12 @@ steps = [['CPU.Clock',
           'CPU.TempIn'],
 
          ['CPU.Clock',
+          # 'CPU.AluSub',
+          'CPU.AluOut',
+          'CPU.SaveFlag',
+          'CPU.AccIn'],
+
+         ['CPU.Clock',
           'CPU.PcOut',
           'CPU.MarIn'],
 
