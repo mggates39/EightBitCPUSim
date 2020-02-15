@@ -10,6 +10,8 @@ class InstructionRegister(wx.Panel):
         self.parent = parent
         self.value = 0
         self.buffer = 0
+        self.carry_flag = 0
+        self.zero_flag = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -103,12 +105,14 @@ class InstructionRegister(wx.Panel):
                                              ['CPU.Halt'],
                                              ['CPU.RingReset']]}
                           }
+        self.on_reset()
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.IrIn')
         pub.subscribe(self.on_out, 'CPU.IrOut')
+        pub.subscribe(self.on_read_flags, 'CPU.FlagValues')
 
     def set_in_display_flag(self):
         return True
@@ -146,3 +150,7 @@ class InstructionRegister(wx.Panel):
     def on_out(self):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=(self.value & 15))
+
+    def on_read_flags(self, carry, zero):
+        self.carry_flag = carry
+        self.zero_flag = zero
