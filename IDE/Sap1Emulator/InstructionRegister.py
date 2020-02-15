@@ -19,8 +19,8 @@ class InstructionRegister(wx.Panel):
         self.instruction = LEDArray(self.box, 4, topic="ip.set_instruction")
         self.data = LEDArray(self.box, 4, topic="ip.set_data")
 
-        vertical_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND, 10)
-        vertical_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND, 10)
+        vertical_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        vertical_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
 
         nmSizer.Add(vertical_box, 1, wx.EXPAND)
 

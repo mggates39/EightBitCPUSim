@@ -16,8 +16,8 @@ class Bus(wx.Panel):
         self.value = 0
         self.leds = LEDArray(self.box, 8, light_color, dark_color, 'bus.set_lights')
         self.pan = wx.Panel(self.box)
-        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALIGN_TOP | wx.EXPAND)
-        vertical_box.Add(self.pan, 1, wx.EXPAND)
+        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALIGN_TOP | wx.ALL | wx.EXPAND, 10)
+        vertical_box.Add(self.pan, 1, wx.ALL | wx.EXPAND)
         nmSizer.Add(vertical_box, 1, wx.ALL | wx.EXPAND)
         self.SetSizer(nmSizer)
 

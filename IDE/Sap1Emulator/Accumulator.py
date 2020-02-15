@@ -16,7 +16,7 @@ class Accumulator(wx.Panel):
 
         self.leds = LEDArray(self.box, 8, topic="acc.set_value")
 
-        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND, 10)
+        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
 
         nmSizer.Add(vertical_box, 1, wx.EXPAND)
 
@@ -27,7 +27,6 @@ class Accumulator(wx.Panel):
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.AccIn')
         pub.subscribe(self.on_out, 'CPU.AccOut')
-
 
     def set_in_display_flag(self):
         return True
@@ -59,4 +58,3 @@ class Accumulator(wx.Panel):
     def on_out(self):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=self.value)
-
