@@ -44,7 +44,7 @@ class TempRegister(wx.Panel):
         self.value = 0
         self.buffer = 0
         self.on_clock()
-        pub.sendMessage('acc.set_value', new_value=self.value)
+        pub.sendMessage('tmp.set_value', new_value=self.value)
 
     def on_bus_change(self, new_value):
         self.buffer = new_value
@@ -52,6 +52,6 @@ class TempRegister(wx.Panel):
     def on_in(self):
         self.value = self.buffer
         self.set_in_display_flag()
-        pub.sendMessage('acc.set_value', new_value=self.value)
+        pub.sendMessage('tmp.set_value', new_value=self.value)
         pub.sendMessage('alu.set_value_2', new_value=self.value)
 
