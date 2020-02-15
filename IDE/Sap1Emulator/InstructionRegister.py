@@ -24,22 +24,84 @@ class InstructionRegister(wx.Panel):
 
         self.SetSizer(nmSizer)
 
-        self.operators = {0: {"operator": "NOP", "opcode": 0, "operand": None},
-                          1: {"operator": "LDA", "opcode": 1, "operand": "M"},
-                          2: {"operator": "ADD", "opcode": 2, "operand": "M"},
-                          3: {"operator": "SUB", "opcode": 3, "operand": "M"},
-                          4: {"operator": "STA", "opcode": 4, "operand": "M"},
-                          5: {"operator": "LDI", "opcode": 5, "operand": "N"},
-                          6: {"operator": "JMP", "opcode": 6, "operand": "M"},
-                          7: {"operator": "JC", "opcode": 7, "operand": "M"},
-                          8: {"operator": "JZ", "opcode": 8, "operand": "M"},
-                          9: {"operator": "NOP", "opcode": 9, "operand": None},
-                          10: {"operator": "NOP", "opcode": 10, "operand": None},
-                          11: {"operator": "NOP", "opcode": 11, "operand": None},
-                          12: {"operator": "NOP", "opcode": 12, "operand": None},
-                          13: {"operator": "NOP", "opcode": 13, "operand": None},
-                          14: {"operator": "OUT", "opcode": 14, "operand": None},
-                          15: {"operator": "HLT", "opcode": 15, "operand": None}
+        self.operators = {0: {"operator": "NOP", "opcode": 0, "operand": None,
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.RingReset']]},
+                          1: {"operator": "LDA", "opcode": 1, "operand": "M",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.IrOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.AccIn'],
+                                            ['CPU.RingReset']]},
+                          2: {"operator": "ADD", "opcode": 2, "operand": "M",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.IrOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.TempIn'],
+                                            ['CPU.FlagIn', 'CPU.AluOut', 'CPU.AccpIn'],
+                                            ['CPU.RingReset']]},
+                          3: {"operator": "SUB", "opcode": 3, "operand": "M",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.IrOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.TempIn'],
+                                            ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.AccpIn'],
+                                            ['CPU.RingReset']]},
+                          4: {"operator": "STA", "opcode": 4, "operand": "M",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.IrOut', 'CPU.MarIn'],
+                                            ['CPU.AccOut', 'CPU.MemIn'],
+                                            ['CPU.RingReset']]},
+                          5: {"operator": "LDI", "opcode": 5, "operand": "N",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.IrOut', 'CPU.AccIn'],
+                                            ['CPU.RingReset']]},
+                          6: {"operator": "JMP", "opcode": 6, "operand": "M",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.IrOut', 'CPU.PcJump'],
+                                            ['CPU.RingReset']]},
+                          7: {"operator": "JC", "opcode": 7, "operand": "M",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.RingReset']]},
+                          8: {"operator": "JZ", "opcode": 8, "operand": "M",
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.RingReset']]},
+                          9: {"operator": "NOP", "opcode": 9, "operand": None,
+                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                            ['CPU.RingReset']]},
+                          10: {"operator": "NOP", "opcode": 10, "operand": None,
+                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                             ['CPU.RingReset']]},
+                          11: {"operator": "NOP", "opcode": 11, "operand": None,
+                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                             ['CPU.RingReset']]},
+                          12: {"operator": "NOP", "opcode": 12, "operand": None,
+                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                             ['CPU.RingReset']]},
+                          13: {"operator": "NOP", "opcode": 13, "operand": None,
+                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                             ['CPU.RingReset']]},
+                          14: {"operator": "OUT", "opcode": 14, "operand": None,
+                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                             ['CPU.AccOut', 'CPU.OutputWrite'],
+                                             ['CPU.RingReset']]},
+                          15: {"operator": "HLT", "opcode": 15, "operand": None,
+                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                             ['CPU.Halt'],
+                                             ['CPU.RingReset']]}
                           }
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
@@ -64,7 +126,9 @@ class InstructionRegister(wx.Panel):
         self.value = 0
         self.buffer = 0
         self.on_clock()
-        pub.sendMessage('ip.set_instruction', new_value=((self.value >> 4)) & 15)
+        op_code = int((self.value >> 4) & 15)
+        pub.sendMessage('ip.set_instruction', new_value=op_code)
+        pub.sendMessage('ip.set_instruction_label', new_label="NOP")
         pub.sendMessage('ip.set_data', new_value=(self.value & 15))
 
     def on_bus_change(self, new_value):
@@ -73,7 +137,10 @@ class InstructionRegister(wx.Panel):
     def on_in(self):
         self.value = self.buffer
         self.set_in_display_flag()
-        pub.sendMessage('ip.set_instruction', new_value=((self.value >> 4)) & 15)
+        op_code = int((self.value >> 4) & 15)
+        operator = self.operators[op_code]["operator"]
+        pub.sendMessage('ip.set_instruction', new_value=op_code)
+        pub.sendMessage('ip.set_instruction_label', new_label=operator)
         pub.sendMessage('ip.set_data', new_value=(self.value & 15))
 
     def on_out(self):
