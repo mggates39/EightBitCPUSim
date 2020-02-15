@@ -18,7 +18,7 @@ class LEDArray(wx.Panel):
         led_sizer = wx.BoxSizer(wx.HORIZONTAL)
         for i in range(0, number_leds):
             led = LED(self, light_color, dark_color)
-            led_sizer.Add(led, 1, 0)
+            led_sizer.Add(led, 1, wx.ALL, 1)
             self.leds.append(led)
         self.sizer.Add(led_sizer, 1, wx.ALIGN_CENTER)
         self.sizer.Add(self.label, 1, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_TOP)
