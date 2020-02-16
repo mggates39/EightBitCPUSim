@@ -83,4 +83,5 @@ class CPU(wx.Panel):
         pub.sendMessage('CPU.Reset')
 
     def on_click_reset(self, e):
+        pub.sendMessage("CPU.ClearContorl")
         pub.sendMessage('CPU.Reset')

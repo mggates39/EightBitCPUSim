@@ -22,6 +22,7 @@ class Clock(wx.Panel):
 
         pub.subscribe(self.on_halt, 'CPU.Halt')
         pub.subscribe(self.on_reset, 'CPU.Reset')
+
         self.clock.Bind(wx.EVT_BUTTON, self.on_click_clock)
 
     def on_reset(self):
@@ -34,5 +35,6 @@ class Clock(wx.Panel):
         self.clock.Enable(False)
 
     def on_click_clock(self, e):
+        pub.sendMessage("CPU.ClearContorl")
         pub.sendMessage('CPU.Clock')
 
