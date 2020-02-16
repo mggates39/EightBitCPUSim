@@ -131,7 +131,7 @@ class InstructionRegister(wx.Panel):
     def on_clock(self):
         self.clear_display_flags()
         microcode = self.microcode[self.ring_count]
-        print("tick: {} cycle: {} ring: {}".format(self.tick, self.cycle, self.ring_count))
+        pub.sendMessage("ir.ring", tick=self.tick, cycle=self.cycle, ring=self.ring_count)
         for send in microcode:
             pub.sendMessage(send)
         self.tick += 1

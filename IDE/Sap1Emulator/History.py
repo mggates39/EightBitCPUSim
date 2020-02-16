@@ -1,11 +1,36 @@
 import wx
 from pubsub import pub
 
+from Sap1Emulator.ControlLogic import control_messages
+
+decode_messages = {
+    "CPU.Halt": "HLT ",
+    "CPU.MarIn": "MI ",
+    "CPU.MemIn": "RI ",
+    "CPU.MemOut": "RO ",
+    "CPU.IrIn": "II ",
+    "CPU.IrOut": "IO ",
+    "CPU.AccIn": "AI ",
+    "CPU.AccOut": "AO ",
+    "CPU.AluOut": "EO ",
+    "CPU.AluSub": "SU ",
+    "CPU.TempIn": "BI ",
+    "CPU.OutputWrite": "OI ",
+    "CPU.PcOut": "CO ",
+    "CPU.PcInc": "CI ",
+    "CPU.PcJump": "CJ ",
+    "CPU.FlagIn": "FI ",
+    "CPU.RingReset": "RCR "
+}
+
+
 class ExecutionHistory(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, size=(400, 75))
         self.parent = parent
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Execution History", wx.DefaultPosition, (400,75))
+        self.last_index = 0
+        self.last_control = ""
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Execution History", wx.DefaultPosition, (300, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         self.SetSizer(nmSizer)
@@ -14,9 +39,35 @@ class ExecutionHistory(wx.Panel):
 
         self.list = wx.ListCtrl(self.box, wx.ID_ANY, style=wx.LC_REPORT)
         self.list.InsertColumn(0, 'tick', width=50)
-        self.list.InsertColumn(1, 'ring', width=50)
-        self.list.InsertColumn(2, 'control', width=200)
-        self.list.InsertColumn(3, 'flags', width=100)
+        self.list.InsertColumn(1, 'cycle', width=50)
+        self.list.InsertColumn(2, 'ring', width=50)
+        self.list.InsertColumn(3, 'control', width=250)
 
         hbox.Add(self.list, 1, wx.EXPAND)
         nmSizer.Add(hbox, 1, wx.EXPAND)
+
+        for i in control_messages:
+            message = control_messages[i]
+            pub.subscribe(self.on_control, message["topic"])
+
+        pub.subscribe(self.on_clock, 'CPU.Clock')
+        pub.subscribe(self.on_reset, 'CPU.Reset')
+        pub.subscribe(self.on_start_message, 'ir.ring')
+
+    def on_clock(self):
+        self.last_control = ""
+
+    def on_reset(self):
+        self.list.DeleteAllItems()
+        self.last_index = 0
+
+    def on_start_message(self, tick, cycle, ring):
+        self.last_index = self.list.InsertItem(0, "{}".format(tick))
+        self.list.SetItem(self.last_index, 1, "{}".format(cycle))
+        self.list.SetItem(self.last_index, 2, "{}".format(ring))
+
+    def on_control(self, topic=pub.AUTO_TOPIC):
+        topic_name = topic.getName()
+        if topic_name in decode_messages:
+            self.last_control += decode_messages[topic_name]
+            self.list.SetItem(self.last_index, 3, self.last_control)
