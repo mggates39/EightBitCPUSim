@@ -3,9 +3,9 @@ from pubsub import pub
 
 test = [('0x0:', '00011110'),
         ('0x1:', '00101111'),
-        ('0x2:', '11100000'),
-        ('0x3:', '11110000'),
-        ('0x4:', '00000000'),
+        ('0x2:', '01000111'),
+        ('0x3:', '11100000'),
+        ('0x4:', '11110000'),
         ('0x5:', '00000000'),
         ('0x6:', '00000000'),
         ('0x7:', '00000000'),
@@ -17,7 +17,6 @@ test = [('0x0:', '00011110'),
         ('0xD:', '00000000'),
         ('0xE:', '00011100'),
         ('0xF:', '00001110')]
-
 
 class Memory(wx.Panel):
     def __init__(self, parent):
@@ -98,8 +97,10 @@ class Memory(wx.Panel):
     def on_in(self):
         self.value = self.buffer
         self.set_in_display_flag()
+        new_data = "{0:08b}".format(self.value)
+        new_address = "0x{0:X}:".format(self.address)
 
-        self.data[self.address][1] = "0:08b".format(self.value)
+        self.data[self.address] = (new_address, new_data)
         self.list.SetItem(self.address, 1, self.data[self.address][1] )
 
     def on_out(self):
