@@ -1,78 +1,13 @@
 import wx
 from pubsub import pub
 
-steps = [['CPU.Clock',
-          'CPU.PcOut',
-          'CPU.MarIn'],
-
-         ['CPU.Clock',
-          'CPU.MemOut',
-          'CPU.IrIn',
-          'CPU.PcInc'],
-
-         ['CPU.Clock',
-          'CPU.IrOut',
-          'CPU.MarIn'],
-
-         ['CPU.Clock',
-          'CPU.MemOut',
-          'CPU.AccIn'],
-
-         ['CPU.Clock',
-          'CPU.PcOut',
-          'CPU.MarIn'],
-
-         ['CPU.Clock',
-          'CPU.MemOut',
-          'CPU.IrIn',
-          'CPU.PcInc'],
-
-         ['CPU.Clock',
-          'CPU.IrOut',
-          'CPU.MarIn'],
-
-         ['CPU.Clock',
-          'CPU.MemOut',
-          'CPU.TempIn'],
-
-         ['CPU.Clock',
-          # 'CPU.AluSub',
-          'CPU.AluOut',
-          'CPU.SaveFlag',
-          'CPU.AccIn'],
-
-         ['CPU.Clock',
-          'CPU.PcOut',
-          'CPU.MarIn'],
-
-         ['CPU.Clock',
-          'CPU.MemOut',
-          'CPU.IrIn',
-          'CPU.PcInc'],
-
-         ['CPU.Clock',
-          'CPU.AccOut',
-          'CPU.OutputWrite'],
-
-         ['CPU.Clock',
-          'CPU.PcOut',
-          'CPU.MarIn'],
-
-         ['CPU.Clock',
-          'CPU.MemOut',
-          'CPU.IrIn',
-          'CPU.PcInc'],
-
-         ['CPU.Clock',
-          'CPU.Halt']
-         ]
-
 
 class Clock(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, size=(250, 100))
         self.parent = parent
         self.index = 0
+        self.halted = False
         self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (250, 100))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
@@ -94,16 +29,15 @@ class Clock(wx.Panel):
 
     def on_reset(self):
         self.index = 0
+        self.halted = False
         self.clock.Enable(True)
 
     def on_halt(self):
+        self.halted = True
         self.clock.Enable(False)
 
     def on_click_clock(self, e):
-        microcode = steps[self.index]
-        for send in microcode:
-            pub.sendMessage(send)
-        self.index += 1
+        pub.sendMessage('CPU.Clock')
 
     def on_click_reset(self, e):
         pub.sendMessage('CPU.Reset')

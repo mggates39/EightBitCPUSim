@@ -15,19 +15,20 @@ class Alu(wx.Panel):
         self.zero = False
         self.subtract = False
         self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 75))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
-
-        self.SetSizer(nmSizer)
+        self.nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.leds = LEDArray(self.box, 8, topic="alu.set_value")
-
+        self.carry_flag =  wx.StaticText(self.box, label="Carry-Bit: False", style=wx.ALIGN_CENTRE)
+        self.zero_flag =  wx.StaticText(self.box, label="Zero-Bit: False", style=wx.ALIGN_CENTRE)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        vertical_box.Add(self.carry_flag, 0, wx.ALIGN_CENTER | wx.ALL,10)
+        vertical_box.Add(self.zero_flag, 0, wx.ALIGN_CENTER | wx.ALL,10)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        self.nmSizer.Add(vertical_box, 1, wx.EXPAND)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(self.nmSizer)
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
@@ -88,10 +89,13 @@ class Alu(wx.Panel):
                 self.carry = True
             else:
                 self.carry = False
-        if self.result == 9:
+        if self.result == 0:
             self.zero = True
         else:
             self.zero = False
+
+        self.set_carry_lablel(self.carry)
+        self.set_zero_lablel(self.zero)
         pub.sendMessage('alu.set_value', new_value=self.result)
 
     def on_out(self):
@@ -100,3 +104,21 @@ class Alu(wx.Panel):
 
     def on_save_flags(self):
         pub.sendMessage("FlagValues", new_carry=self.carry, new_zero=self.zero)
+
+    def set_carry_lablel(self, new_label: bool) -> None:
+        """
+        Set the value to be displayed by the Carry Flag.
+        :type new_value: str
+        :rtype: None
+        """
+        self.carry_flag.SetLabel("Carry-Bit: {}".format(new_label))
+        self.nmSizer.Layout()
+
+    def set_zero_lablel(self, new_label: bool) -> None:
+        """
+        Set the value to be displayed by the Carry Flag.
+        :type new_value: str
+        :rtype: None
+        """
+        self.zero_flag.SetLabel("Zero-Bit: {}".format(new_label))
+        self.nmSizer.Layout()
