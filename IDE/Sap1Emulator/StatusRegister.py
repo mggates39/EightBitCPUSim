@@ -37,7 +37,7 @@ class StatusRegister(wx.Panel):
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
-        pub.subscribe(self.on_get_flags, 'FlagValues')
+        pub.subscribe(self.on_get_flags, 'alu.FlagValues')
 
     def set_in_display_flag(self):
         return True

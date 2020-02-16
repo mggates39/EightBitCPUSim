@@ -116,7 +116,7 @@ class InstructionRegister(wx.Panel):
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.IrIn')
         pub.subscribe(self.on_out, 'CPU.IrOut')
-        pub.subscribe(self.on_read_flags, 'CPU.FlagValues')
+        pub.subscribe(self.on_read_flags, 'alu.FlagValues')
         pub.subscribe(self.on_ring_reset, 'CPU.RingReset')
 
     def set_in_display_flag(self):
@@ -183,6 +183,6 @@ class InstructionRegister(wx.Panel):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=(self.value & 15))
 
-    def on_read_flags(self, carry, zero):
-        self.carry_flag = carry
-        self.zero_flag = zero
+    def on_read_flags(self, new_carry, new_zero):
+        self.carry_flag = new_carry
+        self.zero_flag = new_zero

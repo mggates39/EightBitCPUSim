@@ -36,7 +36,7 @@ class Alu(wx.Panel):
         pub.subscribe(self.on_b_value, 'alu.set_value_2')
         pub.subscribe(self.on_out, 'CPU.AluOut')
         pub.subscribe(self.on_subtract, 'CPU.AluSub')
-        pub.subscribe(self.on_save_flags, 'CPU.SaveFlag')
+        pub.subscribe(self.on_save_flags, 'CPU.FlagIn')
 
 
     def set_sub_display_flag(self):
@@ -103,7 +103,7 @@ class Alu(wx.Panel):
         pub.sendMessage('CPU.ChangeBus', new_value=self.result)
 
     def on_save_flags(self):
-        pub.sendMessage("FlagValues", new_carry=self.carry, new_zero=self.zero)
+        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero)
 
     def set_carry_lablel(self, new_label: bool) -> None:
         """
