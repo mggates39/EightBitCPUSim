@@ -10,8 +10,11 @@ class InstructionRegister(wx.Panel):
         self.parent = parent
         self.value = 0
         self.buffer = 0
-        self.carry_flag = 0
-        self.zero_flag = 0
+        self.tick = 0
+        self.cycle = 0
+        self.ring_count = 0
+        self.carry_flag = False
+        self.zero_flag = False
         self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -41,14 +44,14 @@ class InstructionRegister(wx.Panel):
                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                             ['CPU.IrOut', 'CPU.MarIn'],
                                             ['CPU.MemOut', 'CPU.TempIn'],
-                                            ['CPU.FlagIn', 'CPU.AluOut', 'CPU.AccpIn'],
+                                            ['CPU.FlagIn', 'CPU.AluOut', 'CPU.AccIn'],
                                             ['CPU.RingReset']]},
                           3: {"operator": "SUB <A>", "opcode": 3, "operand": "M",
                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                             ['CPU.IrOut', 'CPU.MarIn'],
                                             ['CPU.MemOut', 'CPU.TempIn'],
-                                            ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.AccpIn'],
+                                            ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.AccIn'],
                                             ['CPU.RingReset']]},
                           4: {"operator": "STA <A>", "opcode": 4, "operand": "M",
                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
@@ -105,6 +108,7 @@ class InstructionRegister(wx.Panel):
                                              ['CPU.Halt'],
                                              ['CPU.RingReset']]}
                           }
+        self.microcode = []
         self.on_reset()
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
@@ -113,6 +117,7 @@ class InstructionRegister(wx.Panel):
         pub.subscribe(self.on_in, 'CPU.IrIn')
         pub.subscribe(self.on_out, 'CPU.IrOut')
         pub.subscribe(self.on_read_flags, 'CPU.FlagValues')
+        pub.subscribe(self.on_ring_reset, 'CPU.RingReset')
 
     def set_in_display_flag(self):
         return True
@@ -125,15 +130,34 @@ class InstructionRegister(wx.Panel):
 
     def on_clock(self):
         self.clear_display_flags()
+        microcode = self.microcode[self.ring_count]
+        print("tick: {} cycle: {} ring: {}".format(self.tick, self.cycle, self.ring_count))
+        for send in microcode:
+            pub.sendMessage(send)
+        self.tick += 1
+        self.ring_count += 1
+
 
     def on_reset(self):
         self.value = 0
         self.buffer = 0
-        self.on_clock()
+        self.tick = 0
+        self.cycle = 0
+        self.ring_count = 0
+        self.carry_flag = False
+        self.zero_flag = False
+
+        self.clear_display_flags()
+
         op_code = int((self.value >> 4) & 15)
+        self.microcode = self.operators[op_code]["microcode"]
         pub.sendMessage('ip.set_instruction', new_value=op_code)
         pub.sendMessage('ip.set_instruction_label', new_label="NOP")
         pub.sendMessage('ip.set_data', new_value=(self.value & 15))
+
+    def on_ring_reset(self):
+        self.cycle += 1
+        self.ring_count = -1
 
     def on_bus_change(self, new_value):
         self.buffer = new_value
@@ -143,6 +167,14 @@ class InstructionRegister(wx.Panel):
         self.set_in_display_flag()
         op_code = int((self.value >> 4) & 15)
         operator = self.operators[op_code]["operator"]
+        self.microcode = self.operators[op_code]["microcode"]
+
+        if op_code == 7 and self.carry_flag:
+            self.microcode = self.operators[6]["microcode"]
+
+        if op_code == 8 and self.zero_flag:
+            self.microcode = self.operators[6]["microcode"]
+
         pub.sendMessage('ip.set_instruction', new_value=op_code)
         pub.sendMessage('ip.set_instruction_label', new_label=operator)
         pub.sendMessage('ip.set_data', new_value=(self.value & 15))
