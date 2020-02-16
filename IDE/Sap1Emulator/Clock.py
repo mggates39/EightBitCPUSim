@@ -13,10 +13,8 @@ class Clock(wx.Panel):
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.clock = wx.Button(self.box, -1, "Step")
-        self.reset = wx.Button(self.box, -1, "Reset")
 
         vertical_box.Add(self.clock, 1, wx.ALIGN_CENTER, 10)
-        vertical_box.Add(self.reset, 1, wx.ALIGN_CENTER, 10)
 
         nmSizer.Add(vertical_box, 1, wx.EXPAND)
 
@@ -25,7 +23,6 @@ class Clock(wx.Panel):
         pub.subscribe(self.on_halt, 'CPU.Halt')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         self.clock.Bind(wx.EVT_BUTTON, self.on_click_clock)
-        self.reset.Bind(wx.EVT_BUTTON, self.on_click_reset)
 
     def on_reset(self):
         self.index = 0
@@ -39,5 +36,3 @@ class Clock(wx.Panel):
     def on_click_clock(self, e):
         pub.sendMessage('CPU.Clock')
 
-    def on_click_reset(self, e):
-        pub.sendMessage('CPU.Reset')

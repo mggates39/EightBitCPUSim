@@ -23,6 +23,13 @@ class CPU(wx.Panel):
         self.box = wx.StaticBox(self, wx.ID_ANY, "SAP 1 CPU", wx.DefaultPosition, (675, 700))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
+        self.resetPanel = wx.Panel(self.box)
+        self.resetButton = wx.Button(self.box, -1, "Reset")
+        panel_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        panel_sizer.Add(self.resetButton, 0, wx.ALL | wx.ALIGN_LEFT, 10)
+        self.resetPanel.SetSizer(panel_sizer)
+
+
         self.bus = Bus(self.box)
         self.clock = Clock(self.box)
         self.pc = ProgramCounter(self.box)
@@ -38,29 +45,32 @@ class CPU(wx.Panel):
         self.history = ExecutionHistory(self.box)
 
         self.sizer = wx.GridBagSizer(10, 10)
-        self.sizer.Add(self.clock, pos=(0, 0), flag=wx.EXPAND)
-        self.sizer.Add(self.mar, pos=(1, 0), flag=wx.EXPAND)
-        self.sizer.Add(self.mem, pos=(2, 0), span=(9, 1), flag=wx.EXPAND)
-        self.sizer.Add(self.ir, pos=(11, 0), flag=wx.EXPAND)
+        self.sizer.Add(self.resetPanel, pos=(0,0), span=(1,5))
+        self.sizer.Add(self.clock, pos=(1, 0), flag=wx.EXPAND)
+        self.sizer.Add(self.mar, pos=(2, 0), flag=wx.EXPAND)
+        self.sizer.Add(self.mem, pos=(3, 0), span=(9, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.ir, pos=(12, 0), flag=wx.EXPAND)
 
-        self.sizer.Add(self.bus, pos=(0, 1), span=(12, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.bus, pos=(1, 1), span=(12, 1), flag=wx.EXPAND)
 
-        self.sizer.Add(self.pc, pos=(0, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.acc, pos=(1, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.alu, pos=(2, 2), span=(7, 1), flag=wx.EXPAND)
-        self.sizer.Add(self.tmp, pos=(9, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.out, pos=(10, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.cl, pos=(11, 2), span=(1, 3), flag=wx.EXPAND)
+        self.sizer.Add(self.pc, pos=(1, 2), flag=wx.EXPAND)
+        self.sizer.Add(self.acc, pos=(2, 2), flag=wx.EXPAND)
+        self.sizer.Add(self.alu, pos=(3, 2), span=(7, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.tmp, pos=(10, 2), flag=wx.EXPAND)
+        self.sizer.Add(self.out, pos=(11, 2), flag=wx.EXPAND)
+        self.sizer.Add(self.cl, pos=(12, 2), span=(1, 3), flag=wx.EXPAND)
 
-        self.sizer.Add(self.history, pos=(0,3), span=(11,3), flag=wx.EXPAND)
+        self.sizer.Add(self.history, pos=(1,3), span=(11,3), flag=wx.EXPAND)
 
-        self.sizer.Add(self.sr, pos=(11,5), flag=wx.EXPAND)
+        self.sizer.Add(self.sr, pos=(12,5), flag=wx.EXPAND)
 
 
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
         self.SetSizer(nmSizer)
+
+        self.resetButton.Bind(wx.EVT_BUTTON, self.on_click_reset)
 
     def load_memory(self, memory):
         data = []
@@ -70,4 +80,7 @@ class CPU(wx.Panel):
             idx += 1
 
         self.mem.load_data(data)
+        pub.sendMessage('CPU.Reset')
+
+    def on_click_reset(self, e):
         pub.sendMessage('CPU.Reset')
