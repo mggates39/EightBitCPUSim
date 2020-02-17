@@ -6,11 +6,11 @@ from GuiComponents.LedArray import LEDArray
 
 class MemoryAddressRegister(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(100, 75))
+        wx.Panel.__init__(self, parent, size=(250, 100))
         self.parent = parent
         self.value = 0
         self.buffer = 0
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Memory Address Register", wx.DefaultPosition, (100, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Memory Address Register", wx.DefaultPosition, (250, 100))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
