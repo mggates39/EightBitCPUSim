@@ -19,7 +19,7 @@ control_messages = {
     11: {"topic": "CPU.OutputWrite", "label": "OI"},
 
     12: {"topic": "CPU.PcOut", "label": "CO"},
-    13: {"topic": "CPU.PcInc", "label": "CI"},
+    13: {"topic": "CPU.PcInc", "label": "CE"},
     14: {"topic": "CPU.PcJump", "label": "CJ"},
     15: {"topic": "CPU.FlagIn", "label": "FI"},
     16: {"topic": "CPU.RingReset", "label": "RCR"},

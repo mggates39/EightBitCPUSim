@@ -17,7 +17,7 @@ decode_messages = {
     "CPU.TempIn": "BI ",
     "CPU.OutputWrite": "OI ",
     "CPU.PcOut": "CO ",
-    "CPU.PcInc": "CI ",
+    "CPU.PcInc": "CE ",
     "CPU.PcJump": "CJ ",
     "CPU.FlagIn": "FI ",
     "CPU.RingReset": "RCR "
@@ -60,8 +60,10 @@ class ExecutionHistory(wx.Panel):
     def on_reset(self):
         self.list.DeleteAllItems()
         self.last_index = 0
+        self.last_control = ""
 
     def on_start_message(self, tick, cycle, ring):
+        self.last_control = ""
         self.last_index = self.list.InsertItem(0, "{}".format(tick))
         self.list.SetItem(self.last_index, 1, "{}".format(cycle))
         self.list.SetItem(self.last_index, 2, "{}".format(ring))
