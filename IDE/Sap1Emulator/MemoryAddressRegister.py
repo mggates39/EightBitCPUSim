@@ -12,13 +12,20 @@ class MemoryAddressRegister(wx.Panel):
         self.buffer = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Memory Address Register", wx.DefaultPosition, (100, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
-        vertical_box = wx.BoxSizer(wx.VERTICAL)
+        horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.write_indicator = wx.StaticText(self.panel, label="MI")
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.panel.SetSizer(vbox)
 
         self.leds = LEDArray(self.box, 4, topic="mar.set_value")
 
-        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        horizontal_box.Add(self.panel, 0, wx.EXPAND)
+        horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        nmSizer.Add(horizontal_box, 1, wx.EXPAND)
 
         self.SetSizer(nmSizer)
 
@@ -28,10 +35,10 @@ class MemoryAddressRegister(wx.Panel):
         pub.subscribe(self.on_in, 'CPU.MarIn')
 
     def set_in_display_flag(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()

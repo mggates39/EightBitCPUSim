@@ -12,13 +12,25 @@ class TempRegister(wx.Panel):
         self.buffer = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Temp Register", wx.DefaultPosition, (100,75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.write_indicator = wx.StaticText(self.panel, label="BI")
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.panel.SetSizer(vbox)
+
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.leds = LEDArray(self.box, 8, topic="tmp.set_value")
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        hbox.Add(vertical_box, 1, wx.EXPAND)
+        hbox.Add(self.panel, 0, wx.EXPAND)
+
+        nmSizer.Add(hbox, 1, wx.EXPAND)
 
         self.SetSizer(nmSizer)
 
@@ -29,13 +41,10 @@ class TempRegister(wx.Panel):
 
 
     def set_in_display_flag(self):
-        return True
-
-    def set_out_display_flag(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()

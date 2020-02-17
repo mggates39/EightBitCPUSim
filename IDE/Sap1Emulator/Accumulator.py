@@ -12,13 +12,27 @@ class Accumulator(wx.Panel):
         self.value = 0
         self.buffer = 0
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.read_indicator = wx.StaticText(self.panel, label="AO")
+        self.write_indicator = wx.StaticText(self.panel, label="AI")
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.panel.SetSizer(vbox)
+
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.leds = LEDArray(self.box, 8, topic="acc.set_value")
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        hbox.Add(vertical_box, 1, wx.EXPAND)
+        hbox.Add(self.panel, 0, wx.EXPAND)
+
+        nmSizer.Add(hbox, 1, wx.EXPAND)
 
         self.SetSizer(nmSizer)
 
@@ -29,13 +43,14 @@ class Accumulator(wx.Panel):
         pub.subscribe(self.on_out, 'CPU.AccOut')
 
     def set_in_display_flag(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_out_display_flag(self):
-        return True
+        self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()

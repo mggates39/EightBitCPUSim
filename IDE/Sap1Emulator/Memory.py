@@ -31,6 +31,14 @@ class Memory(wx.Panel):
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
+        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.read_indicator = wx.StaticText(self.panel, label="RO")
+        self.write_indicator = wx.StaticText(self.panel, label="RI")
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.panel.SetSizer(vbox)
+
 
         self.list = wx.ListCtrl(self.box, wx.ID_ANY, style=wx.LC_REPORT)
         self.list.InsertColumn(0, 'Addr', width=50)
@@ -38,6 +46,7 @@ class Memory(wx.Panel):
 
         self.load_data(test)
 
+        hbox.Add(self.panel, 0, wx.EXPAND)
         hbox.Add(self.list, 1, wx.EXPAND)
         nmSizer.Add(hbox, 1, wx.EXPAND)
         self.SetSizer(nmSizer)
@@ -63,13 +72,14 @@ class Memory(wx.Panel):
             idx += 1
 
     def set_in_display_flag(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_out_display_flag(self):
-        return True
+        self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()

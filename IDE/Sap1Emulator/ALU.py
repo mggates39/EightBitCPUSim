@@ -17,6 +17,16 @@ class Alu(wx.Panel):
         self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 75))
         self.nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.read_indicator = wx.StaticText(self.panel, label="EO")
+        self.subtract_indicator = wx.StaticText(self.panel, label="SU")
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.subtract_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.panel.SetSizer(vbox)
+
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.leds = LEDArray(self.box, 8, topic="alu.set_value")
@@ -26,7 +36,10 @@ class Alu(wx.Panel):
         vertical_box.Add(self.carry_flag, 0, wx.ALIGN_CENTER | wx.ALL,10)
         vertical_box.Add(self.zero_flag, 0, wx.ALIGN_CENTER | wx.ALL,10)
 
-        self.nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        hbox.Add(vertical_box, 1, wx.EXPAND)
+        hbox.Add(self.panel, 0, wx.EXPAND)
+
+        self.nmSizer.Add(hbox, 1, wx.EXPAND)
 
         self.SetSizer(self.nmSizer)
 
@@ -40,13 +53,14 @@ class Alu(wx.Panel):
 
 
     def set_sub_display_flag(self):
-        return True
+        self.subtract_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_out_display_flag(self):
-        return True
+        self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
-        return True
+        self.subtract_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.subtract = False

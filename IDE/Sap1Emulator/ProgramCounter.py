@@ -12,13 +12,24 @@ class ProgramCounter(wx.Panel):
         self.buffer = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Program Counter", wx.DefaultPosition, (250, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
-        vertical_box = wx.BoxSizer(wx.VERTICAL)
+        horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.panel = wx.Panel(self.box, size=( 40, 75))
+        self.increment_indicator = wx.StaticText(self.panel, label="CE")
+        self.jump_indicator = wx.StaticText(self.panel, label="Jmp")
+        self.read_indicator = wx.StaticText(self.panel, label="CO")
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.increment_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.jump_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.panel.SetSizer(vbox)
 
         self.leds = LEDArray(self.box, 4, topic="pc.set_value")
 
-        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
+        horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
+        horizontal_box.Add(self.panel, 0, wx.EXPAND)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        nmSizer.Add(horizontal_box, 1, wx.EXPAND)
 
         self.SetSizer(nmSizer)
 
@@ -31,16 +42,18 @@ class ProgramCounter(wx.Panel):
 
 
     def set_jmp_display_flag(self):
-        return True
+        self.jump_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_inc_display_flag(self):
-        return True
+        self.increment_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_out_display_flag(self):
-        return True
+        self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
-        return True
+        self.increment_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.jump_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()

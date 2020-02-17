@@ -36,12 +36,12 @@ class CPU(wx.Panel):
         self.mar = MemoryAddressRegister(self.box)
         self.acc = Accumulator(self.box)
         self.mem = Memory(self.box)
-        self.ir = InstructionRegister(self.box)
         self.alu = Alu(self.box)
         self.tmp = TempRegister(self.box)
         self.out = OutputRegister(self.box)
         self.cl = ControlLogic(self.box)
         self.sr = StatusRegister(self.box)
+        self.ir = InstructionRegister(self.box)
         self.history = ExecutionHistory(self.box)
 
         self.sizer = wx.GridBagSizer(10, 10)

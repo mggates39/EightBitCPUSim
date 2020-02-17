@@ -88,7 +88,7 @@ class ControlLogic(wx.Panel):
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = ControlLedArray(self.box)
+        self.leds = ControlLedArray(self.box, '#0065ef', '#00075f')
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
 

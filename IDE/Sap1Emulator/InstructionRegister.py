@@ -17,15 +17,24 @@ class InstructionRegister(wx.Panel):
         self.zero_flag = False
         self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
-        vertical_box = wx.BoxSizer(wx.HORIZONTAL)
+        horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.read_indicator = wx.StaticText(self.panel, label="IO")
+        self.write_indicator = wx.StaticText(self.panel, label="II")
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.panel.SetSizer(vbox)
 
         self.instruction = LEDArray(self.box, 4, topic="ip.set_instruction")
         self.data = LEDArray(self.box, 4, topic="ip.set_data")
 
-        vertical_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
-        vertical_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        horizontal_box.Add(self.panel, 0, wx.EXPAND)
+        horizontal_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        horizontal_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        nmSizer.Add(horizontal_box, 1, wx.EXPAND)
 
         self.SetSizer(nmSizer)
 
@@ -120,13 +129,14 @@ class InstructionRegister(wx.Panel):
         pub.subscribe(self.on_ring_reset, 'CPU.RingReset')
 
     def set_in_display_flag(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_out_display_flag(self):
-        return True
+        self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
-        return True
+        self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()
