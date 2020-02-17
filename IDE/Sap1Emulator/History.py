@@ -30,7 +30,7 @@ class ExecutionHistory(wx.Panel):
         self.parent = parent
         self.last_index = 0
         self.last_control = ""
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Execution History", wx.DefaultPosition, (300, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Execution History", wx.DefaultPosition, (400, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         self.SetSizer(nmSizer)
@@ -41,7 +41,7 @@ class ExecutionHistory(wx.Panel):
         self.list.InsertColumn(0, 'tick', width=50)
         self.list.InsertColumn(1, 'cycle', width=50)
         self.list.InsertColumn(2, 'ring', width=50)
-        self.list.InsertColumn(3, 'control', width=250)
+        self.list.InsertColumn(3, 'control', width=200)
 
         hbox.Add(self.list, 1, wx.EXPAND)
         nmSizer.Add(hbox, 1, wx.EXPAND)
