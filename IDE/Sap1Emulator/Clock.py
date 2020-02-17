@@ -91,5 +91,6 @@ class Clock(wx.Panel):
 
     def on_scroll(self, e):
         self.speed = e.GetInt()
-        self.timer.Start(1005 - self.speed)
+        if self.timer.IsRunning():
+            self.timer.Start(1005 - self.speed)
 
