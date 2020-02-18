@@ -2,10 +2,11 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from Sap1Emulator.MicroCode import MicroCode
 
 
 class InstructionRegister(wx.Panel):
-    def __init__(self, parent):
+    def __init__(self, parent, instruction_decoder: MicroCode):
         wx.Panel.__init__(self, parent, size=(100, 75))
         self.parent = parent
         self.value = 0
@@ -15,11 +16,12 @@ class InstructionRegister(wx.Panel):
         self.ring_count = 0
         self.carry_flag = False
         self.zero_flag = False
+        self.instruction_decoder = instruction_decoder
         self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 75))
         nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.panel = wx.Panel(self.box, size=(30, 75))
         self.read_indicator = wx.StaticText(self.panel, label="IO")
         self.write_indicator = wx.StaticText(self.panel, label="II")
         vbox = wx.BoxSizer(wx.VERTICAL)
@@ -37,86 +39,7 @@ class InstructionRegister(wx.Panel):
         nmSizer.Add(horizontal_box, 1, wx.EXPAND)
 
         self.SetSizer(nmSizer)
-
-        self.operators = {0: {"operator": "NOP", "opcode": 0, "operand": None,
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.RingReset']]},
-                          1: {"operator": "LDA <A>", "opcode": 1, "operand": "M",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.IrOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.AccIn'],
-                                            ['CPU.RingReset']]},
-                          2: {"operator": "ADD <A>", "opcode": 2, "operand": "M",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.IrOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.TempIn'],
-                                            ['CPU.FlagIn', 'CPU.AluOut', 'CPU.AccIn'],
-                                            ['CPU.RingReset']]},
-                          3: {"operator": "SUB <A>", "opcode": 3, "operand": "M",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.IrOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.TempIn'],
-                                            ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.AccIn'],
-                                            ['CPU.RingReset']]},
-                          4: {"operator": "STA <A>", "opcode": 4, "operand": "M",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.IrOut', 'CPU.MarIn'],
-                                            ['CPU.AccOut', 'CPU.MemIn'],
-                                            ['CPU.RingReset']]},
-                          5: {"operator": "LDI", "opcode": 5, "operand": "N",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.IrOut', 'CPU.AccIn'],
-                                            ['CPU.RingReset']]},
-                          6: {"operator": "JMP <A>", "opcode": 6, "operand": "M",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.IrOut', 'CPU.PcJump'],
-                                            ['CPU.RingReset']]},
-                          7: {"operator": "JC <A>", "opcode": 7, "operand": "M",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.RingReset']]},
-                          8: {"operator": "JZ <A>", "opcode": 8, "operand": "M",
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.RingReset']]},
-                          9: {"operator": "NOP", "opcode": 9, "operand": None,
-                              "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                            ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                            ['CPU.RingReset']]},
-                          10: {"operator": "NOP", "opcode": 10, "operand": None,
-                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                             ['CPU.RingReset']]},
-                          11: {"operator": "NOP", "opcode": 11, "operand": None,
-                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                             ['CPU.RingReset']]},
-                          12: {"operator": "NOP", "opcode": 12, "operand": None,
-                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                             ['CPU.RingReset']]},
-                          13: {"operator": "NOP", "opcode": 13, "operand": None,
-                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                             ['CPU.RingReset']]},
-                          14: {"operator": "OUT", "opcode": 14, "operand": None,
-                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                             ['CPU.AccOut', 'CPU.OutputWrite'],
-                                             ['CPU.RingReset']]},
-                          15: {"operator": "HLT", "opcode": 15, "operand": None,
-                               "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                             ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                             ['CPU.Halt'],
-                                             ['CPU.RingReset']]}
-                          }
+        self.operator = None
         self.microcode = []
         self.on_reset()
 
@@ -147,7 +70,6 @@ class InstructionRegister(wx.Panel):
         self.tick += 1
         self.ring_count += 1
 
-
     def on_reset(self):
         self.value = 0
         self.buffer = 0
@@ -160,7 +82,8 @@ class InstructionRegister(wx.Panel):
         self.clear_display_flags()
 
         op_code = int((self.value >> 4) & 15)
-        self.microcode = self.operators[op_code]["microcode"]
+        self.instruction_decoder.decode_opcode(op_code)
+        self.microcode = self.instruction_decoder.get_current_microcode()
         pub.sendMessage('ip.set_instruction', new_value=op_code)
         pub.sendMessage('ip.set_instruction_label', new_label="NOP")
         pub.sendMessage('ip.set_data', new_value=(self.value & 15))
@@ -176,17 +99,13 @@ class InstructionRegister(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         op_code = int((self.value >> 4) & 15)
-        operator = self.operators[op_code]["operator"]
-        self.microcode = self.operators[op_code]["microcode"]
-
-        if op_code == 7 and self.carry_flag:
-            self.microcode = self.operators[6]["microcode"]
-
-        if op_code == 8 and self.zero_flag:
-            self.microcode = self.operators[6]["microcode"]
+        self.instruction_decoder.decode_opcode(op_code)
+        operator = self.instruction_decoder.get_current_operator()
+        operator_name = operator["operator"]
+        self.microcode = self.instruction_decoder.get_current_microcode()
 
         pub.sendMessage('ip.set_instruction', new_value=op_code)
-        pub.sendMessage('ip.set_instruction_label', new_label=operator)
+        pub.sendMessage('ip.set_instruction_label', new_label=operator_name)
         pub.sendMessage('ip.set_data', new_value=(self.value & 15))
 
     def on_out(self):

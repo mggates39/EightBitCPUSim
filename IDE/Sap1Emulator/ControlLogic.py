@@ -2,28 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LED
-
-control_messages = {
-    0: {"topic": "CPU.Halt", "label": "HLT"},
-    1: {"topic": "CPU.MarIn", "label": "MI"},
-    2: {"topic": "CPU.MemIn", "label": "RI"},
-    3: {"topic": "CPU.MemOut", "label": "RO"},
-    4: {"topic": "CPU.IrIn", "label": "II"},
-    5: {"topic": "CPU.IrOut", "label": "IO"},
-    6: {"topic": "CPU.AccIn", "label": "AI"},
-    7: {"topic": "CPU.AccOut", "label": "AO"},
-
-    8: {"topic": "CPU.AluOut", "label": "EO"},
-    9: {"topic": "CPU.AluSub", "label": "SU"},
-    10: {"topic": "CPU.TempIn", "label": "BI"},
-    11: {"topic": "CPU.OutputWrite", "label": "OI"},
-
-    12: {"topic": "CPU.PcOut", "label": "CO"},
-    13: {"topic": "CPU.PcInc", "label": "CE"},
-    14: {"topic": "CPU.PcJump", "label": "CJ"},
-    15: {"topic": "CPU.FlagIn", "label": "FI"},
-    16: {"topic": "CPU.RingReset", "label": "RCR"},
-}
+from Sap1Emulator.MicroCode import control_messages
 
 
 class ControlLed(wx.Panel):
@@ -73,7 +52,7 @@ class ControlLedArray(wx.Panel):
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
 
-        pub.subscribe(self.reset_leds,"CPU.ClearContorl")
+        pub.subscribe(self.reset_leds, "CPU.ClearContorl")
 
     def reset_leds(self) -> None:
         for led in self.leds:

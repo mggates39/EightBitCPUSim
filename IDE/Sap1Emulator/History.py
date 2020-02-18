@@ -1,27 +1,7 @@
 import wx
 from pubsub import pub
 
-from Sap1Emulator.ControlLogic import control_messages
-
-decode_messages = {
-    "CPU.Halt": "HLT ",
-    "CPU.MarIn": "MI ",
-    "CPU.MemIn": "RI ",
-    "CPU.MemOut": "RO ",
-    "CPU.IrIn": "II ",
-    "CPU.IrOut": "IO ",
-    "CPU.AccIn": "AI ",
-    "CPU.AccOut": "AO ",
-    "CPU.AluOut": "EO ",
-    "CPU.AluSub": "SU ",
-    "CPU.TempIn": "BI ",
-    "CPU.OutputWrite": "OI ",
-    "CPU.PcOut": "CO ",
-    "CPU.PcInc": "CE ",
-    "CPU.PcJump": "CJ ",
-    "CPU.FlagIn": "FI ",
-    "CPU.RingReset": "RCR "
-}
+from Sap1Emulator.MicroCode import control_messages, decode_messages
 
 
 class ExecutionHistory(wx.Panel):
