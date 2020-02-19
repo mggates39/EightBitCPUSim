@@ -14,13 +14,13 @@ from GuiComponents.LedArray import LEDArray
 class Alu(wx.Panel):
     """
     The Alu class implements the ALU and manages the display of its values, flags and control signal representations
-    insde a wxPython Panel
+    inside a wxPython Panel
     """
     def __init__(self, parent):
         """
         Create a new ALU Panel
 
-        :param parent: Holder panel that will contian this ALU Panel
+        :param parent: Panel that will contain this ALU Panel
         """
         wx.Panel.__init__(self, parent, size=(100, 75))
         self.parent = parent
@@ -81,7 +81,7 @@ class Alu(wx.Panel):
 
     def clear_display_flags(self):
         """
-
+        Clear all the display flag indicators.  Usually called from the :meth: `on_clock` message handler.
         """
         self.subtract_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
@@ -109,6 +109,7 @@ class Alu(wx.Panel):
     def on_a_value(self, new_value):
         """
         Receive a new value from the Accumulator (a) register.
+
         :param new_value: int
         """
         self.a_value = new_value
@@ -117,6 +118,7 @@ class Alu(wx.Panel):
     def on_b_value(self, new_value):
         """
         Receive a new value from the temp (b) register.
+
         :param new_value: int
         """
         self.b_value = new_value
@@ -174,8 +176,8 @@ class Alu(wx.Panel):
     def set_carry_label(self, new_label: bool) -> None:
         """
         Set the label to be displayed for the Carry Flag.
-        :type new_label: bool
-        :rtype: None
+
+        :param new_label: New state of the carry flag
         """
         self.carry_flag.SetLabel("Carry-Bit: {}".format(new_label))
         self.static_box_sizer.Layout()
@@ -183,8 +185,8 @@ class Alu(wx.Panel):
     def set_zero_label(self, new_label: bool) -> None:
         """
         Set the labek to be displayed for the Zero Flag.
-        :type new_label: bool
-        :rtype: None
+
+        :param new_label: New state of the zero flag
         """
         self.zero_flag.SetLabel("Zero-Bit: {}".format(new_label))
         self.static_box_sizer.Layout()
