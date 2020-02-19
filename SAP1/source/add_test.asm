@@ -9,7 +9,7 @@
 
 	.dorg 14
 # Variables
-x:		.byte 28
-y:		.byte 14
+x:	.byte 28
+y:	.byte 14
 
 	.end
