@@ -11,9 +11,9 @@ class ExecutionHistory(wx.Panel):
         self.last_index = 0
         self.last_control = ""
         self.box = wx.StaticBox(self, wx.ID_ANY, "Execution History", wx.DefaultPosition, (400, 75))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -24,7 +24,7 @@ class ExecutionHistory(wx.Panel):
         self.list.InsertColumn(3, 'control', width=200)
 
         hbox.Add(self.list, 1, wx.EXPAND)
-        nmSizer.Add(hbox, 1, wx.EXPAND)
+        static_box_sizer.Add(hbox, 1, wx.EXPAND)
 
         for i in control_messages:
             message = control_messages[i]

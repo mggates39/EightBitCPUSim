@@ -52,7 +52,7 @@ class ControlLedArray(wx.Panel):
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
 
-        pub.subscribe(self.reset_leds, "CPU.ClearContorl")
+        pub.subscribe(self.reset_leds, "CPU.ClearControl")
 
     def reset_leds(self) -> None:
         for led in self.leds:
@@ -64,13 +64,13 @@ class ControlLogic(wx.Panel):
         wx.Panel.__init__(self, parent, size=(200, 75))
         self.parent = parent
         self.box = wx.StaticBox(self, wx.ID_ANY, "Control Logic", wx.DefaultPosition, (200, 75))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.leds = ControlLedArray(self.box, '#0065ef', '#00075f')
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        static_box_sizer.Add(vertical_box, 1, wx.EXPAND)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)

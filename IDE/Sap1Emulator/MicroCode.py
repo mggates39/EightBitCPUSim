@@ -40,80 +40,80 @@ decode_messages = {
     "CPU.RingReset": "RCR "
 }
 
-operators = {0: {"operator": "NOP", "opcode": 0, "operand": None,
+operators = {0: {"operator": "NOP", "op_code": 0, "operand": None,
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.RingReset']]},
-             1: {"operator": "LDA <A>", "opcode": 1, "operand": "M",
+             1: {"operator": "LDA <A>", "op_code": 1, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.IrOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.AccIn'],
                                ['CPU.RingReset']]},
-             2: {"operator": "ADD <A>", "opcode": 2, "operand": "M",
+             2: {"operator": "ADD <A>", "op_code": 2, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.IrOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.TempIn'],
                                ['CPU.FlagIn', 'CPU.AluOut', 'CPU.AccIn'],
                                ['CPU.RingReset']]},
-             3: {"operator": "SUB <A>", "opcode": 3, "operand": "M",
+             3: {"operator": "SUB <A>", "op_code": 3, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.IrOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.TempIn'],
                                ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.AccIn'],
                                ['CPU.RingReset']]},
-             4: {"operator": "STA <A>", "opcode": 4, "operand": "M",
+             4: {"operator": "STA <A>", "op_code": 4, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.IrOut', 'CPU.MarIn'],
                                ['CPU.AccOut', 'CPU.MemIn'],
                                ['CPU.RingReset']]},
-             5: {"operator": "LDI", "opcode": 5, "operand": "N",
+             5: {"operator": "LDI", "op_code": 5, "operand": "N",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.IrOut', 'CPU.AccIn'],
                                ['CPU.RingReset']]},
-             6: {"operator": "JMP <A>", "opcode": 6, "operand": "M",
+             6: {"operator": "JMP <A>", "op_code": 6, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.IrOut', 'CPU.PcJump'],
                                ['CPU.RingReset']]},
-             7: {"operator": "JC <A>", "opcode": 7, "operand": "M",
+             7: {"operator": "JC <A>", "op_code": 7, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.RingReset']]},
-             8: {"operator": "JZ <A>", "opcode": 8, "operand": "M",
+             8: {"operator": "JZ <A>", "op_code": 8, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.RingReset']]},
-             9: {"operator": "NOP", "opcode": 9, "operand": None,
+             9: {"operator": "JN <A>", "op_code": 9, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.RingReset']]},
-             10: {"operator": "NOP", "opcode": 10, "operand": None,
+             10: {"operator": "NOP", "op_code": 10, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.RingReset']]},
-             11: {"operator": "NOP", "opcode": 11, "operand": None,
+             11: {"operator": "NOP", "op_code": 11, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.RingReset']]},
-             12: {"operator": "NOP", "opcode": 12, "operand": None,
+             12: {"operator": "NOP", "op_code": 12, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.RingReset']]},
-             13: {"operator": "NOP", "opcode": 13, "operand": None,
+             13: {"operator": "NOP", "op_code": 13, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.RingReset']]},
-             14: {"operator": "OUT", "opcode": 14, "operand": None,
+             14: {"operator": "OUT", "op_code": 14, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.AccOut', 'CPU.OutputWrite'],
                                 ['CPU.RingReset']]},
-             15: {"operator": "HLT", "opcode": 15, "operand": None,
+             15: {"operator": "HLT", "op_code": 15, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.Halt'],
@@ -121,20 +121,23 @@ operators = {0: {"operator": "NOP", "opcode": 0, "operand": None,
              }
 
 
-class MicroCode():
+class MicroCode:
     def __init__(self):
         self.current_operator = operators[0]
         self.current_microcode = self.current_operator["microcode"]
 
-    def decode_opcode(self, op_code, carry_flag=False, zero_flag=False, negative_flag=False):
+    def decode_op_code(self, op_code, carry_flag=False, zero_flag=False, negative_flag=False):
         self.current_operator = operators[op_code]
         self.current_microcode = self.current_operator["microcode"]
 
-        if op_code == 7 and self.carry_flag:
+        if op_code == 7 and carry_flag:
             self.current_microcode = operators[6]["microcode"]
 
         if op_code == 8 and zero_flag:
-            self.current_microcode = self.operators[6]["microcode"]
+            self.current_microcode = operators[6]["microcode"]
+
+        if op_code == 9 and zero_flag:
+            self.current_microcode = operators[6]["microcode"]
 
     def get_current_operator(self):
         return self.current_operator

@@ -1,17 +1,17 @@
 class Instructions:
     def __init__(self) -> None:
         super().__init__()
-        self.operators = {"NOP": {"operator": "NOP", "opcode": 0, "operand": None},
-                          "LDA": {"operator": "LDA", "opcode": 1, "operand": "M"},
-                          "ADD": {"operator": "ADD", "opcode": 2, "operand": "M"},
-                          "SUB": {"operator": "SUB", "opcode": 3, "operand": "M"},
-                          "STA": {"operator": "STA", "opcode": 4, "operand": "M"},
-                          "LDI": {"operator": "LDI", "opcode": 5, "operand": "N"},
-                          "JMP": {"operator": "JMP", "opcode": 6, "operand": "M"},
-                          "JC": {"operator": "JC", "opcode": 7, "operand": "M"},
-                          "JZ": {"operator": "JZ", "opcode": 8, "operand": "M"},
-                          "OUT": {"operator": "OUT", "opcode": 14, "operand": None},
-                          "HLT": {"operator": "HLT", "opcode": 15, "operand": None}
+        self.operators = {"NOP": {"operator": "NOP", "op_code": 0, "operand": None},
+                          "LDA": {"operator": "LDA", "op_code": 1, "operand": "M"},
+                          "ADD": {"operator": "ADD", "op_code": 2, "operand": "M"},
+                          "SUB": {"operator": "SUB", "op_code": 3, "operand": "M"},
+                          "STA": {"operator": "STA", "op_code": 4, "operand": "M"},
+                          "LDI": {"operator": "LDI", "op_code": 5, "operand": "N"},
+                          "JMP": {"operator": "JMP", "op_code": 6, "operand": "M"},
+                          "JC": {"operator": "JC", "op_code": 7, "operand": "M"},
+                          "JZ": {"operator": "JZ", "op_code": 8, "operand": "M"},
+                          "OUT": {"operator": "OUT", "op_code": 14, "operand": None},
+                          "HLT": {"operator": "HLT", "op_code": 15, "operand": None}
                           }
 
     def is_operator(self, operator):
@@ -23,7 +23,7 @@ class Instructions:
     def lookup_op_code(self, operator):
         op_code = -1
         if self.is_operator(operator):
-            op_code = self.operators[operator]["opcode"]
+            op_code = self.operators[operator]["op_code"]
         return op_code
 
     def get_operand_type(self, operator):

@@ -2,8 +2,6 @@ import wx
 import wx.gizmos as gizmos
 from pubsub import pub
 
-from GuiComponents.Led import LED
-
 
 class LEDSegment(wx.Panel):
     def __init__(self, parent, led_color='#36ff27', background_color='#077100', topic=None):
@@ -14,7 +12,7 @@ class LEDSegment(wx.Panel):
         self.value = 0
 
         pos = wx.DefaultPosition
-        size = (100,50) #wx.DefaultSize
+        size = (100, 50)  # wx.DefaultSize
         style = gizmos.LED_ALIGN_RIGHT  # | gizmos.LED_DRAW_FADED
         self.segment = gizmos.LEDNumberCtrl(self, -1, pos, size, style)
         # default colours are green on black

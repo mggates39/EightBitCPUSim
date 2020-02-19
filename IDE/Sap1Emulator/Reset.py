@@ -11,18 +11,18 @@ class Reset(wx.Panel):
         self.speed = 100
         self.timer = wx.Timer(self)
         self.box = wx.StaticBox(self, wx.ID_ANY, "Reset", wx.DefaultPosition, (250, 100))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.resetButton = wx.Button(self.box, wx.ID_ANY, "Reset")
         vertical_box.Add(self.resetButton, 0, wx.ALL | wx.ALIGN_LEFT, 10)
 
-        nmSizer.Add(vertical_box, 1, wx.EXPAND)
+        static_box_sizer.Add(vertical_box, 1, wx.EXPAND)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)
 
         self.resetButton.Bind(wx.EVT_BUTTON, self.on_click_reset)
 
     def on_click_reset(self, e):
-        pub.sendMessage("CPU.ClearContorl")
+        pub.sendMessage("CPU.ClearControl")
         pub.sendMessage('CPU.Reset')

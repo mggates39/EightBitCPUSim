@@ -28,7 +28,7 @@ class LEDArray(wx.Panel):
 
         if topic is not None:
             pub.subscribe(self.set_value, topic)
-            pub.subscribe(self.set_label, topic+"_label")
+            pub.subscribe(self.set_label, topic + "_label")
 
     def set_value(self, new_value: int) -> None:
         """
@@ -51,7 +51,7 @@ class LEDArray(wx.Panel):
     def set_label(self, new_label: str) -> None:
         """
         Set the value to be displayed by the LED Array.
-        :type new_value: str
+        :type new_label: str
         :rtype: None
         """
         self.label.SetLabel("{}".format(new_label))

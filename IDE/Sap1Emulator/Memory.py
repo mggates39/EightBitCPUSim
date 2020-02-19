@@ -18,6 +18,7 @@ test = [('0x0:', '00011110'),
         ('0xE:', '00011100'),
         ('0xF:', '00001110')]
 
+
 class Memory(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, size=(100, 75))
@@ -28,17 +29,16 @@ class Memory(wx.Panel):
         self.buffer = 0
         self.value = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Memory", wx.DefaultPosition, (100, 75))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
-        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.panel = wx.Panel(self.box, size=(30, 75))
         self.read_indicator = wx.StaticText(self.panel, label="RO")
         self.write_indicator = wx.StaticText(self.panel, label="RI")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
-
 
         self.list = wx.ListCtrl(self.box, wx.ID_ANY, style=wx.LC_REPORT)
         self.list.InsertColumn(0, 'Addr', width=50)
@@ -48,8 +48,8 @@ class Memory(wx.Panel):
 
         hbox.Add(self.panel, 0, wx.EXPAND)
         hbox.Add(self.list, 1, wx.EXPAND)
-        nmSizer.Add(hbox, 1, wx.EXPAND)
-        self.SetSizer(nmSizer)
+        static_box_sizer.Add(hbox, 1, wx.EXPAND)
+        self.SetSizer(static_box_sizer)
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
@@ -111,9 +111,9 @@ class Memory(wx.Panel):
         new_address = "0x{0:X}:".format(self.address)
 
         self.data[self.address] = (new_address, new_data)
-        self.list.SetItem(self.address, 1, self.data[self.address][1] )
+        self.list.SetItem(self.address, 1, self.data[self.address][1])
 
     def on_out(self):
         self.set_out_display_flag()
-        self.value = int( self.data[self.address][1], 2)
+        self.value = int(self.data[self.address][1], 2)
         pub.sendMessage('CPU.ChangeBus', new_value=self.value)

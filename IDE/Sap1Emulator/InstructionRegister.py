@@ -18,7 +18,7 @@ class InstructionRegister(wx.Panel):
         self.zero_flag = False
         self.instruction_decoder = instruction_decoder
         self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 75))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
         self.panel = wx.Panel(self.box, size=(30, 75))
@@ -36,9 +36,9 @@ class InstructionRegister(wx.Panel):
         horizontal_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
         horizontal_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
 
-        nmSizer.Add(horizontal_box, 1, wx.EXPAND)
+        static_box_sizer.Add(horizontal_box, 1, wx.EXPAND)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)
         self.operator = None
         self.microcode = []
         self.on_reset()
@@ -82,7 +82,7 @@ class InstructionRegister(wx.Panel):
         self.clear_display_flags()
 
         op_code = int((self.value >> 4) & 15)
-        self.instruction_decoder.decode_opcode(op_code)
+        self.instruction_decoder.decode_op_code(op_code)
         self.microcode = self.instruction_decoder.get_current_microcode()
         pub.sendMessage('ip.set_instruction', new_value=op_code)
         pub.sendMessage('ip.set_instruction_label', new_label="NOP")
@@ -99,7 +99,7 @@ class InstructionRegister(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         op_code = int((self.value >> 4) & 15)
-        self.instruction_decoder.decode_opcode(op_code)
+        self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag)
         operator = self.instruction_decoder.get_current_operator()
         operator_name = operator["operator"]
         self.microcode = self.instruction_decoder.get_current_microcode()

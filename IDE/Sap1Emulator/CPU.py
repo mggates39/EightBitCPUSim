@@ -23,9 +23,9 @@ class CPU(wx.Panel):
         wx.Panel.__init__(self, parent, size=(675, 700))
         self.parent = parent
         self.box = wx.StaticBox(self, wx.ID_ANY, "SAP 1 CPU", wx.DefaultPosition, (675, 700))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.HORIZONTAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.HORIZONTAL)
 
-        self.microcoder = MicroCode()
+        self.microcode_engine = MicroCode()
         self.reset = Reset(self.box)
         self.bus = Bus(self.box)
         self.clock = Clock(self.box)
@@ -38,7 +38,7 @@ class CPU(wx.Panel):
         self.out = OutputRegister(self.box)
         self.cl = ControlLogic(self.box)
         self.sr = StatusRegister(self.box)
-        self.ir = InstructionRegister(self.box, self.microcoder)
+        self.ir = InstructionRegister(self.box, self.microcode_engine)
         self.history = ExecutionHistory(self.box)
 
         self.sizer = wx.GridBagSizer(10, 10)
@@ -62,9 +62,9 @@ class CPU(wx.Panel):
 
         self.sizer.Add(self.sr, pos=(12, 5), flag=wx.EXPAND)
 
-        nmSizer.Add(self.sizer, 1, wx.EXPAND)
+        static_box_sizer.Add(self.sizer, 1, wx.EXPAND)
         self.SetAutoLayout(1)
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)
         self.sizer.Fit(self)
 
     def load_memory(self, memory):

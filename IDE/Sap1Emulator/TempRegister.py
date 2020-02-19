@@ -10,12 +10,12 @@ class TempRegister(wx.Panel):
         self.parent = parent
         self.value = 0
         self.buffer = 0
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Temp Register", wx.DefaultPosition, (100,75))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Temp Register", wx.DefaultPosition, (100, 75))
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.panel = wx.Panel(self.box, size=(30, 75))
         self.write_indicator = wx.StaticText(self.panel, label="BI")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
@@ -30,15 +30,14 @@ class TempRegister(wx.Panel):
         hbox.Add(vertical_box, 1, wx.EXPAND)
         hbox.Add(self.panel, 0, wx.EXPAND)
 
-        nmSizer.Add(hbox, 1, wx.EXPAND)
+        static_box_sizer.Add(hbox, 1, wx.EXPAND)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.TempIn')
-
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -63,4 +62,3 @@ class TempRegister(wx.Panel):
         self.set_in_display_flag()
         pub.sendMessage('tmp.set_value', new_value=self.value)
         pub.sendMessage('alu.set_value_2', new_value=self.value)
-

@@ -12,10 +12,10 @@ class OutputRegister(wx.Panel):
         self.value = 0
         self.buffer = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Output Register", wx.DefaultPosition, (100, 100))
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.panel = wx.Panel(self.box, size=(30, 75))
         self.write_indicator = wx.StaticText(self.panel, label="OI")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
@@ -32,9 +32,9 @@ class OutputRegister(wx.Panel):
         hbox.Add(vertical_box, 1, wx.EXPAND)
         hbox.Add(self.panel, 0, wx.EXPAND)
 
-        nmSizer.Add(hbox, 1, wx.EXPAND)
+        static_box_sizer.Add(hbox, 1, wx.EXPAND)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')

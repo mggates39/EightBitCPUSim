@@ -11,11 +11,11 @@ class Accumulator(wx.Panel):
         self.box = wx.StaticBox(self, wx.ID_ANY, "Accumulator", wx.DefaultPosition, (150, 75))
         self.value = 0
         self.buffer = 0
-        nmSizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
+        static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.panel = wx.Panel(self.box, size=( 30, 75))
+        self.panel = wx.Panel(self.box, size=(30, 75))
         self.read_indicator = wx.StaticText(self.panel, label="AO")
         self.write_indicator = wx.StaticText(self.panel, label="AI")
         vbox = wx.BoxSizer(wx.VERTICAL)
@@ -32,9 +32,9 @@ class Accumulator(wx.Panel):
         hbox.Add(vertical_box, 1, wx.EXPAND)
         hbox.Add(self.panel, 0, wx.EXPAND)
 
-        nmSizer.Add(hbox, 1, wx.EXPAND)
+        static_box_sizer.Add(hbox, 1, wx.EXPAND)
 
-        self.SetSizer(nmSizer)
+        self.SetSizer(static_box_sizer)
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
