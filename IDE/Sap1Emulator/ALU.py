@@ -1,3 +1,10 @@
+"""
+    ALU.py
+    ------
+
+    This module contains the Arithmetic Logic Unit implementation and display.
+"""
+
 import wx
 from pubsub import pub
 
@@ -5,7 +12,16 @@ from GuiComponents.LedArray import LEDArray
 
 
 class Alu(wx.Panel):
+    """
+    The Alu class implements the ALU and manages the display of its values, flags and control signal representations
+    insde a wxPython Panel
+    """
     def __init__(self, parent):
+        """
+        Create a new ALU Panel
+
+        :param parent: Holder panel that will contian this ALU Panel
+        """
         wx.Panel.__init__(self, parent, size=(100, 75))
         self.parent = parent
         self.result = 0
@@ -53,13 +69,13 @@ class Alu(wx.Panel):
 
     def set_sub_display_flag(self):
         """
-
+        Turn on the Subtraction Control signal display.
         """
         self.subtract_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_out_display_flag(self):
         """
-
+        Turn on the Execution Out Control signal display.
         """
         self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
@@ -72,7 +88,7 @@ class Alu(wx.Panel):
 
     def on_clock(self):
         """
-
+        Receive the CPU Clock signal
         """
         self.subtract = False
         self.clear_display_flags()
@@ -80,7 +96,7 @@ class Alu(wx.Panel):
 
     def on_reset(self):
         """
-
+        Receive the CPU Reset control signal
         """
         self.result = 0
         self.a_value = 0
@@ -92,22 +108,23 @@ class Alu(wx.Panel):
 
     def on_a_value(self, new_value):
         """
-
-        :param new_value:
+        Receive a new value from the Accumulator (a) register.
+        :param new_value: int
         """
         self.a_value = new_value
         self.do_math()
 
     def on_b_value(self, new_value):
         """
-
+        Receive a new value from the temp (b) register.
+        :param new_value: int
         """
         self.b_value = new_value
         self.do_math()
 
     def on_subtract(self):
         """
-
+        Receive the subtract control message and enable subtration in do_math.
         """
         self.set_sub_display_flag()
         self.subtract = True
@@ -115,7 +132,9 @@ class Alu(wx.Panel):
 
     def do_math(self):
         """
-
+        Do the math calculation.  Addition by default, but subtraction if
+        the subtract flag is set.
+        Then update the carry and zero flag values accordingly
         """
         if self.subtract:
             self.result = self.a_value - self.b_value
@@ -141,20 +160,20 @@ class Alu(wx.Panel):
 
     def on_out(self):
         """
-
+        Send message to the bus that there is a new value to read.
         """
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=self.result)
 
     def on_save_flags(self):
         """
-
+        Send out the current carry and zero status flags.
         """
         pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero)
 
     def set_carry_label(self, new_label: bool) -> None:
         """
-        Set the value to be displayed by the Carry Flag.
+        Set the label to be displayed for the Carry Flag.
         :type new_label: bool
         :rtype: None
         """
@@ -163,7 +182,7 @@ class Alu(wx.Panel):
 
     def set_zero_label(self, new_label: bool) -> None:
         """
-        Set the value to be displayed by the Zero Flag.
+        Set the labek to be displayed for the Zero Flag.
         :type new_label: bool
         :rtype: None
         """
