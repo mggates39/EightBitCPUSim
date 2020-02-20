@@ -1,3 +1,10 @@
+"""
+    Bus.py
+    ------
+
+    This module contains the Eight Bit Data buse implementation and display.
+"""
+
 import wx
 from pubsub import pub
 
@@ -5,7 +12,15 @@ from GuiComponents.LedArray import LEDArray
 
 
 class Bus(wx.Panel):
+    """
+    The Bus class implements the data bus data passing and display inside a wxPython Panel.
+    """
     def __init__(self, parent):
+        """
+        Create a new Bus Panel
+
+        :param parent: Panel that will contain this Bus Panel
+        """
         wx.Panel.__init__(self, parent, size=(175, 75))
         self.parent = parent
         self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (150, 75))
@@ -25,13 +40,22 @@ class Bus(wx.Panel):
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_write, "CPU.ChangeBus")
 
-    def on_bus_write(self, new_value):
+    def on_bus_write(self, new_value: object) -> None:
+        """
+        Put a new value on the data bus and tell everyone that is interested that there is new data.
+        Also update the LED array with the new data value.
+
+        :param new_value: The new value to be written on to the bus
+        """
         if new_value != self.value:
             self.value = new_value
             pub.sendMessage('bus.set_lights', new_value=self.value)
             pub.sendMessage('CPU.BusChanged', new_value=self.value)
 
-    def on_reset(self):
+    def on_reset(self) -> None:
+        """
+        Reset the bus to all zeros.
+        """
         self.value = 0
         pub.sendMessage('bus.set_lights', new_value=self.value)
 

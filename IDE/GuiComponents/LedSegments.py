@@ -1,10 +1,27 @@
+"""
+    LedEDSegment.py
+    ------
+
+    This module contains the seven segment lED display.
+"""
+
 import wx
 import wx.gizmos as gizmos
 from pubsub import pub
 
 
 class LEDSegment(wx.Panel):
+    """
+    The LEDSegment class implements a seven segement display
+    """
     def __init__(self, parent, led_color='#36ff27', background_color='#077100', topic=None):
+        """
+
+        :param parent: Panel that will hold the Seven Segment display
+        :param led_color: Color of the LED segments.  Defaults to light green
+        :param background_color: Color of the background of the display.  Defaults to Dark Green
+        :param topic: pyPubSub topic that will change the value to display
+        """
         wx.Panel.__init__(self, parent, size=(10, 1))
         self.parent = parent
         self.led_color = led_color
@@ -32,8 +49,7 @@ class LEDSegment(wx.Panel):
     def set_value(self, new_value: int) -> None:
         """
         Set the value to be displayed by the 7 segment LED display.
-        :type new_value: int
-        :rtype: None
+        :param new_value: new value to display
         """
 
         if self.value != new_value:

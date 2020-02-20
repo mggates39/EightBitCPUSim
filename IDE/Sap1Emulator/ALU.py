@@ -106,20 +106,20 @@ class Alu(wx.Panel):
         self.subtract = False
         self.on_clock()
 
-    def on_a_value(self, new_value):
+    def on_a_value(self, new_value: int) -> None:
         """
         Receive a new value from the Accumulator (a) register.
 
-        :param new_value: int
+        :param new_value: New value from the A Register
         """
         self.a_value = new_value
         self.do_math()
 
-    def on_b_value(self, new_value):
+    def on_b_value(self, new_value: int) -> None:
         """
         Receive a new value from the temp (b) register.
 
-        :param new_value: int
+        :param new_value: New value from the A Register
         """
         self.b_value = new_value
         self.do_math()
