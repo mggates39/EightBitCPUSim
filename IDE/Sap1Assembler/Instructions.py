@@ -10,6 +10,8 @@ class Instructions:
                           "JMP": {"operator": "JMP", "op_code": 6, "operand": "M"},
                           "JC": {"operator": "JC", "op_code": 7, "operand": "M"},
                           "JZ": {"operator": "JZ", "op_code": 8, "operand": "M"},
+                          "JNZ": {"operator": "JNZ", "op_code": 9, "operand": "M"},
+                          "JM": {"operator": "JM", "op_code": 10, "operand": "M"},
                           "OUT": {"operator": "OUT", "op_code": 14, "operand": None},
                           "HLT": {"operator": "HLT", "op_code": 15, "operand": None}
                           }

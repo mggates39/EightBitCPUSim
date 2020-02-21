@@ -7,7 +7,7 @@ from Sap1Emulator.MicroCode import MicroCode
 
 class InstructionRegister(wx.Panel):
     def __init__(self, parent, instruction_decoder: MicroCode):
-        wx.Panel.__init__(self, parent, size=(100, 75))
+        wx.Panel.__init__(self, parent, size=(100, 100))
         self.parent = parent
         self.value = 0
         self.buffer = 0
@@ -16,8 +16,9 @@ class InstructionRegister(wx.Panel):
         self.ring_count = 0
         self.carry_flag = False
         self.zero_flag = False
+        self.minus_flag = False
         self.instruction_decoder = instruction_decoder
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 100))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -78,6 +79,7 @@ class InstructionRegister(wx.Panel):
         self.ring_count = 0
         self.carry_flag = False
         self.zero_flag = False
+        self.minus_flag = False
 
         self.clear_display_flags()
 
@@ -99,7 +101,7 @@ class InstructionRegister(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         op_code = int((self.value >> 4) & 15)
-        self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag)
+        self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag, negative_flag=self.minus_flag)
         operator = self.instruction_decoder.get_current_operator()
         operator_name = operator["operator"]
         self.microcode = self.instruction_decoder.get_current_microcode()
@@ -112,6 +114,7 @@ class InstructionRegister(wx.Panel):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=(self.value & 15))
 
-    def on_read_flags(self, new_carry, new_zero):
+    def on_read_flags(self, new_carry, new_zero, new_minus):
         self.carry_flag = new_carry
         self.zero_flag = new_zero
+        self.minus_flag = new_minus

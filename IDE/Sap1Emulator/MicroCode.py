@@ -88,11 +88,11 @@ operators = {0: {"operator": "NOP", "op_code": 0, "operand": None,
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.RingReset']]},
-             9: {"operator": "JN <A>", "op_code": 9, "operand": "M",
+             9: {"operator": "JNZ <A>", "op_code": 9, "operand": "M",
                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                ['CPU.RingReset']]},
-             10: {"operator": "NOP", "op_code": 10, "operand": None,
+             10: {"operator": "JM <A>", "op_code": 10, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.RingReset']]},
@@ -137,6 +137,9 @@ class MicroCode:
             self.current_microcode = operators[6]["microcode"]
 
         if op_code == 9 and zero_flag:
+            self.current_microcode = operators[6]["microcode"]
+
+        if op_code == 10 and negative_flag:
             self.current_microcode = operators[6]["microcode"]
 
     def get_current_operator(self):

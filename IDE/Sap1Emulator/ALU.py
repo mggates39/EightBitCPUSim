@@ -29,6 +29,7 @@ class Alu(wx.Panel):
         self.b_value = 0
         self.carry = False
         self.zero = False
+        self.minus = False
         self.subtract = False
         self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 75))
         self.static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -48,9 +49,11 @@ class Alu(wx.Panel):
         self.leds = LEDArray(self.box, 8, topic="alu.set_value")
         self.carry_flag = wx.StaticText(self.box, label="Carry-Bit: False", style=wx.ALIGN_CENTRE)
         self.zero_flag = wx.StaticText(self.box, label="Zero-Bit: False", style=wx.ALIGN_CENTRE)
+        self.minus_flag = wx.StaticText(self.box, label="Sign-Bit: False", style=wx.ALIGN_CENTRE)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
-        vertical_box.Add(self.carry_flag, 0, wx.ALIGN_CENTER | wx.ALL, 10)
-        vertical_box.Add(self.zero_flag, 0, wx.ALIGN_CENTER | wx.ALL, 10)
+        vertical_box.Add(self.carry_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
+        vertical_box.Add(self.zero_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
+        vertical_box.Add(self.minus_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
 
         hbox.Add(vertical_box, 1, wx.EXPAND)
         hbox.Add(self.panel, 0, wx.EXPAND)
@@ -103,6 +106,7 @@ class Alu(wx.Panel):
         self.b_value = 0
         self.carry = False
         self.zero = False
+        self.minus = False
         self.subtract = False
         self.on_clock()
 
@@ -151,13 +155,20 @@ class Alu(wx.Panel):
                 self.carry = True
             else:
                 self.carry = False
+
         if self.result == 0:
             self.zero = True
         else:
             self.zero = False
 
+        if self.result & 128 == 128:
+            self.minus = True
+        else:
+            self.minus = False
+
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
+        self.set_sign_label(self.minus)
         pub.sendMessage('alu.set_value', new_value=self.result)
 
     def on_out(self):
@@ -171,7 +182,7 @@ class Alu(wx.Panel):
         """
         Send out the current carry and zero status flags.
         """
-        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero)
+        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero, new_minus=self.minus)
 
     def set_carry_label(self, new_label: bool) -> None:
         """
@@ -189,4 +200,13 @@ class Alu(wx.Panel):
         :param new_label: New state of the zero flag
         """
         self.zero_flag.SetLabel("Zero-Bit: {}".format(new_label))
+        self.static_box_sizer.Layout()
+
+    def set_sign_label(self, new_label: bool) -> None:
+        """
+        Set the labek to be displayed for the Minus Flag.
+
+        :param new_label: New state of the zero flag
+        """
+        self.minus_flag.SetLabel("Sign-Bit: {}".format(new_label))
         self.static_box_sizer.Layout()

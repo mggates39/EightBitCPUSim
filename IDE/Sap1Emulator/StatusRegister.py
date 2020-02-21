@@ -10,6 +10,7 @@ class StatusRegister(wx.Panel):
         self.parent = parent
         self.carry = False
         self.zero = False
+        self.minus = False
         light_color = '#36ff27'
         dark_color = '#077100'
         self.box = wx.StaticBox(self, wx.ID_ANY, "Status Register", wx.DefaultPosition, (100, 75))
@@ -30,9 +31,16 @@ class StatusRegister(wx.Panel):
         zero_box.Add(self.zero_flag, 0, wx.ALL | wx.ALIGN_RIGHT, 5)
         zero_box.Add(self.zero_led, 0, wx.ALL | wx.ALIGN_LEFT, 5)
 
+        negative_box = wx.BoxSizer(wx.HORIZONTAL)
+        self.minus_flag = wx.StaticText(self.box, label="Minus:", style=wx.ALIGN_RIGHT)
+        self.minus_led = LED(self.box, light_color, dark_color)
+        negative_box.Add(self.minus_flag, 0, wx.ALL | wx.ALIGN_RIGHT, 5)
+        negative_box.Add(self.minus_led, 0, wx.ALL | wx.ALIGN_LEFT, 5)
+
         vertical_box.Add(carry_box, 1, wx.EXPAND | wx.ALIGN_CENTER)
         vertical_box.Add(zero_box, 1, wx.EXPAND | wx.ALIGN_CENTER)
-        horizontal_box.Add(vertical_box, 1, wx.EXPAND)
+        vertical_box.Add(negative_box, 1, wx.EXPAND | wx.ALIGN_CENTER)
+        horizontal_box.Add(vertical_box, 1, wx.EXPAND | wx.ALIGN_CENTER)
 
         self.panel = wx.Panel(self.box, size=(30, 75))
         self.write_indicator = wx.StaticText(self.panel, label="FI")
@@ -62,14 +70,17 @@ class StatusRegister(wx.Panel):
     def on_reset(self):
         self.carry = False
         self.zero = False
+        self.minus = False
         self.on_clock()
 
-    def on_get_flags(self, new_carry, new_zero):
+    def on_get_flags(self, new_carry, new_zero, new_minus):
         self.set_in_display_flag()
         self.carry = new_carry
         self.zero = new_zero
+        self.minus = new_minus
         self.display_flags()
 
     def display_flags(self):
         self.carry_led.light(self.carry)
         self.zero_led.light(self.zero)
+        self.minus_led.light(self.minus)
