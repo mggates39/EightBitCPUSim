@@ -5,10 +5,12 @@ from GuiComponents.LedArray import LEDArray
 
 
 class Accumulator(wx.Panel):
-    def __init__(self, parent):
+    def __init__(self, parent, name="A"):
         wx.Panel.__init__(self, parent, size=(150, 75))
+        title = name + " Register"
+        self.topic_prefix = name + "Reg"
         self.parent = parent
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Accumulator", wx.DefaultPosition, (150, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, title, wx.DefaultPosition, (150, 75))
         self.value = 0
         self.buffer = 0
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -16,8 +18,8 @@ class Accumulator(wx.Panel):
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
         self.panel = wx.Panel(self.box, size=(30, 75))
-        self.read_indicator = wx.StaticText(self.panel, label="AO")
-        self.write_indicator = wx.StaticText(self.panel, label="AI")
+        self.read_indicator = wx.StaticText(self.panel, label=name+"O")
+        self.write_indicator = wx.StaticText(self.panel, label=name+"I")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
@@ -25,7 +27,7 @@ class Accumulator(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = LEDArray(self.box, 8, topic="acc.set_value")
+        self.leds = LEDArray(self.box, 8, topic=self.topic_prefix + ".set_value")
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
 
@@ -39,8 +41,8 @@ class Accumulator(wx.Panel):
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
-        pub.subscribe(self.on_in, 'CPU.AccIn')
-        pub.subscribe(self.on_out, 'CPU.AccOut')
+        pub.subscribe(self.on_in, 'CPU.'+self.topic_prefix+'In')
+        pub.subscribe(self.on_out, 'CPU.'+self.topic_prefix+'Out')
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -59,7 +61,7 @@ class Accumulator(wx.Panel):
         self.value = 0
         self.buffer = 0
         self.on_clock()
-        pub.sendMessage('acc.set_value', new_value=self.value)
+        pub.sendMessage(self.topic_prefix + ".set_value", new_value=self.value)
 
     def on_bus_change(self, new_value):
         self.buffer = new_value
@@ -67,8 +69,8 @@ class Accumulator(wx.Panel):
     def on_in(self):
         self.value = self.buffer
         self.set_in_display_flag()
-        pub.sendMessage('acc.set_value', new_value=self.value)
-        pub.sendMessage('alu.set_value_1', new_value=self.value)
+        pub.sendMessage(self.topic_prefix + '.set_value', new_value=self.value)
+        pub.sendMessage('alu.set_value_' + self.topic_prefix, new_value=self.value)
 
     def on_out(self):
         self.set_out_display_flag()

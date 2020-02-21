@@ -64,7 +64,7 @@ class Alu(wx.Panel):
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
-        pub.subscribe(self.on_a_value, 'alu.set_value_1')
+        pub.subscribe(self.on_a_value, 'alu.set_value_AReg')
         pub.subscribe(self.on_b_value, 'alu.set_value_2')
         pub.subscribe(self.on_out, 'CPU.AluOut')
         pub.subscribe(self.on_subtract, 'CPU.AluSub')

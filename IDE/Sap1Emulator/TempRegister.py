@@ -16,7 +16,7 @@ class TempRegister(wx.Panel):
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
         self.panel = wx.Panel(self.box, size=(30, 75))
-        self.write_indicator = wx.StaticText(self.panel, label="BI")
+        self.write_indicator = wx.StaticText(self.panel, label="TI")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
