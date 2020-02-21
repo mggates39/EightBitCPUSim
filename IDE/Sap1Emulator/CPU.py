@@ -20,9 +20,9 @@ from Sap1Emulator.TempRegister import TempRegister
 
 class CPU(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(675, 700))
+        wx.Panel.__init__(self, parent, size=(1024, 800))
         self.parent = parent
-        self.box = wx.StaticBox(self, wx.ID_ANY, "SAP 1 CPU", wx.DefaultPosition, (675, 700))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "SAP 1 CPU", wx.DefaultPosition, (1024, 800))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.HORIZONTAL)
 
         self.microcode_engine = MicroCode()

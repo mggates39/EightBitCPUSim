@@ -3,6 +3,7 @@ import sys
 
 import wx
 import wx.adv
+import wx.lib.scrolledpanel
 import wx.stc
 
 from Sap1Assembler.Assembler import Assembler
@@ -93,10 +94,16 @@ class MainWindow(wx.Frame):
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
         wx.Frame.__init__(self, parent, title=title, size=(600, 600))
+        screenSize = wx.DisplaySize()
+        screenWidth = screenSize[0]
+        screenHeight = screenSize[1]
         self.CreateStatusBar()  # A Status bar in the bottom of the window
 
         # Create a panel and notebook (tabs holder)
-        p = wx.Panel(self)
+        # p = wx.Panel(self)
+        p = wx.lib.scrolledpanel.ScrolledPanel(self, -1, size=(screenWidth, screenHeight), pos=(0, 0),
+                                                    style=wx.SIMPLE_BORDER)
+        p.SetupScrolling()
         self.nb = wx.Notebook(p)
 
         # Create the tab windows
