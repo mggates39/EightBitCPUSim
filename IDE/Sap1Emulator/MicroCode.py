@@ -96,18 +96,6 @@ operators = {0: {"operator": "NOP", "op_code": 0, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                                 ['CPU.RingReset']]},
-             11: {"operator": "NOP", "op_code": 11, "operand": None,
-                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                ['CPU.RingReset']]},
-             12: {"operator": "NOP", "op_code": 12, "operand": None,
-                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                ['CPU.RingReset']]},
-             13: {"operator": "NOP", "op_code": 13, "operand": None,
-                  "microcode": [['CPU.PcOut', 'CPU.MarIn'],
-                                ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                ['CPU.RingReset']]},
              14: {"operator": "OUT", "op_code": 14, "operand": None,
                   "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                 ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -120,6 +108,12 @@ operators = {0: {"operator": "NOP", "op_code": 0, "operand": None,
                                 ['CPU.RingReset']]}
              }
 
+invalid_operator = {"operator": "---", "op_code": 0, "operand": None,
+                    "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                                  ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                                  ['CPU.Halt'],
+                                  ['CPU.RingReset']]}
+
 
 class MicroCode:
     def __init__(self):
@@ -127,20 +121,24 @@ class MicroCode:
         self.current_microcode = self.current_operator["microcode"]
 
     def decode_op_code(self, op_code, carry_flag=False, zero_flag=False, negative_flag=False):
-        self.current_operator = operators[op_code]
-        self.current_microcode = self.current_operator["microcode"]
+        if op_code in operators:
+            self.current_operator = operators[op_code]
+            self.current_microcode = self.current_operator["microcode"]
 
-        if op_code == 7 and carry_flag:
-            self.current_microcode = operators[6]["microcode"]
+            if op_code == 7 and carry_flag:
+                self.current_microcode = operators[6]["microcode"]
 
-        if op_code == 8 and zero_flag:
-            self.current_microcode = operators[6]["microcode"]
+            if op_code == 8 and zero_flag:
+                self.current_microcode = operators[6]["microcode"]
 
-        if op_code == 9 and zero_flag:
-            self.current_microcode = operators[6]["microcode"]
+            if op_code == 9 and zero_flag:
+                self.current_microcode = operators[6]["microcode"]
 
-        if op_code == 10 and negative_flag:
-            self.current_microcode = operators[6]["microcode"]
+            if op_code == 10 and negative_flag:
+                self.current_microcode = operators[6]["microcode"]
+        else:
+            self.current_operator = invalid_operator
+            self.current_microcode = self.current_operator["microcode"]
 
     def get_current_operator(self):
         return self.current_operator
