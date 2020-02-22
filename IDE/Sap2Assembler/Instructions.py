@@ -11,6 +11,7 @@ class Instructions:
             "HLT": {"operands": 0, "included": 0, "bytes": 1, "operators": ["HLT"]},
             "IN": {"operands": 1, "included": 0, "bytes": 2, "operators": ["IN"]},
             "INR": {"operands": 1, "included": 1, "bytes": 1, "operators": ["INR A", "INR B", "INR C"]},
+            "JC": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JC"]},
             "JM": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JM"]},
             "JMP": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JMP"]},
             "JNZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNZ"]},
@@ -72,6 +73,8 @@ class Instructions:
             "INR C": {"operator": "INR C", "op_code": 0x0C, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
 
+            "JC": {"operator": "JC", "op_code": 0xFB, "operand1": "M", "operand2": None, "addressing": "Imm",
+                   "bytes": 3},
             "JM": {"operator": "JM", "op_code": 0xFA, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
             "JMP": {"operator": "JMP", "op_code": 0xC3, "operand1": "M", "operand2": None, "addressing": "Imm",
