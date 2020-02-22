@@ -26,8 +26,7 @@ class ExecutionHistory(wx.Panel):
         hbox.Add(self.list, 1, wx.EXPAND)
         static_box_sizer.Add(hbox, 1, wx.EXPAND)
 
-        for i in control_messages:
-            message = control_messages[i]
+        for message in control_messages:
             pub.subscribe(self.on_control, message["topic"])
 
         pub.subscribe(self.on_clock, 'CPU.Clock')

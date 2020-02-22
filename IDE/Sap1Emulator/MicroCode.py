@@ -1,24 +1,22 @@
-control_messages = {
-    0: {"topic": "CPU.Halt", "label": "HLT"},
-    1: {"topic": "CPU.MarIn", "label": "MI"},
-    2: {"topic": "CPU.MemIn", "label": "RI"},
-    3: {"topic": "CPU.MemOut", "label": "RO"},
-    4: {"topic": "CPU.IrIn", "label": "II"},
-    5: {"topic": "CPU.IrOut", "label": "IO"},
-    6: {"topic": "CPU.ARegIn", "label": "AI"},
-    7: {"topic": "CPU.ARegOut", "label": "AO"},
-
-    8: {"topic": "CPU.AluOut", "label": "EO"},
-    9: {"topic": "CPU.AluSub", "label": "SU"},
-    10: {"topic": "CPU.TempIn", "label": "TI"},
-    11: {"topic": "CPU.OutputWrite", "label": "OI"},
-
-    12: {"topic": "CPU.PcOut", "label": "CO"},
-    13: {"topic": "CPU.PcInc", "label": "CE"},
-    14: {"topic": "CPU.PcJump", "label": "CJ"},
-    15: {"topic": "CPU.FlagIn", "label": "FI"},
-    16: {"topic": "CPU.RingReset", "label": "RCR"},
-}
+control_messages = [
+    {"topic": "CPU.Halt", "label": "HLT"},
+    {"topic": "CPU.MarIn", "label": "MI"},
+    {"topic": "CPU.MemIn", "label": "RI"},
+    {"topic": "CPU.MemOut", "label": "RO"},
+    {"topic": "CPU.IrIn", "label": "II"},
+    {"topic": "CPU.IrOut", "label": "IO"},
+    {"topic": "CPU.ARegIn", "label": "AI"},
+    {"topic": "CPU.ARegOut", "label": "AO"},
+    {"topic": "CPU.AluOut", "label": "EO"},
+    {"topic": "CPU.AluSub", "label": "SU"},
+    {"topic": "CPU.TempIn", "label": "TI"},
+    {"topic": "CPU.OutputWrite", "label": "OI"},
+    {"topic": "CPU.PcOut", "label": "CO"},
+    {"topic": "CPU.PcInc", "label": "CE"},
+    {"topic": "CPU.PcJump", "label": "CJ"},
+    {"topic": "CPU.FlagIn", "label": "FI"},
+    {"topic": "CPU.RingReset", "label": "RCR"}
+]
 
 decode_messages = {
     "CPU.Halt": "HLT ",
