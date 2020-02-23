@@ -15,15 +15,16 @@ class Bus(wx.Panel):
     """
     The Bus class implements the data bus data passing and display inside a wxPython Panel.
     """
+
     def __init__(self, parent):
         """
         Create a new Bus Panel
 
         :param parent: Panel that will contain this Bus Panel
         """
-        wx.Panel.__init__(self, parent, size=(175, 75))
+        wx.Panel.__init__(self, parent, size=(300, 75))
         self.parent = parent
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (150, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (300, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
@@ -58,4 +59,3 @@ class Bus(wx.Panel):
         """
         self.value = 0
         pub.sendMessage('bus.set_lights', new_value=self.value)
-

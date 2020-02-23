@@ -4,13 +4,13 @@ from pubsub import pub
 
 class Reset(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(250, 100))
+        wx.Panel.__init__(self, parent, size=(350, 75))
         self.parent = parent
         self.index = 0
         self.halted = False
         self.speed = 100
         self.timer = wx.Timer(self)
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Reset", wx.DefaultPosition, (250, 100))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Reset", wx.DefaultPosition, (350, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 

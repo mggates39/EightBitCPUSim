@@ -6,11 +6,11 @@ from GuiComponents.LedArray import LEDArray
 
 class ProgramCounter(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(250, 75))
+        wx.Panel.__init__(self, parent, size=(350, 100))
         self.parent = parent
         self.value = 0
         self.buffer = 0
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Program Counter", wx.DefaultPosition, (250, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Program Counter", wx.DefaultPosition, (350, 100))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 

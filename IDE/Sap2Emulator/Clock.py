@@ -14,19 +14,20 @@ class Clock(wx.Panel):
     The Clock class implements a periodic or manual clock tick that drives the CPU
     through the execution of the microcode for each instruction.  This is displayed inside a wxPython Panel
     """
+
     def __init__(self, parent):
         """
         Create a new Clock Panel
 
         :param parent: Panel that will contain this Bus Panel
         """
-        wx.Panel.__init__(self, parent, size=(250, 100))
+        wx.Panel.__init__(self, parent, size=(300, 75))
         self.parent = parent
         self.index = 0
         self.halted = False
         self.speed = 100
         self.timer = wx.Timer(self)
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (250, 100))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (300, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)

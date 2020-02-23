@@ -7,7 +7,7 @@ from Sap1Emulator.MicroCode import MicroCode
 
 class InstructionRegister(wx.Panel):
     def __init__(self, parent, instruction_decoder: MicroCode):
-        wx.Panel.__init__(self, parent, size=(100, 100))
+        wx.Panel.__init__(self, parent, size=(100, 150))
         self.parent = parent
         self.value = 0
         self.operand = 0
@@ -19,7 +19,7 @@ class InstructionRegister(wx.Panel):
         self.zero_flag = False
         self.minus_flag = False
         self.instruction_decoder = instruction_decoder
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 100))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 150))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -37,10 +37,12 @@ class InstructionRegister(wx.Panel):
 
         self.instruction = LEDArray(self.box, 8, topic="ip.set_instruction")
         self.data = LEDArray(self.box, 16, topic="ip.set_data")
+        register_box = wx.BoxSizer(wx.VERTICAL)
+        register_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
+        register_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
 
         horizontal_box.Add(self.panel, 0, wx.EXPAND)
-        horizontal_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
-        horizontal_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        horizontal_box.Add(register_box, 1, wx.EXPAND)
 
         static_box_sizer.Add(horizontal_box, 1, wx.EXPAND)
 
@@ -118,7 +120,8 @@ class InstructionRegister(wx.Panel):
         self.operand = 0
         self.set_in_display_flag()
         op_code = int(self.value)
-        self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag, negative_flag=self.minus_flag)
+        self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag,
+                                                negative_flag=self.minus_flag)
         operator = self.instruction_decoder.get_current_operator()
         operator_name = operator["operator"]
         self.microcode = self.instruction_decoder.get_current_microcode()
@@ -139,7 +142,7 @@ class InstructionRegister(wx.Panel):
 
     def on_out(self):
         self.set_out_display_flag()
-        pub.sendMessage('CPU.ChangeBus', new_value=(self.value & 15))
+        pub.sendMessage('CPU.ChangeBus', new_value=self.operand)
 
     def on_read_flags(self, new_carry, new_zero, new_minus):
         self.carry_flag = new_carry
