@@ -75,7 +75,7 @@ class CPU(wx.Panel):
         data = []
         idx = 0
         for mem in memory.get_memory_array():
-            data.append(("0x{0:X}:".format(idx), "{0:08b}".format(mem)))
+            data.append(("0x{0:04X}:".format(idx), "{0:08b}".format(mem)))
             idx += 1
 
         self.mem.load_data(data)
