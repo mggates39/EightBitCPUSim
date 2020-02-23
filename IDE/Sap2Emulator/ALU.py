@@ -177,8 +177,8 @@ class Alu(wx.Panel):
         self.logical_and_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.logical_or_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.logical_xor_indicator.SetForegroundColour((0, 0, 0))  # set text color
-        self.logical_roll_right_indicator.SetForegroundColour((0, 0, 255))  # set text color
-        self.logical_roll_left_indicator.SetForegroundColour((0, 0, 255))  # set text color
+        self.logical_roll_right_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.logical_roll_left_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         """
