@@ -42,7 +42,9 @@ control_messages = [
 
     {"topic": "CPU.FlagIn", "label": "FI"},
 
-    {"topic": "CPU.RingReset", "label": "RCR"}
+    {"topic": "CPU.RingReset", "label": "RCR"},
+
+    {"topic": "CPU.IllegalInst", "label": "ILL"}
 ]
 
 decode_messages = {
@@ -80,7 +82,8 @@ decode_messages = {
     "CPU.PcInc": "CE ",
     "CPU.PcJump": "CJ ",
     "CPU.FlagIn": "FI ",
-    "CPU.RingReset": "RCR "
+    "CPU.RingReset": "RCR ",
+    "CPU.IllegalInst": "ILL "
 }
 
 operators = {
@@ -392,7 +395,7 @@ operators = {
 invalid_operator = {"operator": "***", "op_code": 0x00, "operand1": None, "operand2": None, "addressing": "Non",
                     "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                   ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                  ['CPU.Halt'],
+                                  ['CPU.IllegalInst', 'CPU.Halt'],
                                   ['CPU.RingReset']]}
 
 

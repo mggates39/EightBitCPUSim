@@ -15,7 +15,8 @@ control_messages = [
     {"topic": "CPU.PcInc", "label": "CE"},
     {"topic": "CPU.PcJump", "label": "CJ"},
     {"topic": "CPU.FlagIn", "label": "FI"},
-    {"topic": "CPU.RingReset", "label": "RCR"}
+    {"topic": "CPU.RingReset", "label": "RCR"},
+    {"topic": "CPU.IllegalInst", "label": "ILL"}
 ]
 
 decode_messages = {
@@ -35,7 +36,8 @@ decode_messages = {
     "CPU.PcInc": "CE ",
     "CPU.PcJump": "CJ ",
     "CPU.FlagIn": "FI ",
-    "CPU.RingReset": "RCR "
+    "CPU.RingReset": "RCR ",
+    "CPU.IllegalInst": "ILL "
 }
 
 operators = {0: {"operator": "NOP", "op_code": 0, "operand": None,
@@ -106,10 +108,10 @@ operators = {0: {"operator": "NOP", "op_code": 0, "operand": None,
                                 ['CPU.RingReset']]}
              }
 
-invalid_operator = {"operator": "---", "op_code": 0, "operand": None,
+invalid_operator = {"operator": "***", "op_code": 0, "operand": None,
                     "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                                   ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                                  ['CPU.Halt'],
+                                  ['CPU.IllegalInst', 'CPU.Halt'],
                                   ['CPU.RingReset']]}
 
 

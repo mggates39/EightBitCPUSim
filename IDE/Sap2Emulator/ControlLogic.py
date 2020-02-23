@@ -12,7 +12,7 @@ class ControlLogic(wx.Panel):
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
         cm1 = control_messages[0:17]
-        cm2 = control_messages[17:34]
+        cm2 = control_messages[17:]
 
         self.leds1 = ControlLedArray(self.box, '#0065ef', '#00075f', cm1)
         self.leds2 = ControlLedArray(self.box, '#0065ef', '#00075f', cm2)
