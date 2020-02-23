@@ -18,8 +18,8 @@ class Accumulator(wx.Panel):
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
         self.panel = wx.Panel(self.box, size=(30, 75))
-        self.read_indicator = wx.StaticText(self.panel, label=name+"O")
-        self.write_indicator = wx.StaticText(self.panel, label=name+"I")
+        self.read_indicator = wx.StaticText(self.panel, label=name + "O")
+        self.write_indicator = wx.StaticText(self.panel, label=name + "I")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
@@ -41,8 +41,8 @@ class Accumulator(wx.Panel):
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
-        pub.subscribe(self.on_in, 'CPU.'+self.topic_prefix+'In')
-        pub.subscribe(self.on_out, 'CPU.'+self.topic_prefix+'Out')
+        pub.subscribe(self.on_in, 'CPU.' + self.topic_prefix + 'In')
+        pub.subscribe(self.on_out, 'CPU.' + self.topic_prefix + 'Out')
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color

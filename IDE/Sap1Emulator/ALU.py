@@ -16,6 +16,7 @@ class Alu(wx.Panel):
     The Alu class implements the ALU and manages the display of its values, flags and control signal representations
     inside a wxPython Panel
     """
+
     def __init__(self, parent):
         """
         Create a new ALU Panel

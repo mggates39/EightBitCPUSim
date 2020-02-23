@@ -101,7 +101,8 @@ class InstructionRegister(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         op_code = int((self.value >> 4) & 15)
-        self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag, negative_flag=self.minus_flag)
+        self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag,
+                                                negative_flag=self.minus_flag)
         operator = self.instruction_decoder.get_current_operator()
         operator_name = operator["operator"]
         self.microcode = self.instruction_decoder.get_current_microcode()

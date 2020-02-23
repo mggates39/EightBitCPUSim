@@ -14,6 +14,7 @@ class LEDSegment(wx.Panel):
     """
     The LEDSegment class implements a seven segement display
     """
+
     def __init__(self, parent, led_color='#36ff27', background_color='#077100', topic=None):
         """
 

@@ -16,6 +16,7 @@ class LEDArray(wx.Panel):
     This class implements an array of n LEDs with a label.
     The label is the value being displayed by the LEDs.
     """
+
     def __init__(self, parent, number_leds, light_color='#36ff27', dark_color='#077100', topic=None):
         """
         Create the string of LEDs and put a label underneath.  If a topic is provided it will
