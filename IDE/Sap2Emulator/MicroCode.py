@@ -94,7 +94,7 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         # Need output port selection from operand
+                         # TODO Need output port selection from operand
                          ['CPU.ARegOut', 'CPU.OutputWrite'],
                          ['CPU.RingReset']]},
 
@@ -318,7 +318,7 @@ operators = {
     0xC9: {"operator": "RET", "op_code": 0xC9, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         # Meed get return address into PC
+                         # TODO Meed get return address into PC
                          ['CPU.RingReset']]},
     0xCA: {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
