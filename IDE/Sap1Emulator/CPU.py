@@ -31,7 +31,7 @@ class CPU(wx.Panel):
         self.clock = Clock(self.box)
         self.pc = ProgramCounter(self.box)
         self.mar = MemoryAddressRegister(self.box)
-        self.acc = Accumulator(self.box,name="A")
+        self.acc = Accumulator(self.box, name="A")
         self.mem = Memory(self.box)
         self.alu = Alu(self.box)
         self.tmp = TempRegister(self.box)
