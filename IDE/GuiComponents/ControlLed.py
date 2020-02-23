@@ -14,8 +14,8 @@ class ControlLed(wx.Panel):
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.led = LED(self, light_color, dark_color)
         if label is not None:
-            self.label = wx.StaticText(self, label=label, style=wx.ALIGN_CENTRE)
-            self.sizer.Add(self.label, 1, wx.ALIGN_CENTRE | wx.EXPAND)
+            self.label = wx.StaticText(self, label=label, style=wx.ALIGN_CENTER)
+            self.sizer.Add(self.label, 1, wx.ALIGN_CENTER | wx.EXPAND)
         self.sizer.Add(self.led, 1, wx.ALIGN_CENTER | wx.EXPAND)
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
@@ -30,4 +30,3 @@ class ControlLed(wx.Panel):
 
     def dark(self) -> None:
         self.led.light(False)
-

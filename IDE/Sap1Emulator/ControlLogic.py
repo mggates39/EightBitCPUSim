@@ -1,6 +1,7 @@
 import wx
 
 from GuiComponents.ControlLedArray import ControlLedArray
+from Sap1Emulator.MicroCode import control_messages
 
 
 class ControlLogic(wx.Panel):
@@ -11,7 +12,7 @@ class ControlLogic(wx.Panel):
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = ControlLedArray(self.box, '#0065ef', '#00075f')
+        self.leds = ControlLedArray(self.box, '#0065ef', '#00075f', control_messages)
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
 
