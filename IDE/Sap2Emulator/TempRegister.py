@@ -61,4 +61,4 @@ class TempRegister(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         pub.sendMessage('tmp.set_value', new_value=self.value)
-        pub.sendMessage('alu.set_value_2', new_value=self.value)
+        pub.sendMessage('alu.set_value_temp', new_value=self.value)
