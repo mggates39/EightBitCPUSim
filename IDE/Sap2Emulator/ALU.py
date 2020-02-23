@@ -23,7 +23,7 @@ class Alu(wx.Panel):
 
         :param parent: Panel that will contain this ALU Panel
         """
-        wx.Panel.__init__(self, parent, size=(100, 75))
+        wx.Panel.__init__(self, parent, size=(100, 250))
         self.parent = parent
         self.result = 0
         self.value = 0
@@ -38,8 +38,10 @@ class Alu(wx.Panel):
         self.logical_and = False
         self.logical_or = False
         self.logical_xor = False
+        self.logical_roll_right = False
+        self.logical_roll_left = False
 
-        self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 250))
         self.static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -48,16 +50,22 @@ class Alu(wx.Panel):
         self.read_indicator = wx.StaticText(self.panel, label="EO")
         self.add_indicator = wx.StaticText(self.panel, label="ADD")
         self.subtract_indicator = wx.StaticText(self.panel, label="SUB")
+        self.complement_indicator = wx.StaticText(self.panel, label="CMA")
         self.logical_and_indicator = wx.StaticText(self.panel, label="LAND")
         self.logical_or_indicator = wx.StaticText(self.panel, label="LOR")
         self.logical_xor_indicator = wx.StaticText(self.panel, label="LXOR")
+        self.logical_roll_right_indicator = wx.StaticText(self.panel, label="RAR")
+        self.logical_roll_left_indicator = wx.StaticText(self.panel, label="RAL")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.add_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.subtract_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.complement_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.logical_and_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.logical_or_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.logical_xor_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.logical_roll_right_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.logical_roll_left_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
@@ -83,13 +91,15 @@ class Alu(wx.Panel):
         pub.subscribe(self.on_out, 'CPU.AluOut')
         pub.subscribe(self.on_add, 'CPU.AluAdd')
         pub.subscribe(self.on_subtract, 'CPU.AluSub')
-
+        pub.subscribe(self.on_complement, 'CPU.AluCma')
         pub.subscribe(self.on_decrement, 'CPU.AluDec')
         pub.subscribe(self.on_increment, 'CPU.AluInc')
 
         pub.subscribe(self.on_and, 'CPU.AluLand')
         pub.subscribe(self.on_or, 'CPU.AluLor')
         pub.subscribe(self.on_xor, 'CPU.AluLxor')
+        pub.subscribe(self.on_rar, 'CPU.AluRar')
+        pub.subscribe(self.on_ral, 'CPU.AluRal')
 
         pub.subscribe(self.on_use_a_value, 'CPU.AluLda')
         pub.subscribe(self.on_use_b_value, 'CPU.AluLdb')
@@ -104,7 +114,7 @@ class Alu(wx.Panel):
 
     def set_add_display_flag(self):
         """
-        Turn on the Subtraction Control signal display.
+        Turn on the Addition Control signal display.
         """
         self.add_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
@@ -114,6 +124,12 @@ class Alu(wx.Panel):
         """
         self.subtract_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
+    def set_complement_display_flag(self):
+        """
+        Turn on the 2s complement Control signal display.
+        """
+        self.complement_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
     def set_out_display_flag(self):
         """
         Turn on the Execution Out Control signal display.
@@ -122,21 +138,33 @@ class Alu(wx.Panel):
 
     def set_and_display_flag(self):
         """
-        Turn on the Execution Out Control signal display.
+        Turn on the Logical And Control signal display.
         """
         self.logical_and_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_or_display_flag(self):
         """
-        Turn on the Execution Out Control signal display.
+        Turn on the Logical Or Control signal display.
         """
         self.logical_or_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_xor_display_flag(self):
         """
-        Turn on the Execution Out Control signal display.
+        Turn on the Logical Xor Control signal display.
         """
         self.logical_xor_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
+    def set_rar_display_flag(self):
+        """
+        Turn on the Logical roll right Control signal display.
+        """
+        self.logical_roll_right_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
+    def set_ral_display_flag(self):
+        """
+        Turn on the Logical roll left Control signal display.
+        """
+        self.logical_roll_left_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def clear_display_flags(self):
         """
@@ -144,10 +172,13 @@ class Alu(wx.Panel):
         """
         self.add_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.subtract_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.complement_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.logical_and_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.logical_or_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.logical_xor_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.logical_roll_right_indicator.SetForegroundColour((0, 0, 255))  # set text color
+        self.logical_roll_left_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def on_clock(self):
         """
@@ -174,6 +205,8 @@ class Alu(wx.Panel):
         self.logical_and = False
         self.logical_or = False
         self.logical_xor = False
+        self.logical_roll_right = False
+        self.logical_roll_left = False
         self.clear_display_flags()
         pub.sendMessage('alu.set_value', new_value=self.result)
 
@@ -249,6 +282,13 @@ class Alu(wx.Panel):
         self.subtract = True
         self.do_math()
 
+    def on_complement(self):
+        self.set_complement_display_flag()
+        self.value = self.value ^ 0xFF
+        self.temp_value = 1
+        self.subtract = False
+        self.do_math()
+
     def on_and(self):
         self.set_and_display_flag()
         self.logical_and = True
@@ -262,6 +302,16 @@ class Alu(wx.Panel):
     def on_xor(self):
         self.set_xor_display_flag()
         self.logical_xor = True
+        self.do_logic()
+
+    def on_rar(self):
+        self.set_rar_display_flag()
+        self.logical_roll_right = True
+        self.do_logic()
+
+    def on_ral(self):
+        self.set_ral_display_flag()
+        self.logical_roll_left = True
         self.do_logic()
 
     def do_math(self):
@@ -307,14 +357,26 @@ class Alu(wx.Panel):
         """
         if self.logical_and:
             self.result = self.value & self.temp_value
+            self.carry = False
 
         if self.logical_or:
             self.result = self.value | self.temp_value
+            self.carry = False
 
         if self.logical_xor:
             self.result = self.value ^ self.temp_value
+            self.carry = False
 
-        self.carry = False
+        if self.logical_roll_left:
+            if self.value & 0x80 == 0x80:
+                self.carry = True
+            else:
+                self.carry = False
+            self.result = self.value << 1
+
+        if self.logical_roll_right:
+            self.result = self.value >> 1
+            self.carry = False
 
         if self.result == 0:
             self.zero = True

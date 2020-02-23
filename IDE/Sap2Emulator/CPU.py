@@ -61,14 +61,14 @@ class CPU(wx.Panel):
 
         self.sizer.Add(self.pc, pos=(0, 3), flag=wx.EXPAND)
         self.sizer.Add(self.b_register, pos=(1, 3), flag=wx.EXPAND)
-        self.sizer.Add(self.history, pos=(2, 3), span=(10, 3), flag=wx.EXPAND)
+        self.sizer.Add(self.history, pos=(2, 3), span=(10, 2), flag=wx.EXPAND)
 
         self.sizer.Add(self.sr, pos=(12, 4), flag=wx.EXPAND)
         self.sizer.Add(self.c_register, pos=(1, 4), flag=wx.EXPAND)
 
         static_box_sizer.Add(self.sizer, 1, wx.EXPAND)
-        self.SetAutoLayout(1)
         self.SetSizer(static_box_sizer)
+        self.SetAutoLayout(1)
         self.sizer.Fit(self)
 
     def load_memory(self, memory):
