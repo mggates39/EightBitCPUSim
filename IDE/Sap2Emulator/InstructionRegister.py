@@ -23,7 +23,7 @@ class InstructionRegister(wx.Panel):
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.panel = wx.Panel(self.box, size=(30, 75))
+        self.panel = wx.Panel(self.box, size=(40, 75))
         self.read_indicator = wx.StaticText(self.panel, label="IO")
         self.write_indicator = wx.StaticText(self.panel, label="II")
         self.load_operand_low_indicator = wx.StaticText(self.panel, label="IAL")

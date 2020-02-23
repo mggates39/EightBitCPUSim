@@ -54,7 +54,7 @@ class CPU(wx.Panel):
         self.sizer.Add(self.bus, pos=(1, 1), span=(12, 1), flag=wx.EXPAND)
 
         self.sizer.Add(self.a_register, pos=(1, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.alu, pos=(3, 2), span=(7, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.alu, pos=(2, 2), span=(8, 1), flag=wx.EXPAND)
         self.sizer.Add(self.tmp, pos=(10, 2), flag=wx.EXPAND)
         self.sizer.Add(self.out, pos=(11, 2), flag=wx.EXPAND)
         self.sizer.Add(self.cl, pos=(12, 2), span=(1, 2), flag=wx.EXPAND)
