@@ -39,6 +39,7 @@ control_messages = [
     {"topic": "CPU.PcOut", "label": "CO"},
     {"topic": "CPU.PcInc", "label": "CE"},
     {"topic": "CPU.PcJump", "label": "CJ"},
+
     {"topic": "CPU.FlagIn", "label": "FI"},
 
     {"topic": "CPU.RingReset", "label": "RCR"}
@@ -401,19 +402,19 @@ class MicroCode:
             self.current_operator = operators[op_code]
             self.current_microcode = self.current_operator["microcode"]
 
-            # JC
+            # JC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
             if op_code == 0xFB and carry_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
-            # JNZ
+            # JNZ - If this is the Jump if Not Zero and zero flag is clear Just use the Jump Microcode
             if op_code == 0xC2 and not zero_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
-            # JZ
+            # JZ - If this is the Jump if Zero and zero flag is set Just use the Jump Microcode
             if op_code == 0xCA and zero_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
-            # JM
+            # JM - If this is the Jump if minus and negative flag is set Just use the Jump Microcode
             if op_code == 0xFA and negative_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
         else:
