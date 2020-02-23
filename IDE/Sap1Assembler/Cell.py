@@ -60,20 +60,15 @@ class Cell:
         return mem_value
 
     def get_listing(self):
-        if self.label is None:
-            if self.operator is None:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + "    .byte {}\n".format(self.get_memory())
-            else:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + "    {} {}\n".format(
-                    self.operator, self.operand)
-        else:
-            if self.operator is None:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + " {}: .byte {}\n".format(self.label, self.get_memory())
-            else:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + " {}: {} {}\n".format(self.label, self.operator, self.operand)
+        listing = "{0:02} - 0b{0:08b}\t".format(self.address, self.get_memory())
 
+        if self.label is not None:
+            listing += "{:<10s}".format(self.label + ':')
+        else:
+            listing += "{:<10s}".format(' ')
+
+        if self.operator is None:
+            listing += " .byte {}\n".format(self.get_memory())
+        else:
+            listing += " {} {}\n".format(self.operator, self.operand)
         return listing

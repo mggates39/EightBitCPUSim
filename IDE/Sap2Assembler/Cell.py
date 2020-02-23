@@ -1,13 +1,16 @@
 class Cell:
 
-    def __init__(self, address, label=None, operator=None, operand=None) -> None:
+    def __init__(self, line_number, address, label=None, operator=None, first_operand=None, second_operand=None) -> None:
         super().__init__()
+        self.line_number = line_number
         self.address = address
         self.label = label
         self.operator = operator
-        self.operand = operand
+        self.first_operand = first_operand
+        self.second_operand = second_operand
         self.op_code = None
-        self.value = None
+        self.first_value = None
+        self.second_value = None
         self.good = True
 
     def back_patch_label(self, operand, labels):
@@ -33,47 +36,49 @@ class Cell:
             if self.op_code == -1:
                 error = "ERROR: Unknown operator {} at {}.\n".format(self.operator, self.address)
                 self.op_code = 0
-                self.value = 0
-                self.operand = ''
+                self.first_value = 0
+                self.first_operand = ''
             else:
-                if self.operand is not None:
-                    self.value, error = self.back_patch_label(self.operand, labels)
+                if self.first_operand is not None:
+                    self.first_value, error = self.back_patch_label(self.first_operand, labels)
                     if instructions.is_operand_numeric(self.operator):
-                        self.operand = "{}".format(self.value)
+                        self.first_operand = "{}".format(self.first_value)
                     else:
-                        self.operand = "({}) ; {}".format(self.value, self.operand)
+                        self.first_operand = "({}) ; {}".format(self.first_value, self.first_operand)
                 else:
-                    self.value = 0
-                    self.operand = ''
+                    self.first_value = 0
+                    self.first_operand = ''
         else:
-            self.value = self.operand
+            self.first_value = self.first_operand
         return error
 
     def get_memory(self):
         mem_value = 0
         if self.good:
             if self.op_code is not None:
-                mem_value = self.op_code << 4 | (self.value & 0xF)
+                mem_value = self.op_code << 4 | (self.first_value & 0xF)
             else:
-                mem_value = self.value & 0xFF
+                mem_value = self.first_value & 0xFF
 
         return mem_value
 
     def get_listing(self):
-        if self.label is None:
-            if self.operator is None:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + "    .byte {}\n".format(self.get_memory())
-            else:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + "    {} {}\n".format(
-                    self.operator, self.operand)
-        else:
-            if self.operator is None:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + " {}: .byte {}\n".format(self.label, self.get_memory())
-            else:
-                listing = "{0:02} - ".format(self.address) + " 0b{0:08b}\t".format(
-                    self.get_memory()) + " {}: {} {}\n".format(self.label, self.operator, self.operand)
+        listing = "{0:05} - 0x{0:04X}: ".format(self.line_number, self.address)
 
+        if self.label is not None:
+            listing += "{:<10s}".format(self.label+':')
+        else:
+            listing += "{:<10s}".format(' ')
+
+        if self.operator is None:
+            listing += " .byte {}".format(self.get_memory())
+        else:
+            listing += " {}".format(self.operator)
+            if self.first_operand is not None:
+                listing += " {}".format(self.first_operand)
+            if self.second_operand is not None:
+                listing += ", {}".format(self.second_operand)
+
+        listing += "\n"
+        
         return listing
