@@ -73,7 +73,7 @@ class Instructions:
             "INR C": {"operator": "INR C", "op_code": 0x0C, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
 
-            "JC": {"operator": "JC", "op_code": 0xFB, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JC": {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
             "JM": {"operator": "JM", "op_code": 0xFA, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
