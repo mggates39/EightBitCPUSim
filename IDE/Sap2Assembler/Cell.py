@@ -83,7 +83,7 @@ class Cell:
                         if self.second_operand is not None:
                             if instructions.is_operand_two_numeric(self.real_operator):
                                 self.second_value, error = self.back_patch_label(self.second_operand, labels)
-                                self.second_operand = ",{}".format(self.second_value)
+                                self.second_operand = "{}".format(self.second_value)
                         else:
                             error = "ERROR: Missing second operand"
                             self.good = False
@@ -110,6 +110,10 @@ class Cell:
                     self.memory[1] = self.first_value
                     if self.second_value is not None:
                         self.memory[2] = self.second_value
+                else:
+                    if self.second_value is not None:
+                        self.memory[1] = self.second_value
+
             else:
                 self.memory[0] = self.first_value
 
@@ -140,7 +144,7 @@ class Cell:
             if self.first_operand is not None:
                 listing += " {}".format(self.first_operand)
                 if self.second_operand is not None:
-                    listing += ", {}".format(self.second_operand)
+                    listing += ",{}".format(self.second_operand)
 
         listing += "\n"
 
