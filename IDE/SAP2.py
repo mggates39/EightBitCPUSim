@@ -18,6 +18,8 @@ class SourceTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.control = wx.TextCtrl(self, style=wx.TE_PROCESS_TAB | wx.TE_RICH | wx.TE_MULTILINE)
+        fo = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, False)
+        self.control.SetFont(fo)
 
         # Use some sizers to see layout options
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -33,6 +35,9 @@ class ListingTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        fo = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, False)
+        self.control.SetFont(fo)
+
         # Use some sizers to see layout options
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.control, 1, wx.EXPAND)
@@ -53,6 +58,9 @@ class MemoryTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        fo = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, False)
+        self.control.SetFont(fo)
+
         # Use some sizers to see layout options
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.control, 1, wx.EXPAND)

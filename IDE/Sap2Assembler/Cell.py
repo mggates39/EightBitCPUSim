@@ -116,12 +116,13 @@ class Cell:
         return self.memory
 
     def get_listing(self):
-        listing = "{0:05} - 0x{0:04X}: ".format(self.line_number, self.address)
+        listing = "{0:05} - ".format(self.line_number)
+        listing += "0x{0:04X}: ".format(self.address)
 
         memory_dump = ""
         for memory in self.memory:
             if memory is not None:
-                memory_dump += "0x{0:2X} ".format(memory)
+                memory_dump += "0x{0:02X} ".format(memory)
             else:
                 memory_dump += "     "
 
