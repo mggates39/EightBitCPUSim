@@ -71,7 +71,8 @@ class StatusRegister(wx.Panel):
         self.carry = False
         self.zero = False
         self.minus = False
-        self.on_clock()
+        self.clear_display_flags()
+        self.display_flags()
 
     def on_get_flags(self, new_carry, new_zero, new_minus):
         self.set_in_display_flag()
