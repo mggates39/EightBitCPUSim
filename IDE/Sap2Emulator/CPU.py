@@ -1,7 +1,7 @@
 import wx
 from pubsub import pub
 
-from Sap1Emulator.OutputRegister import OutputRegister
+from Sap2Emulator.OutputRegister import OutputRegister
 from Sap2Emulator.ALU import Alu
 from Sap2Emulator.Accumulator import Accumulator
 from Sap2Emulator.Bus import Bus
