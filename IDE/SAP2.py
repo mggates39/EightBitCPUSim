@@ -6,10 +6,10 @@ import wx.adv
 import wx.lib.scrolledpanel
 import wx.stc
 
-from Sap1Assembler.Assembler import Assembler
-from Sap1Assembler.Parser import is_label
-from Sap1Assembler.Parser import make_label
-from Sap1Assembler.Parser import make_target
+from Sap2Assembler.Assembler import Assembler
+from Sap2Assembler.Parser import is_label
+from Sap2Assembler.Parser import make_label
+from Sap2Assembler.Parser import make_target
 from Sap2Emulator.CPU import CPU
 
 

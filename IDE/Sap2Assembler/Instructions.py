@@ -17,9 +17,9 @@ class Instructions:
             "JNZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNZ"]},
             "JZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JZ"]},
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
-            "MOV": {"operands": 2, "included": 21, "bytes": 1,
+            "MOV": {"operands": 2, "included": 2, "bytes": 1,
                     "operators": ["MOV A,B", "MOV A,C", "MOV B,A", "MOV B,C", "MOV C,A", "MOV C,B"]},
-            "MVI": {"operands": 2, "included": 0, "bytes": 2, "operators": ["MVI A", "MVI B", "MVI C"]},
+            "MVI": {"operands": 2, "included": 1, "bytes": 2, "operators": ["MVI A", "MVI B", "MVI C"]},
             "NOP": {"operands": 0, "included": 0, "bytes": 1, "operators": ["NOP"]},
             "ORA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ORA B", "ORA C"]},
             "ORI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ORI"]},
@@ -148,6 +148,12 @@ class Instructions:
                     "bytes": 2}
         }
 
+    def is_mnemonic(self, mnemonic):
+        return_value = False
+        if mnemonic in self.mnemonics:
+            return_value = True
+        return return_value
+
     def get_mnemonic(self, mnemonic):
         if mnemonic in self.mnemonics:
             return self.mnemonics[mnemonic]
@@ -166,11 +172,48 @@ class Instructions:
             return_value = True
         return return_value
 
-    def lookup_op_code(self, operator):
-        op_code = -1
-        if self.is_operator(operator):
-            op_code = self.operators[operator]["op_code"]
-        return op_code
+    def lookup_op_code(self, operator, first_operand, second_operand):
+        op_code = -1  # operator not found
+        real_operator = None
+        if self.is_mnemonic(operator):
+            mnemonic = self.get_mnemonic(operator)
+            if mnemonic["operands"] == 0:
+                op_code = self.operators[operator]["op_code"]
+                real_operator = self.get_operator(operator)
+            elif mnemonic["operands"] == 1:
+                if mnemonic["included"] == 1:
+                    test_operator = "{} {}".format(operator, first_operand)
+                    if self.is_operator(test_operator):
+                        op_code = self.operators[test_operator]["op_code"]
+                        real_operator = self.get_operator(test_operator)
+                    else:
+                        op_code = -2  # Bad Operand
+                else:
+                    if self.is_operator(operator):
+                        op_code = self.operators[operator]["op_code"]
+                        real_operator = self.get_operator(operator)
+
+            elif mnemonic["operands"] == 2:
+                if mnemonic["included"] == 2:
+                    test_operator = "{} {},{}".format(operator, first_operand, second_operand)
+                    if self.is_operator(test_operator):
+                        op_code = self.operators[test_operator]["op_code"]
+                        real_operator = self.get_operator(test_operator)
+                    else:
+                        op_code = -2  # Bad Operand
+                elif mnemonic["included"] == 1:
+                    test_operator = "{} {}".format(operator, first_operand)
+                    if self.is_operator(test_operator):
+                        op_code = self.operators[test_operator]["op_code"]
+                        real_operator = self.get_operator(test_operator)
+                    else:
+                        op_code = -2  # Bad Operand
+                else:
+                    if self.is_operator(operator):
+                        op_code = self.operators[operator]["op_code"]
+                        real_operator = self.get_operator(operator)
+
+        return op_code, real_operator
 
     def get_operand_one_type(self, operator):
         operand_type = None
@@ -193,6 +236,11 @@ class Instructions:
     def is_operand_one_numeric(self, operator):
         return self.get_operand_one_type(operator) == "N"
 
+    def is_operand_one_register(self, operator):
+        return ((self.get_operand_one_type(operator) == "A") |
+                (self.get_operand_one_type(operator) == "B") |
+                (self.get_operand_one_type(operator) == "C"))
+
     def is_operand_two_memory(self, operator):
         return self.get_operand_two_type(operator) == "M"
 
@@ -201,3 +249,8 @@ class Instructions:
 
     def is_operand_two_numeric(self, operator):
         return self.get_operand_two_type(operator) == "N"
+
+    def is_operand_two_register(self, operator):
+        return ((self.get_operand_two_type(operator) == "A") |
+                (self.get_operand_two_type(operator) == "B") |
+                (self.get_operand_two_type(operator) == "C"))

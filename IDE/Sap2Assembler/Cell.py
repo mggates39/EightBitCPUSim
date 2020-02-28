@@ -11,7 +11,13 @@ class Cell:
         self.op_code = None
         self.first_value = None
         self.second_value = None
+        self.memory = [None, None, None]
+        self.size = 0
+        self.real_operator = None
         self.good = True
+
+    def get_size(self):
+        return self.size
 
     def back_patch_label(self, operand, labels):
         error = ""
@@ -24,46 +30,102 @@ class Cell:
         try:
             value = int(value)
         except ValueError:
-            error = "ERROR: Label {} not found at address {}.\n".format(value, self.address)
+            error = "ERROR: Label {} not found at line {}.\n".format(value, self.line_number)
             self.good = False
 
         return value, error
 
-    def assemble(self, labels, instructions):
+    def calculate_size(self, instructions):
+        if self.operator is not None:
+            mneumonic = instructions.get_mnemonic(self.operator)
+            if mneumonic is not None:
+                self.size = mneumonic["bytes"]
+        else:
+            self.size = 1
+
+    def assemble_pass_one(self, instructions):
         error = ""
         if self.operator is not None:
-            self.op_code = instructions.lookup_op_code(self.operator)
+            self.op_code, real_operator = instructions.lookup_op_code(self.operator, self.first_operand, self.second_operand)
             if self.op_code == -1:
-                error = "ERROR: Unknown operator {} at {}.\n".format(self.operator, self.address)
+                error = "ERROR: Unknown operator {} at {}.\n".format(self.operator, self.line_number)
                 self.op_code = 0
-                self.first_value = 0
-                self.first_operand = ''
+                self.first_value = None
+                self.second_value = None
+            elif self.op_code == -2:
+                error = "ERROR: Unknown operand {} {},{} at {}.\n".format(self.operator, self.first_operand, self.second_operand, self.line_number)
+                self.op_code = 0
+                self.first_value = None
+                self.second_value = None
+
             else:
+                self.size = real_operator["bytes"]
+                self.real_operator = real_operator["operator"]
+        else:
+            self.size = 1
+        return error
+
+    def assemble_pass_two(self, labels, instructions):
+        error = ""
+        if self.operator is not None:
+            if not instructions.is_operand_one_none(self.real_operator):
                 if self.first_operand is not None:
-                    self.first_value, error = self.back_patch_label(self.first_operand, labels)
-                    if instructions.is_operand_numeric(self.operator):
-                        self.first_operand = "{}".format(self.first_value)
+                    if instructions.is_operand_one_memory(self.real_operator):
+                        value, error = self.back_patch_label(self.first_operand, labels)
+                        if self.good:
+                            self.first_value = value & 0xFF
+                            self.second_value = (value >> 8) & 0xFF
+                            self.first_operand = "({}) ; {}".format(value, self.first_operand)
+                    elif instructions.is_operand_one_numeric(self.real_operator):
+                        self.first_value, error = self.back_patch_label(self.first_operand, labels)
+
+                    if not instructions.is_operand_two_none(self.real_operator):
+                        if self.second_operand is not None:
+                            if instructions.is_operand_two_numeric(self.real_operator):
+                                self.second_value, error = self.back_patch_label(self.second_operand, labels)
+                                self.second_operand = ",{}".format(self.second_value)
+                        else:
+                            error = "ERROR: Missing second operand"
+                            self.good = False
+                            self.second_value = None
+                            self.second_operand = ''
                     else:
-                        self.first_operand = "({}) ; {}".format(self.first_value, self.first_operand)
+                        self.first_operand = "{}".format(self.first_value)
                 else:
-                    self.first_value = 0
+                    error = "ERROR: Missing first operand on line {}".format(self.line_number)
+                    self.good = False
+                    self.first_value = None
                     self.first_operand = ''
         else:
-            self.first_value = self.first_operand
+            self.first_value = int(self.first_operand)
+
         return error
 
     def get_memory(self):
-        mem_value = 0
+        self.memory = [None, None, None]
         if self.good:
             if self.op_code is not None:
-                mem_value = self.op_code << 4 | (self.first_value & 0xF)
+                self.memory[0] = self.op_code
+                if self.first_value is not None:
+                    self.memory[1] = self.first_value
+                    if self.second_value is not None:
+                        self.memory[2] = self.second_value
             else:
-                mem_value = self.first_value & 0xFF
+                self.memory[0] = self.first_value
 
-        return mem_value
+        return self.memory
 
     def get_listing(self):
         listing = "{0:05} - 0x{0:04X}: ".format(self.line_number, self.address)
+
+        memory_dump = ""
+        for memory in self.memory:
+            if memory is not None:
+                memory_dump += "0x{0:2X} ".format(memory)
+            else:
+                memory_dump += "     "
+
+        listing += memory_dump
 
         if self.label is not None:
             listing += "{:<10s}".format(self.label+':')
@@ -71,14 +133,14 @@ class Cell:
             listing += "{:<10s}".format(' ')
 
         if self.operator is None:
-            listing += " .byte {}".format(self.get_memory())
+            listing += " .byte {}".format(self.first_operand)
         else:
             listing += " {}".format(self.operator)
             if self.first_operand is not None:
                 listing += " {}".format(self.first_operand)
-            if self.second_operand is not None:
-                listing += ", {}".format(self.second_operand)
+                if self.second_operand is not None:
+                    listing += ", {}".format(self.second_operand)
 
         listing += "\n"
-        
+
         return listing
