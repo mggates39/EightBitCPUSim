@@ -1,5 +1,5 @@
 ###############
-# Test Add             #
+# Test Add    #
 ###############
 	.org 0
 start:	LDA (x)
