@@ -14,6 +14,7 @@ from Sap2Emulator.MemoryAddressRegister import MemoryAddressRegister
 from Sap2Emulator.MicroCode import MicroCode
 from Sap2Emulator.ProgramCounter import ProgramCounter
 from Sap2Emulator.Reset import Reset
+from Sap2Emulator.StackRegister import StackRegister
 from Sap2Emulator.StatusRegister import StatusRegister
 from Sap2Emulator.TempRegister import TempRegister
 
@@ -30,6 +31,7 @@ class CPU(wx.Panel):
         self.bus = Bus(self.box)
         self.clock = Clock(self.box)
         self.pc = ProgramCounter(self.box)
+        self.sp = StackRegister(self.box)
         self.mar = MemoryAddressRegister(self.box)
         self.a_register = Accumulator(self.box, name="A")
         self.b_register = Accumulator(self.box, name="B")
@@ -64,6 +66,7 @@ class CPU(wx.Panel):
         self.sizer.Add(self.history, pos=(2, 3), span=(10, 2), flag=wx.EXPAND)
 
         self.sizer.Add(self.sr, pos=(12, 4), flag=wx.EXPAND)
+        self.sizer.Add(self.sp, pos=(0, 4), flag=wx.EXPAND)
         self.sizer.Add(self.c_register, pos=(1, 4), flag=wx.EXPAND)
 
         static_box_sizer.Add(self.sizer, 1, wx.EXPAND)
