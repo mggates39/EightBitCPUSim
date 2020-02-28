@@ -335,7 +335,7 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc'],
-                         # Need Save return address from PC
+                         # TODO Need Save return address from PC
                          ['CPU.RingReset']]},
 
     0xDA: {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
