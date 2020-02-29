@@ -13,6 +13,7 @@ cont:	SUB	B
 	JZ	(top)
 	JMP	(cont)
 
+	.org 36
 sub:	OUT 2
 	RET
 
