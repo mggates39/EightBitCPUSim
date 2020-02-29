@@ -372,7 +372,7 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         # Need input port select
+                         # TODO Need input port select
                          ['CPU.RingReset']]},
 
     0xE6: {"operator": "ANI", "op_code": 0xE6, "operand1": "N", "operand2": None, "addressing": "Imm",
