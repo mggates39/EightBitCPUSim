@@ -15,7 +15,7 @@ class ProgramCounter(wx.Panel):
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
         self.panel = wx.Panel(self.box, size=(40, 75))
-        self.increment_indicator = wx.StaticText(self.panel, label="CE")
+        self.increment_indicator = wx.StaticText(self.panel, label="C+")
         self.jump_indicator = wx.StaticText(self.panel, label="Jmp")
         self.read_indicator = wx.StaticText(self.panel, label="CO")
         vbox = wx.BoxSizer(wx.VERTICAL)
@@ -39,6 +39,8 @@ class ProgramCounter(wx.Panel):
         pub.subscribe(self.on_jump, 'CPU.PcJump')
         pub.subscribe(self.on_inc, 'CPU.PcInc')
         pub.subscribe(self.on_out, 'CPU.PcOut')
+        pub.subscribe(self.on_out_low, 'CPU.PcOutLow')
+        pub.subscribe(self.on_out_high, 'CPU.PcOutHigh')
 
     def set_jmp_display_flag(self):
         self.jump_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -79,3 +81,11 @@ class ProgramCounter(wx.Panel):
     def on_out(self):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=self.value)
+
+    def on_out_low(self):
+        self.set_out_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=(self.value & 0xFF))
+
+    def on_out_high(self):
+        self.set_out_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=((self.value >> 8) & 0xFF))

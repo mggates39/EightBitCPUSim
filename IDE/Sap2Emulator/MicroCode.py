@@ -37,8 +37,15 @@ control_messages = [
     {"topic": "CPU.OutputWrite", "label": "OI"},
 
     {"topic": "CPU.PcOut", "label": "CO"},
-    {"topic": "CPU.PcInc", "label": "CE"},
+    {"topic": "CPU.PcOutLow", "label": "COL"},
+    {"topic": "CPU.PcOutHigh", "label": "COH"},
+    {"topic": "CPU.PcInc", "label": "C+"},
     {"topic": "CPU.PcJump", "label": "CJ"},
+
+    {"topic": "CPU.SpOut", "label": "SO"},
+    {"topic": "CPU.SpIn", "label": "SI"},
+    {"topic": "CPU.SpInc", "label": "S+"},
+    {"topic": "CPU.SpDec", "label": "S-"},
 
     {"topic": "CPU.FlagIn", "label": "FI"},
 
@@ -79,8 +86,14 @@ decode_messages = {
     "CPU.TempIn": "TI ",
     "CPU.OutputWrite": "OI ",
     "CPU.PcOut": "CO ",
-    "CPU.PcInc": "CE ",
+    "CPU.PcOutLow": "COL ",
+    "CPU.PcOutHigh": "COH ",
+    "CPU.PcInc": "C+ ",
     "CPU.PcJump": "CJ ",
+    "CPU.SpIn": "SI ",
+    "CPU.SpOut": "SO ",
+    "CPU.SpInc": "S+ ",
+    "CPU.SpDec": "S- ",
     "CPU.FlagIn": "FI ",
     "CPU.RingReset": "RCR ",
     "CPU.IllegalInst": "ILL "
@@ -318,7 +331,11 @@ operators = {
     0xC9: {"operator": "RET", "op_code": 0xC9, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         # TODO Meed get return address into PC
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.SpDec'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.SpDec'],
+                         ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
     0xCA: {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
@@ -334,8 +351,12 @@ operators = {
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc'],
-                         # TODO Need Save return address from PC
+                         ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc', 'CPU.SpInc'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.PcOutLow', 'CPU.MemIn', 'CPU.SpInc'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.PcOutHigh', 'CPU.MemIn'],
+                         ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
 
     0xDA: {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
