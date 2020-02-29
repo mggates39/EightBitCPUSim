@@ -74,7 +74,9 @@ class Segment:
             error = cell.assemble_pass_one(self.instructions)
             if error != "":
                 self.errors.append(error)
-            else:
+
+        if error == "":
+            for cell in self.cell_list:
                 error = cell.assemble_pass_two(labels, self.instructions)
                 if error != "":
                     self.errors.append(error)

@@ -83,6 +83,9 @@ class Cell:
                             self.first_operand = "({}) ; {}".format(value, self.first_operand)
                     elif instructions.is_operand_one_numeric(self.real_operator):
                         self.first_value, error = self.back_patch_label(self.first_operand, labels)
+                        self.first_operand = "{}".format(self.first_value)
+                    elif instructions.is_operand_one_register(self.real_operator):
+                        self.first_value = None
 
                     if not instructions.is_operand_two_none(self.real_operator):
                         if self.second_operand is not None:
@@ -94,8 +97,6 @@ class Cell:
                             self.good = False
                             self.second_value = None
                             self.second_operand = ''
-                    else:
-                        self.first_operand = "{}".format(self.first_value)
                 else:
                     error = "ERROR: Missing first operand on line {}".format(self.line_number)
                     self.good = False
