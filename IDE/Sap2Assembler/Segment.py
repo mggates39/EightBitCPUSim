@@ -66,6 +66,9 @@ class Segment:
     def add_byte(self, line_number, label, value):
         self.add_cell(line_number, label, None, value)
 
+    def add_word(self, line_number, label, value):
+        self.add_cell(line_number, label, None, (value & 0xFF), ((value >> 8) & 0xFF))
+
     def assemble(self, labels):
         for cell in self.cell_list:
             error = cell.assemble_pass_one(self.instructions)

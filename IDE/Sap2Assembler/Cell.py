@@ -36,12 +36,14 @@ class Cell:
         return value, error
 
     def calculate_size(self, instructions):
+        self.size = 1
         if self.operator is not None:
             mneumonic = instructions.get_mnemonic(self.operator)
             if mneumonic is not None:
                 self.size = mneumonic["bytes"]
         else:
-            self.size = 1
+            if self.second_operand is not None:
+                self.size = 2
 
     def assemble_pass_one(self, instructions):
         error = ""
@@ -63,6 +65,9 @@ class Cell:
                 self.real_operator = real_operator["operator"]
         else:
             self.size = 1
+            if self.second_operand is not None:
+                self.size = 2
+
         return error
 
     def assemble_pass_two(self, labels, instructions):
@@ -98,6 +103,8 @@ class Cell:
                     self.first_operand = ''
         else:
             self.first_value = int(self.first_operand)
+            if self.second_operand is not None:
+                self.second_value = int(self.second_operand)
 
         return error
 
@@ -116,6 +123,8 @@ class Cell:
 
             else:
                 self.memory[0] = self.first_value
+                if self.second_value is not None:
+                    self.memory[1] = self.second_value
 
         return self.memory
 
@@ -138,7 +147,10 @@ class Cell:
             listing += "{:<10s}".format(' ')
 
         if self.operator is None:
-            listing += " .byte {}".format(self.first_operand)
+            if self.second_operand is None:
+                listing += " .byte {}".format(self.first_operand)
+            else:
+                listing += " .word {}".format(self.second_operand << 8 | self.first_operand)
         else:
             listing += " {}".format(self.operator)
             if self.first_operand is not None:

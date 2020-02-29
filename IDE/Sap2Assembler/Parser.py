@@ -62,6 +62,8 @@ class Parser:
             self.end_segment()
         elif directive == '.byte':
             self.get_current_segment().add_byte(line_number, label, int(argument))
+        elif directive == '.word':
+            self.get_current_segment().add_word(line_number, label, int(argument))
 
     def check_for_overlap(self):
         overlap = False
