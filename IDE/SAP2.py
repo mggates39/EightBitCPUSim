@@ -174,7 +174,7 @@ class MainWindow(wx.Frame):
         versions = {"python": sys.version.split()[0], "wx_version": wx.VERSION_STRING}
 
         description = """
-        SAP-1 IDE is an basic SAP assembly code editor, assembler, and 
+        SAP-2 IDE is an basic SAP assembly code editor, assembler, and 
         simulator.  It provides interactive syntax highlighting, listings 
         and memory dumps suitable for including in the JavaScript simulator.
         
@@ -182,12 +182,12 @@ class MainWindow(wx.Frame):
         """
 
         licence = """
-        SAP-1 IDE is free software; you can redistribute it and/or modify it under 
+        SAP-2 IDE is free software; you can redistribute it and/or modify it under 
         the terms of the GNU General Public License as published by 
         the Free Software Foundation; either version 2 of the License, 
         or (at your option) any later version.
 
-        SAP-1 IDE is distributed in the hope that it will be useful, 
+        SAP-2 IDE is distributed in the hope that it will be useful, 
         but WITHOUT ANY WARRANTY; without even the implied warranty of 
         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
         See the GNU General Public License for more details. 
@@ -198,7 +198,7 @@ class MainWindow(wx.Frame):
         info = wx.adv.AboutDialogInfo()
 
         # info.SetIcon(wx.Icon('hunter.png', wx.BITMAP_TYPE_PNG))
-        info.SetName('SAP-1 IDE')
+        info.SetName('SAP-2 IDE')
         info.SetVersion('Alpha 0.9')
         info.SetDescription(description % versions)
         info.SetWebSite("https://github.com/mggates39/EightBitCPUSim", "GitHub Repository")
