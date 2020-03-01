@@ -35,6 +35,7 @@ control_messages = [
     {"topic": "CPU.TempIn", "label": "TI"},
 
     {"topic": "CPU.OutputWrite", "label": "OI"},
+    {"topic": "CPU.OutputSelect", "label": "OS"},
 
     {"topic": "CPU.PcOut", "label": "CO"},
     {"topic": "CPU.PcOutLow", "label": "COL"},
@@ -85,6 +86,7 @@ decode_messages = {
     "CPU.AluCma": "CMA ",
     "CPU.TempIn": "TI ",
     "CPU.OutputWrite": "OI ",
+    "CPU.OutputSelect": "OS ",
     "CPU.PcOut": "CO ",
     "CPU.PcOutLow": "COL ",
     "CPU.PcOutHigh": "COH ",
@@ -110,7 +112,7 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         # TODO Need output port selection from operand
+                         ['CPU.IrOut', 'CPU.OutputSelect'],
                          ['CPU.ARegOut', 'CPU.OutputWrite'],
                          ['CPU.RingReset']]},
 
