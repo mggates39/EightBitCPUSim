@@ -5,7 +5,7 @@
 top:	MVI A,1
 	STA (y)
 	MVI A,0
-loop:	OUT
+loop:	OUT 2
 	ADD (y)
 	STA (z)
 	LDA (y)

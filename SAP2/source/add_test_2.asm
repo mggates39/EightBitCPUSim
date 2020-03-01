@@ -6,7 +6,7 @@
 	MOV B,A
 	LDA (y)
 	ADD B
-	OUT 1
+	OUT 2
 	HLT
 
 	.dorg 17

@@ -2,7 +2,7 @@
 	MOV B,A
 	LDA (y)
 	ADD B
-	OUT 1
+	OUT 2
 	HLT
 x: .byte 15
 y: .byte 29

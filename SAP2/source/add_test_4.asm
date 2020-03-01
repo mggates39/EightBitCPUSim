@@ -9,7 +9,7 @@ start:	LDA (x)
 	STA (z)
 	MVI A,0
 	LDA (z)
-	OUT 1
+	OUT 2
 	HLT
 # Variables
 x:	.byte 15
