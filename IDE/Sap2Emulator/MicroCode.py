@@ -428,7 +428,7 @@ class MicroCode:
             self.current_microcode = self.current_operator["microcode"]
 
             # JC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
-            if op_code == 0xFB and carry_flag:
+            if op_code == 0xDA and carry_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
             # JNZ - If this is the Jump if Not Zero and zero flag is clear Just use the Jump Microcode
