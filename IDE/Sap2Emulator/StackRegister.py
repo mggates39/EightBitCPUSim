@@ -9,7 +9,7 @@ class StackRegister(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, size=(350, 100))
         self.parent = parent
-        self.value = MAX_ADDRESS - 3
+        self.value = MAX_ADDRESS - 1
         self.buffer = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Stack Register", wx.DefaultPosition, (350, 100))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -68,7 +68,7 @@ class StackRegister(wx.Panel):
         self.clear_display_flags()
 
     def on_reset(self):
-        self.value = MAX_ADDRESS - 3
+        self.value = MAX_ADDRESS -1
         self.buffer = 0
         self.clear_display_flags()
         pub.sendMessage('sp.set_value', new_value=self.value)
