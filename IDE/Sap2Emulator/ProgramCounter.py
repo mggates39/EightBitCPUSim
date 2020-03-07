@@ -6,7 +6,7 @@ from GuiComponents.LedArray import LEDArray
 
 class ProgramCounter(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(350, 100))
+        wx.Panel.__init__(self, parent, size=(275, 100))
         self.parent = parent
         self.value = 0
         self.buffer = 0
@@ -24,7 +24,7 @@ class ProgramCounter(wx.Panel):
         vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
-        self.leds = LEDArray(self.box, 16, topic="pc.set_value")
+        self.leds = LEDArray(self.box, 16, topic="pc.set_value", size=10)
 
         horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
         horizontal_box.Add(self.panel, 0, wx.EXPAND)

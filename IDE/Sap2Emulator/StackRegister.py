@@ -11,7 +11,7 @@ class StackRegister(wx.Panel):
         self.parent = parent
         self.value = MAX_ADDRESS - 1
         self.buffer = 0
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Stack Register", wx.DefaultPosition, (350, 100))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Stack Register", wx.DefaultPosition, (275, 100))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -27,7 +27,7 @@ class StackRegister(wx.Panel):
         vbox.Add(self.dec_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 2)
         self.panel.SetSizer(vbox)
 
-        self.leds = LEDArray(self.box, 16, topic="sp.set_value")
+        self.leds = LEDArray(self.box, 16, topic="sp.set_value", size=10)
 
         horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
         horizontal_box.Add(self.panel, 0, wx.EXPAND)

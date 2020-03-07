@@ -22,7 +22,7 @@ class Bus(wx.Panel):
 
         :param parent: Panel that will contain this Bus Panel
         """
-        wx.Panel.__init__(self, parent, size=(300, 75))
+        wx.Panel.__init__(self, parent, size=(275, 75))
         self.parent = parent
         self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (300, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -31,7 +31,7 @@ class Bus(wx.Panel):
         light_color = '#36ff27'
         dark_color = '#077100'
         self.value = 0
-        self.leds = LEDArray(self.box, 16, light_color, dark_color, 'bus.set_lights')
+        self.leds = LEDArray(self.box, 16, light_color, dark_color, 'bus.set_lights', size=10)
         self.pan = wx.Panel(self.box)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALIGN_TOP | wx.ALL | wx.EXPAND, 10)
         vertical_box.Add(self.pan, 1, wx.ALL | wx.EXPAND)

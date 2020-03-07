@@ -4,7 +4,7 @@ from pubsub import pub
 
 class Reset(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(350, 75))
+        wx.Panel.__init__(self, parent, size=(275, 75))
         self.parent = parent
         self.index = 0
         self.halted = False
