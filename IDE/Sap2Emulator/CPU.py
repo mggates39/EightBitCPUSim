@@ -21,7 +21,7 @@ from Sap2Emulator.TempRegister import TempRegister
 
 class CPU(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, size=(1024, 800))
+        wx.Panel.__init__(self, parent, size=(1500, 900))
         self.parent = parent
         self.box = wx.StaticBox(self, wx.ID_ANY, "SAP 2 CPU", wx.DefaultPosition, (1024, 800))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.HORIZONTAL)
