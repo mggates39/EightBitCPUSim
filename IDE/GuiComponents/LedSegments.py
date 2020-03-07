@@ -9,13 +9,18 @@ import wx
 import wx.gizmos as gizmos
 from pubsub import pub
 
+from GuiComponents.ledhexctrl import LEDHexCtrl
+
+MODE_DEC = 0x0001
+MODE_HEX = 0x0002
+
 
 class LEDSegment(wx.Panel):
     """
     The LEDSegment class implements a seven segement display
     """
 
-    def __init__(self, parent, led_color='#36ff27', background_color='#077100', topic=None):
+    def __init__(self, parent, led_color='#36ff27', background_color='#077100', topic=None, mode=MODE_DEC):
         """
 
         :param parent: Panel that will hold the Seven Segment display
@@ -28,11 +33,16 @@ class LEDSegment(wx.Panel):
         self.led_color = led_color
         self.background_color = background_color
         self.value = 0
+        self.mode = mode
 
         pos = wx.DefaultPosition
         size = (100, 50)  # wx.DefaultSize
         style = gizmos.LED_ALIGN_RIGHT  # | gizmos.LED_DRAW_FADED
-        self.segment = gizmos.LEDNumberCtrl(self, -1, pos, size, style)
+        if mode == MODE_HEX:
+            self.segment = LEDHexCtrl(self, -1, pos, size, style)
+        else:
+            self.segment = gizmos.LEDNumberCtrl(self, -1, pos, size, style)
+
         # default colours are green on black
         self.segment.SetBackgroundColour(background_color)
         self.segment.SetForegroundColour(led_color)
@@ -55,4 +65,7 @@ class LEDSegment(wx.Panel):
 
         if self.value != new_value:
             self.value = new_value
-            self.segment.SetValue("{}".format(self.value))
+            if self.mode == MODE_HEX:
+                self.segment.SetValue("{02:X}".format(self.value))
+            else:
+                self.segment.SetValue("{}".format(self.value))
