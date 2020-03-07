@@ -5,14 +5,14 @@ from GuiComponents.LedArray import LED
 
 
 class ControlLed(wx.Panel):
-    def __init__(self, parent, light_color='#36ff27', dark_color='#077100', topic=None, label=None):
+    def __init__(self, parent, light_color='#36ff27', dark_color='#077100', topic=None, label=None, size:int = 14):
         wx.Panel.__init__(self, parent, size=(10, 1))
         self.parent = parent
         self.light_color = light_color
         self.dark_color = dark_color
         self.label = None
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.led = LED(self, light_color, dark_color)
+        self.led = LED(self, light_color, dark_color, size)
         if label is not None:
             self.label = wx.StaticText(self, label=label, style=wx.ALIGN_CENTER)
             self.sizer.Add(self.label, 1, wx.ALIGN_CENTER | wx.EXPAND)

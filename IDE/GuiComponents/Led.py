@@ -9,7 +9,7 @@ import wx
 
 
 class LED(wx.Panel):
-    def __init__(self, parent: wx.Panel, light_color: str = '#36ff27', dark_color: str = '#077100') -> None:
+    def __init__(self, parent: wx.Panel, light_color: str = '#36ff27', dark_color: str = '#077100', size:int = 14) -> None:
         """
         This class creates a visual representation of an LED that can be turned on and off
 
@@ -17,13 +17,14 @@ class LED(wx.Panel):
         :param light_color: Color for lit LED default to light green
         :param dark_color: Color for dark (unlit) LED defautls to dark green
         """
-        wx.Panel.__init__(self, parent, size=(14, 14))
+        wx.Panel.__init__(self, parent, size=(size, size))
         self.parent = parent
         # self.SetBackgroundColour('#000000')
         self.Bind(wx.EVT_PAINT, self.on_paint)
         self.lit = False
         self.light_color = light_color
         self.dark_color = dark_color
+        self.size = size-1
 
     def light(self, on_off: bool) -> None:
         """
@@ -49,4 +50,4 @@ class LED(wx.Panel):
             color = self.dark_color
 
         dc.SetBrush(wx.Brush(color))
-        dc.DrawEllipse(0, 0, 13, 13)
+        dc.DrawEllipse(0, 0, self.size, self.size)
