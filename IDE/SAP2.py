@@ -100,14 +100,14 @@ class MainWindow(wx.Frame):
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
         wx.Frame.__init__(self, parent, title=title, size=(600, 600))
-        screenSize = wx.DisplaySize()
-        screenWidth = screenSize[0]
-        screenHeight = screenSize[1]
+        screen_size = wx.DisplaySize()
+        screen_width = screen_size[0]
+        screen_height = screen_size[1]
         self.CreateStatusBar()  # A Status bar in the bottom of the window
 
         # Create a panel and notebook (tabs holder)
         # p = wx.Panel(self)
-        p = wx.lib.scrolledpanel.ScrolledPanel(self, -1, size=(screenWidth, screenHeight), pos=(0, 0),
+        p = wx.lib.scrolledpanel.ScrolledPanel(self, -1, size=(screen_width, screen_height), pos=(0, 0),
                                                style=wx.SIMPLE_BORDER)
         p.SetupScrolling()
         self.nb = wx.Notebook(p)
@@ -136,9 +136,11 @@ class MainWindow(wx.Frame):
         menu_save = file_menu.Append(wx.ID_SAVE, "&Save", " Save the file")
         menu_save_as = file_menu.Append(wx.ID_SAVEAS, "Save As", " Save the file with a new name")
         file_menu.AppendSeparator()
-        menu_assemble = file_menu.Append(wx.ID_ANY, "Assemble", " Assemble text in editor")
-        file_menu.AppendSeparator()
         menu_exit = file_menu.Append(wx.ID_EXIT, "E&xit", " Terminate the program")
+
+        emulator_menu = wx.Menu()
+        menu_assemble = emulator_menu.Append(wx.ID_ANY, "Assemble", " Assemble text in editor")
+        menu_execute = emulator_menu.Append(wx.ID_ANY, "Execute", " Execute the Assembled code")
 
         # Setting up the help menu.
         help_menu = wx.Menu()
@@ -147,6 +149,7 @@ class MainWindow(wx.Frame):
         # Creating the menu_bar.
         menu_bar = wx.MenuBar()
         menu_bar.Append(file_menu, "&File")  # Adding the "file_menu" to the MenuBar
+        menu_bar.Append(emulator_menu, "&Emulator")  # Adding the "emulator_menu" to the MenuBar
         menu_bar.Append(help_menu, "&Help")  # Adding the "help_menu" to the MenuBar
         self.SetMenuBar(menu_bar)  # Adding the MenuBar to the Frame content.
 
@@ -156,6 +159,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_save, menu_save)
         self.Bind(wx.EVT_MENU, self.on_save_as, menu_save_as)
         self.Bind(wx.EVT_MENU, self.on_assemble, menu_assemble)
+        self.Bind(wx.EVT_MENU, self.on_execute, menu_execute)
         self.Bind(wx.EVT_MENU, self.on_exit, menu_exit)
         self.Bind(wx.EVT_CLOSE, self.on_close, self)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
@@ -342,9 +346,6 @@ class MainWindow(wx.Frame):
             self.listing_tab.control.AppendText("\n")
             for line in errors:
                 self.listing_tab.control.AppendText(line)
-            self.nb.SetSelection(1)
-        else:
-            self.nb.SetSelection(0)
 
         memory_dump = a.get_memory_dump()
         self.memory_tab.control.Clear()
@@ -352,6 +353,15 @@ class MainWindow(wx.Frame):
             self.memory_tab.control.AppendText(line)
 
         self.execution_tab.cpu.load_memory(a.get_memory())
+
+        self.nb.SetSelection(1)
+
+    def on_execute(self, e):
+        """
+
+        :param e:
+        """
+        self.nb.SetSelection(3)
 
     def is_valid_label(self, label):
         """
