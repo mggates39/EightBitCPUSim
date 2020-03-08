@@ -32,7 +32,7 @@ class LEDSegment(wx.Panel):
         self.parent = parent
         self.led_color = led_color
         self.background_color = background_color
-        self.value = 0
+        self.value = '1'
         self.mode = mode
 
         pos = wx.DefaultPosition

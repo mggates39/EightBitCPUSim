@@ -45,6 +45,8 @@ class OutputRegister(wx.Panel):
         pub.subscribe(self.on_output_select, 'CPU.OutputSelect')
         pub.subscribe(self.on_out, 'CPU.OutputWrite')
 
+        pub.sendMessage('out.set_value', new_value=self.value)
+
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
