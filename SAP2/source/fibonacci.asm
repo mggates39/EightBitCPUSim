@@ -2,21 +2,17 @@
 # Fibonacci
 ###############
 	.corg 0
-top:	MVI A,1
-	STA (y)
-	MVI A,0
-loop:	OUT 2
-	ADD (y)
-	STA (z)
-	LDA (y)
-	STA (x)
-	LDA (z)
-	STA (y)
-	LDA (x)
+top:	MVI C,0
+	MVI B,1
+loop:	MOV A,C
+	OUT 2
+	ADD B
+	MOV B,C
+	MOV C,A
 	JC  (top)
 	JMP (loop)
 
-	.dorg 13
+	.dorg 17
 # Variables
 x:	.byte 0
 y:	.byte 0
