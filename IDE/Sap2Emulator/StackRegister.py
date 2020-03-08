@@ -68,7 +68,7 @@ class StackRegister(wx.Panel):
         self.clear_display_flags()
 
     def on_reset(self):
-        self.value = MAX_ADDRESS -1
+        self.value = MAX_ADDRESS - 1
         self.buffer = 0
         self.clear_display_flags()
         pub.sendMessage('sp.set_value', new_value=self.value)
@@ -94,4 +94,3 @@ class StackRegister(wx.Panel):
         self.value -= 1
         self.set_dec_display_flag()
         pub.sendMessage('sp.set_value', new_value=self.value)
-

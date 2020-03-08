@@ -264,7 +264,7 @@ class Alu(wx.Panel):
 
     def on_subtract(self):
         """
-        Receive the subtract control message and enable subtration in do_math.
+        Receive the subtract control message and enable subtraction in do_math.
         """
         self.set_sub_display_flag()
         self.subtract = True
@@ -417,7 +417,7 @@ class Alu(wx.Panel):
 
     def set_zero_label(self, new_label: bool) -> None:
         """
-        Set the labek to be displayed for the Zero Flag.
+        Set the label to be displayed for the Zero Flag.
 
         :param new_label: New state of the zero flag
         """
@@ -426,7 +426,7 @@ class Alu(wx.Panel):
 
     def set_sign_label(self, new_label: bool) -> None:
         """
-        Set the labek to be displayed for the Minus Flag.
+        Set the label to be displayed for the Minus Flag.
 
         :param new_label: New state of the zero flag
         """

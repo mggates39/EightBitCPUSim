@@ -1,6 +1,7 @@
 class Cell:
 
-    def __init__(self, line_number, address, label=None, operator=None, first_operand=None, second_operand=None) -> None:
+    def __init__(self, line_number, address, label=None, operator=None, first_operand=None,
+                 second_operand=None) -> None:
         super().__init__()
         self.line_number = line_number
         self.address = address
@@ -38,9 +39,9 @@ class Cell:
     def calculate_size(self, instructions):
         self.size = 1
         if self.operator is not None:
-            mneumonic = instructions.get_mnemonic(self.operator)
-            if mneumonic is not None:
-                self.size = mneumonic["bytes"]
+            mnemonic = instructions.get_mnemonic(self.operator)
+            if mnemonic is not None:
+                self.size = mnemonic["bytes"]
         else:
             if self.second_operand is not None:
                 self.size = 2
@@ -48,14 +49,16 @@ class Cell:
     def assemble_pass_one(self, instructions):
         error = ""
         if self.operator is not None:
-            self.op_code, real_operator = instructions.lookup_op_code(self.operator, self.first_operand, self.second_operand)
+            self.op_code, real_operator = instructions.lookup_op_code(self.operator, self.first_operand,
+                                                                      self.second_operand)
             if self.op_code == -1:
                 error = "ERROR: Unknown operator {} at {}.\n".format(self.operator, self.line_number)
                 self.op_code = 0
                 self.first_value = None
                 self.second_value = None
             elif self.op_code == -2:
-                error = "ERROR: Unknown operand {} {},{} at {}.\n".format(self.operator, self.first_operand, self.second_operand, self.line_number)
+                error = "ERROR: Unknown operand {} {},{} at {}.\n".format(self.operator, self.first_operand,
+                                                                          self.second_operand, self.line_number)
                 self.op_code = 0
                 self.first_value = None
                 self.second_value = None
@@ -136,14 +139,14 @@ class Cell:
         memory_dump = ""
         for memory in self.memory:
             if memory is not None:
-                memory_dump += "0x{0:02X} ".format(memory)
+                memory_dump += '0x{0:02X} '.format(memory)
             else:
                 memory_dump += "     "
 
         listing += memory_dump
 
         if self.label is not None:
-            listing += "{:<10s}".format(self.label+':')
+            listing += "{:<10s}".format(self.label + ':')
         else:
             listing += "{:<10s}".format(' ')
 

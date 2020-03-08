@@ -1,4 +1,6 @@
 from Sap2Assembler.Segment import MAX_ADDRESS
+
+
 def get_label_for_address(labels, address):
     label = ""
     for labelTuple in labels:

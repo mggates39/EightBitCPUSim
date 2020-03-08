@@ -66,6 +66,6 @@ class LEDSegment(wx.Panel):
         if self.value != new_value:
             self.value = new_value
             if self.mode == MODE_HEX:
-                self.segment.SetValue("{02:X}".format(self.value))
+                self.segment.SetValue("{0:X}".format(self.value))
             else:
                 self.segment.SetValue("{}".format(self.value))

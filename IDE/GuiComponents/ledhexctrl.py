@@ -75,6 +75,15 @@ class LEDHexCtrl(wx.Control):
         constructor is used then the Create method will need to be called
         later before the widget can actually be used.
         """
+        self.m_alignment = LED_ALIGN_LEFT
+        self.m_lineMargin = -1
+        self.m_digitMargin = -1
+        self.m_lineLength = -1
+        self.m_lineWidth = -1
+        self.m_drawFaded = False
+        self.m_leftStartPos = -1
+        self.m_value = ''
+
         if not args and not kw:
             self._init_default()
         else:

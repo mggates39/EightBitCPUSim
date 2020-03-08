@@ -2,7 +2,7 @@
     Bus.py
     ------
 
-    This module contains the Eight Bit Data buse implementation and display.
+    This module contains the Eight Bit Data bus implementation and display.
 """
 
 import wx

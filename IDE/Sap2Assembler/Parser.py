@@ -23,13 +23,12 @@ def make_target(target):
 
 
 class Parser:
-    def __init__(self, instructions:Instructions) -> None:
+    def __init__(self, instructions: Instructions) -> None:
         super().__init__()
         self.instructions = instructions
         self.segments = []
         self.errors = []
         self.active_segment = None
-
 
     def get_current_segment(self):
         if self.active_segment is None:
@@ -91,7 +90,8 @@ class Parser:
                 if len(arguments) == 1:
                     self.get_current_segment().add_instruction(line_number, label, fields[1], make_target(fields[2]))
                 else:
-                    self.get_current_segment().add_instruction(line_number, label, fields[1], make_target(arguments[0]), make_target(arguments[1]))
+                    self.get_current_segment().add_instruction(line_number, label, fields[1], make_target(arguments[0]),
+                                                               make_target(arguments[1]))
 
         else:
             if len(fields) == 2:
@@ -99,7 +99,8 @@ class Parser:
                 if len(arguments) == 1:
                     self.get_current_segment().add_instruction(line_number, None, fields[0], make_target(fields[1]))
                 else:
-                    self.get_current_segment().add_instruction(line_number, None, fields[0], make_target(arguments[0]), make_target(arguments[1]))
+                    self.get_current_segment().add_instruction(line_number, None, fields[0], make_target(arguments[0]),
+                                                               make_target(arguments[1]))
             else:
                 self.get_current_segment().add_instruction(line_number, None, fields[0], None)
 

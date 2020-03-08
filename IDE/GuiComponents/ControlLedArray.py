@@ -5,8 +5,10 @@ from GuiComponents.ControlLed import ControlLed
 
 
 class ControlLedArray(wx.Panel):
-    def __init__(self, parent, light_color='#36ff27', dark_color='#077100', control_messages=[], size:int = 14):
+    def __init__(self, parent, light_color='#36ff27', dark_color='#077100', control_messages=None, size:int = 14):
         wx.Panel.__init__(self, parent, size=(10, 1))
+        if control_messages is None:
+            control_messages = []
         self.parent = parent
         self.light_color = light_color
         self.dark_color = dark_color

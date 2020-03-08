@@ -129,7 +129,7 @@ class Clock(wx.Panel):
         a CPU.Clock signal to all the components in the CPU.  This is the
         driving force of the Emulator.
 
-        :param e: Mouse or Iimer Event - Unused
+        :param e: Mouse or Timer Event - Unused
         """
         if not self.halted:
             pub.sendMessage("CPU.ClearControl")

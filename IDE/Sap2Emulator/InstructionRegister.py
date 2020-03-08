@@ -106,7 +106,7 @@ class InstructionRegister(wx.Panel):
         self.microcode = self.instruction_decoder.get_current_microcode()
         pub.sendMessage('ip.set_instruction', new_value=op_code)
         pub.sendMessage('ip.set_instruction_label', new_label="NOP")
-        pub.sendMessage('ip.set_data', new_value=(self.operand))
+        pub.sendMessage('ip.set_data', new_value=self.operand)
 
     def on_ring_reset(self):
         self.cycle += 1

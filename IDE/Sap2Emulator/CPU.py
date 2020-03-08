@@ -1,7 +1,6 @@
 import wx
 from pubsub import pub
 
-from Sap2Emulator.OutputRegister import OutputRegister
 from Sap2Emulator.ALU import Alu
 from Sap2Emulator.Accumulator import Accumulator
 from Sap2Emulator.Bus import Bus
@@ -12,6 +11,7 @@ from Sap2Emulator.InstructionRegister import InstructionRegister
 from Sap2Emulator.Memory import Memory
 from Sap2Emulator.MemoryAddressRegister import MemoryAddressRegister
 from Sap2Emulator.MicroCode import MicroCode
+from Sap2Emulator.OutputRegister import OutputRegister
 from Sap2Emulator.ProgramCounter import ProgramCounter
 from Sap2Emulator.Reset import Reset
 from Sap2Emulator.StackRegister import StackRegister
