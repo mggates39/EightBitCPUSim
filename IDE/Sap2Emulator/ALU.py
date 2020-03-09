@@ -328,8 +328,8 @@ class Alu(wx.Panel):
                 self.carry = False
         else:
             self.result = self.value + self.temp_value
-            if self.result >= 255:
-                self.result = self.result & 255
+            if self.result >= 0xFF:
+                self.result = self.result & 0xFF
                 self.carry = True
             else:
                 self.carry = False
@@ -339,7 +339,7 @@ class Alu(wx.Panel):
         else:
             self.zero = False
 
-        if self.result & 128 == 128:
+        if self.result & 0x80 == 0x80:
             self.minus = True
         else:
             self.minus = False
@@ -368,22 +368,27 @@ class Alu(wx.Panel):
             self.carry = False
 
         if self.logical_roll_left:
-            if self.value & 0x80 == 0x80:
-                self.carry = True
+            prev_bit_seven = self.value & 0x80
+            if self.carry:
+                new_zero_bit = 0x01
             else:
-                self.carry = False
-            self.result = self.value << 1
+                new_zero_bit = 0x00
+
+            self.result = self.value << 1 | new_zero_bit
+            self.carry = prev_bit_seven == 0x80
 
         if self.logical_roll_right:
-            self.result = self.value >> 1
-            self.carry = False
+            prev_bit_seven = self.value & 0x80
+            prev_bit_zero = self.value & 0x01
+            self.result = self.value >> 1 | prev_bit_seven
+            self.carry = prev_bit_zero == 0x01
 
         if self.result == 0:
             self.zero = True
         else:
             self.zero = False
 
-        if self.result & 128 == 128:
+        if self.result & 0x80 == 0x80:
             self.minus = True
         else:
             self.minus = False
