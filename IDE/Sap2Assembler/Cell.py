@@ -95,6 +95,12 @@ class Cell:
                             if instructions.is_operand_two_numeric(self.real_operator):
                                 self.second_value, error = self.back_patch_label(self.second_operand, labels)
                                 self.second_operand = "{}".format(self.second_value)
+                            elif instructions.is_operand_two_memory(self.real_operator):
+                                value, error = self.back_patch_label(self.second_operand, labels)
+                                if self.good:
+                                    self.first_value = value & 0xFF
+                                    self.second_value = (value >> 8) & 0xFF
+                                    self.second_operand = "0x{0:04X}".format(value)
                         else:
                             error = "ERROR: Missing second operand"
                             self.good = False

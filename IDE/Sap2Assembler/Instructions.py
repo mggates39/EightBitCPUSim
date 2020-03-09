@@ -17,6 +17,7 @@ class Instructions:
             "JNZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNZ"]},
             "JZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JZ"]},
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
+            "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI B"]},
             "MOV": {"operands": 2, "included": 2, "bytes": 1,
                     "operators": ["MOV A,B", "MOV A,C", "MOV B,A", "MOV B,C", "MOV C,A", "MOV C,B"]},
             "MVI": {"operands": 2, "included": 1, "bytes": 2, "operators": ["MVI A", "MVI B", "MVI C"]},
@@ -85,6 +86,8 @@ class Instructions:
                    "bytes": 3},
 
             "LDA": {"operator": "LDA", "op_code": 0x3A, "operand1": "M", "operand2": None, "addressing": "Dir",
+                    "bytes": 3},
+            "LXI B": {"operator": "LXI B", "op_code": 0x01, "operand1": "B", "operand2": "M", "addressing": "Imm",
                     "bytes": 3},
 
             "MOV A,B": {"operator": "MOV A,B", "op_code": 0x78, "operand1": "A", "operand2": "B", "addressing": "Reg",

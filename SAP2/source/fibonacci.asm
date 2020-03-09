@@ -2,8 +2,7 @@
 # Fibonacci
 ###############
 	.corg 0
-top:	MVI C,0
-	MVI B,1
+top:	LXI B,256
 loop:	MOV A,C
 	OUT 2
 	ADD B

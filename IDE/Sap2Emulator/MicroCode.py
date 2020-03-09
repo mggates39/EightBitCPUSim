@@ -107,6 +107,15 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
 
+    0x01: {"operator": "LXI B", "op_code": 0x01, "operand1": "B", "operand2": "M", "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.CRegIn', 'CPU.PcInc'],
+                         ['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.BRegIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
     0x04: {"operator": "INR B", "op_code": 0x04, "operand1": "B", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
