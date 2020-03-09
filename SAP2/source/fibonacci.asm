@@ -11,12 +11,5 @@ loop:	MOV A,C
 	MOV C,A
 	JC  (top)
 	JMP (loop)
-
-	.dorg 17
-# Variables
-x:	.byte 0
-y:	.byte 0
-z:	.byte 0
-
 	.end
 
