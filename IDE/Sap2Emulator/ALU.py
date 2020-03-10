@@ -399,9 +399,15 @@ class Alu(wx.Panel):
             is_roll = True
             new_carry = self.value & 0x01 == 0x01
             if self.through_carry:
-                new_bit_seven = self.value & 0x80
+                if self.carry:
+                    new_bit_seven = 0x80
+                else:
+                    new_bit_seven = 0x00
             else:
-                new_bit_seven = (self.value & 0x01) << 7
+                if new_carry:
+                    new_bit_seven = 0x80
+                else:
+                    new_bit_seven = 0x00
 
             self.result = self.value >> 1 | new_bit_seven
             self.carry = new_carry
