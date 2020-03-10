@@ -40,6 +40,7 @@ class Alu(wx.Panel):
         self.logical_xor = False
         self.logical_roll_right = False
         self.logical_roll_left = False
+        self.through_carry = False
 
         self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 250))
         self.static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -100,6 +101,8 @@ class Alu(wx.Panel):
         pub.subscribe(self.on_xor, 'CPU.AluLxor')
         pub.subscribe(self.on_rar, 'CPU.AluRar')
         pub.subscribe(self.on_ral, 'CPU.AluRal')
+        pub.subscribe(self.on_rar_carry, 'CPU.AluRarC')
+        pub.subscribe(self.on_ral_carry, 'CPU.AluRalC')
 
         pub.subscribe(self.on_use_a_value, 'CPU.AluLda')
         pub.subscribe(self.on_use_b_value, 'CPU.AluLdb')
@@ -207,6 +210,7 @@ class Alu(wx.Panel):
         self.logical_xor = False
         self.logical_roll_right = False
         self.logical_roll_left = False
+        self.through_carry = False
         self.clear_display_flags()
         pub.sendMessage('alu.set_value', new_value=self.result)
 
@@ -307,11 +311,29 @@ class Alu(wx.Panel):
     def on_rar(self):
         self.set_rar_display_flag()
         self.logical_roll_right = True
+        self.logical_roll_left = False
+        self.through_carry = False
         self.do_logic()
 
     def on_ral(self):
         self.set_ral_display_flag()
+        self.logical_roll_right = False
         self.logical_roll_left = True
+        self.through_carry = False
+        self.do_logic()
+
+    def on_rar_carry(self):
+        self.set_rar_display_flag()
+        self.logical_roll_right = True
+        self.logical_roll_left = False
+        self.through_carry = True
+        self.do_logic()
+
+    def on_ral_carry(self):
+        self.set_ral_display_flag()
+        self.logical_roll_right = False
+        self.logical_roll_left = True
+        self.through_carry = True
         self.do_logic()
 
     def do_math(self):
@@ -355,6 +377,35 @@ class Alu(wx.Panel):
         the subtract flag is set.
         Then update the carry and zero flag values accordingly
         """
+        is_roll = False
+        if self.logical_roll_left:
+            is_roll = True
+            new_carry = self.value & 0x80 == 0x80
+            if self.through_carry:
+                if self.carry:
+                    new_zero_bit = 0x01
+                else:
+                    new_zero_bit = 0x00
+            else:
+                if new_carry:
+                    new_zero_bit = 0x01
+                else:
+                    new_zero_bit = 0x00
+
+            self.result = self.value << 1 | new_zero_bit
+            self.carry = new_carry
+
+        if self.logical_roll_right:
+            is_roll = True
+            new_carry = self.value & 0x01 == 0x01
+            if self.through_carry:
+                new_bit_seven = self.value & 0x80
+            else:
+                new_bit_seven = (self.value & 0x01) << 7
+
+            self.result = self.value >> 1 | new_bit_seven
+            self.carry = new_carry
+
         if self.logical_and:
             self.result = self.value & self.temp_value
             self.carry = False
@@ -367,31 +418,16 @@ class Alu(wx.Panel):
             self.result = self.value ^ self.temp_value
             self.carry = False
 
-        if self.logical_roll_left:
-            prev_bit_seven = self.value & 0x80
-            if self.carry:
-                new_zero_bit = 0x01
+        if not is_roll:
+            if self.result == 0:
+                self.zero = True
             else:
-                new_zero_bit = 0x00
+                self.zero = False
 
-            self.result = self.value << 1 | new_zero_bit
-            self.carry = prev_bit_seven == 0x80
-
-        if self.logical_roll_right:
-            prev_bit_seven = self.value & 0x80
-            prev_bit_zero = self.value & 0x01
-            self.result = self.value >> 1 | prev_bit_seven
-            self.carry = prev_bit_zero == 0x01
-
-        if self.result == 0:
-            self.zero = True
-        else:
-            self.zero = False
-
-        if self.result & 0x80 == 0x80:
-            self.minus = True
-        else:
-            self.minus = False
+            if self.result & 0x80 == 0x80:
+                 self.minus = True
+            else:
+                self.minus = False
 
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
