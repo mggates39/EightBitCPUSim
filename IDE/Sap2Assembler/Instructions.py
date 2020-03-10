@@ -2,12 +2,14 @@ class Instructions:
     def __init__(self) -> None:
         super().__init__()
         self.mnemonics = {
-            "ADD": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ADD B", "ADD C"]},
+            "ADD": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ADD A", "ADD B", "ADD C"]},
+            "ADI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ADI"]},
             "ANA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ANA B", "ANA C"]},
             "ANI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ANI"]},
             "CALL": {"operands": 1, "included": 0, "bytes": 3, "operators": ["CALL"]},
             "CMA": {"operands": 0, "included": 0, "bytes": 1, "operators": ["CMA"]},
             "CMP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["CMP B", "CMP C"]},
+            "CPI": {"operands": 1, "included": 0, "bytes": 1, "operators": ["CPI"]},
             "DCR": {"operands": 1, "included": 1, "bytes": 1, "operators": ["DCR A", "DCR B", "DCR C"]},
             "HLT": {"operands": 0, "included": 0, "bytes": 1, "operators": ["HLT"]},
             "IN": {"operands": 1, "included": 0, "bytes": 2, "operators": ["IN"]},
@@ -15,7 +17,9 @@ class Instructions:
             "JC": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JC"]},
             "JM": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JM"]},
             "JMP": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JMP"]},
+            "JNC": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNC"]},
             "JNZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNZ"]},
+            "JP": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JP"]},
             "JZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JZ"]},
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
             "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI B"]},
@@ -34,16 +38,21 @@ class Instructions:
             "RRC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RRC"]},
             "RET": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RET"]},
             "STA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["STA"]},
-            "SUB": {"operands": 1, "included": 1, "bytes": 1, "operators": ["SUB B", "SUB C"]},
+            "SUB": {"operands": 1, "included": 1, "bytes": 1, "operators": ["SUB A", "SUB B", "SUB C"]},
+            "SUI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["SUI"]},
             "XRA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["XRA B", "XRA C"]},
             "XRI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["XRI"]},
         }
 
         self.operators = {
+            "ADD A": {"operator": "ADD A", "op_code": 0x87, "operand1": "A", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
             "ADD B": {"operator": "ADD B", "op_code": 0x80, "operand1": "B", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "ADD C": {"operator": "ADD C", "op_code": 0x81, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
+            "ADI": {"operator": "ADI", "op_code": 0xC6, "operand1": "M", "operand2": None, "addressing": "Imm",
+                      "bytes": 2},
 
             "ANA B": {"operator": "ANA B", "op_code": 0xA0, "operand1": "B", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
@@ -63,6 +72,8 @@ class Instructions:
                     "bytes": 1},
             "CMP C": {"operator": "CMP C", "op_code": 0xB9, "operand1": "C", "operand2": None, "addressing": "Reg",
                     "bytes": 1},
+            "CPI": {"operator": "CPI", "op_code": 0xFE, "operand1": "N", "operand2": None, "addressing": "Imm",
+                      "bytes": 2},
 
             "DCR A": {"operator": "DCR A", "op_code": 0x3D, "operand1": "A", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
@@ -90,8 +101,12 @@ class Instructions:
                    "bytes": 3},
             "JMP": {"operator": "JMP", "op_code": 0xC3, "operand1": "M", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
+            "JNC": {"operator": "JNC", "op_code": 0xD2, "operand1": "M", "operand2": None, "addressing": "Imm",
+                    "bytes": 3},
             "JNZ": {"operator": "JNZ", "op_code": 0xC2, "operand1": "M", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
+            "JP": {"operator": "JP", "op_code": 0xF2, "operand1": "M", "operand2": None, "addressing": "Imm",
+                   "bytes": 3},
             "JZ": {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
 
@@ -157,10 +172,14 @@ class Instructions:
             "STA": {"operator": "STA", "op_code": 0x32, "operand1": "M", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
 
+            "SUB A": {"operator": "SUB A", "op_code": 0x97, "operand1": "A", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
             "SUB B": {"operator": "SUB B", "op_code": 0x90, "operand1": "B", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "SUB C": {"operator": "SUB C", "op_code": 0x91, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
+            "SUI": {"operator": "SUI", "op_code": 0xD6, "operand1": "M", "operand2": None, "addressing": "Imm",
+                    "bytes": 2},
 
             "XRA B": {"operator": "XRA B", "op_code": 0x90, "operand1": None, "operand2": None, "addressing": "Reg",
                       "bytes": 1},
