@@ -278,6 +278,12 @@ operators = {
                          ['CPU.AluLda', 'CPU.CRegOut', 'CPU.TempIn'],
                          ['CPU.AluAdd', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
+    0x87: {"operator": "ADD A", "op_code": 0x87, "operand1": "A", "operand2": None, "addressing": "Reg",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.AluLda', 'CPU.ARegOut', 'CPU.TempIn'],
+                         ['CPU.AluAdd', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.RingReset']]},
 
     0x90: {"operator": "SUB B", "op_code": 0x90, "operand1": "B", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
@@ -289,6 +295,12 @@ operators = {
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.AluLda', 'CPU.CRegOut', 'CPU.TempIn'],
+                         ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.RingReset']]},
+    0x97: {"operator": "SUB A", "op_code": 0x97, "operand1": "A", "operand2": None, "addressing": "Reg",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.AluLda', 'CPU.ARegOut', 'CPU.TempIn'],
                          ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
@@ -356,10 +368,8 @@ operators = {
     0xC2: {"operator": "JNZ", "op_code": 0xC2, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
                          ['CPU.RingReset']]},
     0xC3: {"operator": "JMP", "op_code": 0xC3, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
@@ -380,6 +390,14 @@ operators = {
                          ['CPU.CRegOut', 'CPU.MemIn', 'CPU.SpDec'],
                          ['CPU.RingReset']]},
 
+    0xC6: {"operator": "ADI", "op_code": 0xC6, "operand1": "N", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
+                         ['CPU.AluAdd', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.RingReset']]},
+
     0xC9: {"operator": "RET", "op_code": 0xC9, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -389,14 +407,14 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrAhIn'],
                          ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
+
     0xCA: {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
                          ['CPU.RingReset']]},
+
     0xCD: {"operator": "CALL", "op_code": 0xCD, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -411,6 +429,13 @@ operators = {
                          ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
 
+    0xD2: {"operator": "JNC", "op_code": 0xD2, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
     0xD3: {"operator": "OUT", "op_code": 0xD3, "operand1": "N", "operand2": None, "addressing": "Dir",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -419,13 +444,20 @@ operators = {
                          ['CPU.IrOut', 'CPU.OutputSelect'],
                          ['CPU.ARegOut', 'CPU.OutputWrite'],
                          ['CPU.RingReset']]},
-    0xDA: {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
+
+    0xD6: {"operator": "SUI", "op_code": 0xD6, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc'],
+                         ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
+                         ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.RingReset']]},
+
+    0xDA: {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
                          ['CPU.RingReset']]},
     0xDB: {"operator": "IN", "op_code": 0xDB, "operand1": "N", "operand2": None, "addressing": "Dir",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
@@ -439,35 +471,47 @@ operators = {
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         ['CPU.AluLda', 'CPU.IrOut', 'CPU.TempIn'],
+                         ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
                          ['CPU.AluLand', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
     0xEE: {"operator": "XRI", "op_code": 0xEE, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         ['CPU.AluLda', 'CPU.IrOut', 'CPU.TempIn'],
+                         ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
                          ['CPU.AluLxor', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
+
+    0xF2: {"operator": "JP", "op_code": 0xF2, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
     0xF6: {"operator": "ORI", "op_code": 0xF6, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         ['CPU.AluLda', 'CPU.IrOut', 'CPU.TempIn'],
+                         ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
                          ['CPU.AluLor', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
     0xFA: {"operator": "JM", "op_code": 0xFA, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         ['CPU.PcOut', 'CPU.MarIn'],
-                         ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
                          ['CPU.RingReset']]},
+
+    0xFE: {"operator": "CPI", "op_code": 0xFE, "operand1": "N", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
+                         ['CPU.AluSub', 'CPU.FlagIn'],
+                         ['CPU.RingReset']]},
+
 }
 
 invalid_operator = {"operator": "***", "op_code": 0x00, "operand1": None, "operand2": None, "addressing": "Non",
@@ -487,6 +531,10 @@ class MicroCode:
             self.current_operator = operators[op_code]
             self.current_microcode = self.current_operator["microcode"]
 
+            # JNC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+            if op_code == 0xD2 and not carry_flag:
+                self.current_microcode = operators[0xC3]["microcode"]
+
             # JC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
             if op_code == 0xDA and carry_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
@@ -497,6 +545,10 @@ class MicroCode:
 
             # JZ - If this is the Jump if Zero and zero flag is set Just use the Jump Microcode
             if op_code == 0xCA and zero_flag:
+                self.current_microcode = operators[0xC3]["microcode"]
+
+            # JP - If this is the Jump if Plus and negative flag is not set Just use the Jump Microcode
+            if op_code == 0xF2 and not negative_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
             # JM - If this is the Jump if minus and negative flag is set Just use the Jump Microcode
