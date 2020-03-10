@@ -128,7 +128,7 @@ operators = {
     0x05: {"operator": "DCR B", "op_code": 0x05, "operand1": "B", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         ['CPU.AluLdb', 'CPU.AluInc', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.BRegIn'],
+                         ['CPU.AluLdb', 'CPU.AluDec', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.BRegIn'],
                          ['CPU.RingReset']]},
     0x06: {"operator": "MVI B", "op_code": 0x06, "operand1": "B", "operand2": "N", "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
