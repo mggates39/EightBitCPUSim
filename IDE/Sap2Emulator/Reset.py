@@ -26,3 +26,4 @@ class Reset(wx.Panel):
     def on_click_reset(self, e):
         pub.sendMessage("CPU.ClearControl")
         pub.sendMessage('CPU.Reset')
+        self.parent.parent.Refresh()
