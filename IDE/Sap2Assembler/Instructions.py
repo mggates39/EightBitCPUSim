@@ -7,6 +7,7 @@ class Instructions:
             "ANI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ANI"]},
             "CALL": {"operands": 1, "included": 0, "bytes": 3, "operators": ["CALL"]},
             "CMA": {"operands": 0, "included": 0, "bytes": 1, "operators": ["CMA"]},
+            "CMP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["CMP B", "CMP C"]},
             "DCR": {"operands": 1, "included": 1, "bytes": 1, "operators": ["DCR A", "DCR B", "DCR C"]},
             "HLT": {"operands": 0, "included": 0, "bytes": 1, "operators": ["HLT"]},
             "IN": {"operands": 1, "included": 0, "bytes": 2, "operators": ["IN"]},
@@ -24,6 +25,8 @@ class Instructions:
             "NOP": {"operands": 0, "included": 0, "bytes": 1, "operators": ["NOP"]},
             "ORA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ORA B", "ORA C"]},
             "ORI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ORI"]},
+            "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP BC"]},
+            "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH BC"]},
             "OUT": {"operands": 1, "included": 0, "bytes": 2, "operators": ["OUT"]},
             "RAL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAL"]},
             "RAR": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAR"]},
@@ -54,6 +57,11 @@ class Instructions:
                      "bytes": 3},
 
             "CMA": {"operator": "CMA", "op_code": 0x2F, "operand1": None, "operand2": None, "addressing": "Imp",
+                    "bytes": 1},
+
+            "CMP B": {"operator": "CMP B", "op_code": 0xB8, "operand1": "B", "operand2": None, "addressing": "Reg",
+                    "bytes": 1},
+            "CMP C": {"operator": "CMP C", "op_code": 0xB9, "operand1": "C", "operand2": None, "addressing": "Reg",
                     "bytes": 1},
 
             "DCR A": {"operator": "DCR A", "op_code": 0x3D, "operand1": "A", "operand2": None, "addressing": "Reg",
@@ -126,6 +134,12 @@ class Instructions:
                     "bytes": 2},
 
             "OUT": {"operator": "OUT", "op_code": 0xD3, "operand1": "N", "operand2": None, "addressing": "Dir",
+                    "bytes": 2},
+
+            "POP BC": {"operator": "POP B", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
+                    "bytes": 2},
+
+            "PUSH BC": {"operator": "PUSH B", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
                     "bytes": 2},
 
             "RAL": {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",
@@ -248,7 +262,8 @@ class Instructions:
     def is_operand_one_register(self, operator):
         return ((self.get_operand_one_type(operator) == "A") |
                 (self.get_operand_one_type(operator) == "B") |
-                (self.get_operand_one_type(operator) == "C"))
+                (self.get_operand_one_type(operator) == "C") |
+                (self.get_operand_one_type(operator) == "BC"))
 
     def is_operand_two_memory(self, operator):
         return self.get_operand_two_type(operator) == "M"
@@ -262,4 +277,5 @@ class Instructions:
     def is_operand_two_register(self, operator):
         return ((self.get_operand_two_type(operator) == "A") |
                 (self.get_operand_two_type(operator) == "B") |
-                (self.get_operand_two_type(operator) == "C"))
+                (self.get_operand_two_type(operator) == "C") |
+                (self.get_operand_two_type(operator) == "BC"))
