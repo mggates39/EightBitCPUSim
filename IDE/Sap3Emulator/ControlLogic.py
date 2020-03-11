@@ -11,8 +11,9 @@ class ControlLogic(wx.Panel):
         self.box = wx.StaticBox(self, wx.ID_ANY, "Control Logic", wx.DefaultPosition, (200, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
-        cm1 = control_messages[0:21]
-        cm2 = control_messages[21:]
+        slice = int(len(control_messages)/2)
+        cm1 = control_messages[0:slice]
+        cm2 = control_messages[slice:]
 
         self.leds1 = ControlLedArray(self.box, '#0065ef', '#00075f', cm1, size=12)
         self.leds2 = ControlLedArray(self.box, '#0065ef', '#00075f', cm2, size=12)
