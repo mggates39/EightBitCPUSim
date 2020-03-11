@@ -2,7 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
-from Sap2Emulator.MicroCode import MicroCode
+from Sap3Emulator.MicroCode import MicroCode
 
 
 class InstructionRegister(wx.Panel):
