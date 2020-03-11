@@ -23,7 +23,7 @@ class TempRegister(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = LEDArray(self.box, 8, topic="tmp.set_value")
+        self.leds = LEDArray(self.box, 8, topic="tmp.set_value", size=10)
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
 

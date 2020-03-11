@@ -27,7 +27,7 @@ class OutputRegister(wx.Panel):
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
         self.segment = LEDSegment(self.box, 'blue', None, topic='out.set_value')
-        self.leds = LEDArray(self.box, 8, topic="out.set_value")
+        self.leds = LEDArray(self.box, 8, topic="out.set_value", size=10)
 
         vertical_box.Add(self.segment, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)

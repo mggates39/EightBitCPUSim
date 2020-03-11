@@ -21,13 +21,13 @@ class Clock(wx.Panel):
 
         :param parent: Panel that will contain this Bus Panel
         """
-        wx.Panel.__init__(self, parent, size=(300, 75))
+        wx.Panel.__init__(self, parent, size=(300, 150))
         self.parent = parent
         self.index = 0
         self.halted = False
         self.speed = 100
         self.timer = wx.Timer(self)
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (300, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (300, 150))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)

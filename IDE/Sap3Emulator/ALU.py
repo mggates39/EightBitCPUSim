@@ -23,7 +23,7 @@ class Alu(wx.Panel):
 
         :param parent: Panel that will contain this ALU Panel
         """
-        wx.Panel.__init__(self, parent, size=(100, 250))
+        wx.Panel.__init__(self, parent, size=(100, 300))
         self.parent = parent
         self.result = 0
         self.value = 0
@@ -42,7 +42,7 @@ class Alu(wx.Panel):
         self.logical_roll_left = False
         self.through_carry = False
 
-        self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 250))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 300))
         self.static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)

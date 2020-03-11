@@ -6,11 +6,11 @@ from GuiComponents.LedArray import LEDArray
 
 class Accumulator(wx.Panel):
     def __init__(self, parent, name="A"):
-        wx.Panel.__init__(self, parent, size=(200, 75))
+        wx.Panel.__init__(self, parent, size=(150, 75))
         title = name + " Register"
         self.topic_prefix = name + "Reg"
         self.parent = parent
-        self.box = wx.StaticBox(self, wx.ID_ANY, title, wx.DefaultPosition, (200, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, title, wx.DefaultPosition, (150, 75))
         self.value = 0
         self.buffer = 0
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -27,7 +27,7 @@ class Accumulator(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = LEDArray(self.box, 8, topic=self.topic_prefix + ".set_value")
+        self.leds = LEDArray(self.box, 8, topic=self.topic_prefix + ".set_value", size=10)
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
 

@@ -22,9 +22,9 @@ class Bus(wx.Panel):
 
         :param parent: Panel that will contain this Bus Panel
         """
-        wx.Panel.__init__(self, parent, size=(275, 75))
+        wx.Panel.__init__(self, parent, size=(250, 75))
         self.parent = parent
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (300, 75))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Bus", wx.DefaultPosition, (250, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
