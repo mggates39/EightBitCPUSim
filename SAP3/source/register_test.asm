@@ -6,6 +6,9 @@
 	MOV E,D
 	MOV H,E
 	MOV L,H
+	PUSH DE
+	LXI DE,(42838)
+	POP DE
 	HLT
 
 	.end

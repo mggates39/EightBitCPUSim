@@ -24,7 +24,7 @@ class Instructions:
             "JPO": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JPO"]},
             "JZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JZ"]},
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
-            "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI B"]},
+            "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI BC", "LXI DE"]},
             "MOV": {"operands": 2, "included": 2, "bytes": 1,
                     "operators": ["MOV A,A", "MOV A,B", "MOV A,C", "MOV A,D", "MOV A,E", "MOV A,H", "MOV A,L",
                                   "MOV B,A", "MOV B,B", "MOV B,C", "MOV B,D", "MOV B,E", "MOV B,H", "MOV B,L",
@@ -124,8 +124,10 @@ class Instructions:
 
             "LDA": {"operator": "LDA", "op_code": 0x3A, "operand1": "M", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
-            "LXI B": {"operator": "LXI B", "op_code": 0x01, "operand1": "B", "operand2": "M", "addressing": "Imm",
+            "LXI BC": {"operator": "LXI BC", "op_code": 0x01, "operand1": "BC", "operand2": "M", "addressing": "Imm",
                     "bytes": 3},
+            "LXI DE": {"operator": "LXI DE", "op_code": 0x11, "operand1": "DE", "operand2": "M", "addressing": "Imm",
+                      "bytes": 3},
 
             "MOV A,A": {"operator": "MOV A,A", "op_code": 0x7F, "operand1": "A", "operand2": "A", "addressing": "Reg",
                         "bytes": 1},
