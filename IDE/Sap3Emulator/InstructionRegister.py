@@ -17,7 +17,9 @@ class InstructionRegister(wx.Panel):
         self.ring_count = 0
         self.carry_flag = False
         self.zero_flag = False
-        self.minus_flag = False
+        self.sign_flag = False
+        self.parity_flag = False
+        self.auxillary_carry_flag = False
         self.instruction_decoder = instruction_decoder
         self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 150))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -97,7 +99,9 @@ class InstructionRegister(wx.Panel):
         self.ring_count = 0
         self.carry_flag = False
         self.zero_flag = False
-        self.minus_flag = False
+        self.sign_flag = False
+        self.parity_flag = False
+        self.auxillary_carry_flag = False
 
         self.clear_display_flags()
 
@@ -121,7 +125,8 @@ class InstructionRegister(wx.Panel):
         self.set_in_display_flag()
         op_code = int(self.value)
         self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag,
-                                                negative_flag=self.minus_flag)
+                                                sign_flag=self.sign_flag, parity_flag=self.parity_flag,
+                                                auxillary_carry_flag=self.auxillary_carry_flag)
         operator = self.instruction_decoder.get_current_operator()
         operator_name = operator["operator"]
         self.microcode = self.instruction_decoder.get_current_microcode()
@@ -144,7 +149,9 @@ class InstructionRegister(wx.Panel):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=self.operand)
 
-    def on_read_flags(self, new_carry, new_zero, new_minus):
+    def on_read_flags(self, new_carry, new_zero, new_sign, new_parity, new_auxillary_carry):
+        self.auxillary_carry_flag = new_auxillary_carry
         self.carry_flag = new_carry
         self.zero_flag = new_zero
-        self.minus_flag = new_minus
+        self.sign_flag = new_sign
+        self.parity_flag = new_parity

@@ -769,7 +769,7 @@ class MicroCode:
         self.current_operator = operators[0]
         self.current_microcode = self.current_operator["microcode"]
 
-    def decode_op_code(self, op_code, carry_flag=False, zero_flag=False, negative_flag=False):
+    def decode_op_code(self, op_code, carry_flag=False, zero_flag=False, sign_flag=False, parity_flag=False, auxillary_carry_flag=False):
         if op_code in operators:
             self.current_operator = operators[op_code]
             self.current_microcode = self.current_operator["microcode"]
@@ -791,11 +791,11 @@ class MicroCode:
                 self.current_microcode = operators[0xC3]["microcode"]
 
             # JP - If this is the Jump if Plus and negative flag is not set Just use the Jump Microcode
-            if op_code == 0xF2 and not negative_flag:
+            if op_code == 0xF2 and not sign_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
             # JM - If this is the Jump if minus and negative flag is set Just use the Jump Microcode
-            if op_code == 0xFA and negative_flag:
+            if op_code == 0xFA and sign_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
         else:
             self.current_operator = invalid_operator

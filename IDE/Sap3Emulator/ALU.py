@@ -30,10 +30,16 @@ class Alu(wx.Panel):
         self.a_value = 0
         self.b_value = 0
         self.c_value = 0
+        self.d_value = 0
+        self.e_value = 0
+        self.h_value = 0
+        self.l_value = 0
         self.temp_value = 0
+        self.auxillary_carry = False
         self.carry = False
         self.zero = False
-        self.minus = False
+        self.sign = False
+        self.parity = False
         self.subtract = False
         self.logical_and = False
         self.logical_or = False
@@ -107,12 +113,20 @@ class Alu(wx.Panel):
         pub.subscribe(self.on_use_a_value, 'CPU.AluLda')
         pub.subscribe(self.on_use_b_value, 'CPU.AluLdb')
         pub.subscribe(self.on_use_c_value, 'CPU.AluLdc')
+        pub.subscribe(self.on_use_d_value, 'CPU.AluLdd')
+        pub.subscribe(self.on_use_e_value, 'CPU.AluLde')
+        pub.subscribe(self.on_use_h_value, 'CPU.AluLdh')
+        pub.subscribe(self.on_use_l_value, 'CPU.AluLdl')
 
         pub.subscribe(self.on_save_flags, 'CPU.FlagIn')
 
         pub.subscribe(self.on_get_a_value, 'alu.set_value_AReg')
         pub.subscribe(self.on_get_b_value, 'alu.set_value_BReg')
         pub.subscribe(self.on_get_c_value, 'alu.set_value_CReg')
+        pub.subscribe(self.on_get_d_value, 'alu.set_value_DReg')
+        pub.subscribe(self.on_get_e_value, 'alu.set_value_EReg')
+        pub.subscribe(self.on_get_h_value, 'alu.set_value_HReg')
+        pub.subscribe(self.on_get_l_value, 'alu.set_value_LReg')
         pub.subscribe(self.on_temp_value, 'alu.set_value_temp')
 
     def set_add_display_flag(self):
@@ -200,10 +214,16 @@ class Alu(wx.Panel):
         self.a_value = 0
         self.b_value = 0
         self.c_value = 0
+        self.d_value = 0
+        self.e_value = 0
+        self.h_value = 0
+        self.l_value = 0
         self.temp_value = 0
+        self.auxillary_carry = False
         self.carry = False
         self.zero = False
-        self.minus = False
+        self.sign = False
+        self.parity = False
         self.subtract = False
         self.logical_and = False
         self.logical_or = False
@@ -248,6 +268,54 @@ class Alu(wx.Panel):
 
     def on_use_c_value(self) -> None:
         self.value = self.c_value
+        pub.sendMessage('alu.set_value', new_value=self.value)
+
+    def on_get_d_value(self, new_value: int) -> None:
+        """
+        Receive a new value from the Accumulator (a) register.
+
+        :param new_value: New value from the A Register
+        """
+        self.d_value = new_value
+
+    def on_use_d_value(self) -> None:
+        self.value = self.d_value
+        pub.sendMessage('alu.set_value', new_value=self.value)
+
+    def on_get_e_value(self, new_value: int) -> None:
+        """
+        Receive a new value from the Accumulator (a) register.
+
+        :param new_value: New value from the A Register
+        """
+        self.e_value = new_value
+
+    def on_use_e_value(self) -> None:
+        self.value = self.e_value
+        pub.sendMessage('alu.set_value', new_value=self.value)
+
+    def on_get_h_value(self, new_value: int) -> None:
+        """
+        Receive a new value from the Accumulator (a) register.
+
+        :param new_value: New value from the A Register
+        """
+        self.h_value = new_value
+
+    def on_use_h_value(self) -> None:
+        self.value = self.h_value
+        pub.sendMessage('alu.set_value', new_value=self.value)
+
+    def on_get_l_value(self, new_value: int) -> None:
+        """
+        Receive a new value from the Accumulator (a) register.
+
+        :param new_value: New value from the A Register
+        """
+        self.l_value = new_value
+
+    def on_use_l_value(self) -> None:
+        self.value = self.l_value
         pub.sendMessage('alu.set_value', new_value=self.value)
 
     def on_temp_value(self, new_value: int) -> None:
@@ -362,13 +430,13 @@ class Alu(wx.Panel):
             self.zero = False
 
         if self.result & 0x80 == 0x80:
-            self.minus = True
+            self.sign = True
         else:
-            self.minus = False
+            self.sign = False
 
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
-        self.set_sign_label(self.minus)
+        self.set_sign_label(self.sign)
         pub.sendMessage('alu.set_value', new_value=self.result)
 
     def do_logic(self):
@@ -431,13 +499,13 @@ class Alu(wx.Panel):
                 self.zero = False
 
             if self.result & 0x80 == 0x80:
-                 self.minus = True
+                 self.sign = True
             else:
-                self.minus = False
+                self.sign = False
 
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
-        self.set_sign_label(self.minus)
+        self.set_sign_label(self.sign)
         pub.sendMessage('alu.set_value', new_value=self.result)
 
     def on_out(self):
@@ -451,7 +519,7 @@ class Alu(wx.Panel):
         """
         Send out the current carry and zero status flags.
         """
-        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero, new_minus=self.minus)
+        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero, new_sign=self.sign, new_parity=self.parity, new_auxillary_carry=self.auxillary_carry)
 
     def set_carry_label(self, new_label: bool) -> None:
         """
