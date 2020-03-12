@@ -20,6 +20,8 @@ class Instructions:
             "JNC": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNC"]},
             "JNZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNZ"]},
             "JP": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JP"]},
+            "JPE": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JPE"]},
+            "JPO": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JPO"]},
             "JZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JZ"]},
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
             "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI B"]},
@@ -35,8 +37,8 @@ class Instructions:
             "NOP": {"operands": 0, "included": 0, "bytes": 1, "operators": ["NOP"]},
             "ORA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ORA B", "ORA C"]},
             "ORI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ORI"]},
-            "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP BC"]},
-            "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH BC"]},
+            "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP BC", "POP DE"]},
+            "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH BC", "PUSH DE"]},
             "OUT": {"operands": 1, "included": 0, "bytes": 2, "operators": ["OUT"]},
             "RAL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAL"]},
             "RAR": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAR"]},
@@ -112,6 +114,10 @@ class Instructions:
             "JNZ": {"operator": "JNZ", "op_code": 0xC2, "operand1": "M", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
             "JP": {"operator": "JP", "op_code": 0xF2, "operand1": "M", "operand2": None, "addressing": "Imm",
+                   "bytes": 3},
+            "JPE": {"operator": "JPE", "op_code": 0xEA, "operand1": "M", "operand2": None, "addressing": "Imm",
+                   "bytes": 3},
+            "JPO": {"operator": "JPO", "op_code": 0xE2, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
             "JZ": {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
@@ -247,10 +253,16 @@ class Instructions:
             "OUT": {"operator": "OUT", "op_code": 0xD3, "operand1": "N", "operand2": None, "addressing": "Dir",
                     "bytes": 2},
 
-            "POP BC": {"operator": "POP B", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
+            "POP BC": {"operator": "POP BC", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
                     "bytes": 2},
 
-            "PUSH BC": {"operator": "PUSH B", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
+            "POP DE": {"operator": "POP DE", "op_code": 0xD1, "operand1": "DE", "operand2": None, "addressing": "Reg",
+                    "bytes": 2},
+
+            "PUSH BC": {"operator": "PUSH BC", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
+                    "bytes": 2},
+
+            "PUSH DE": {"operator": "PUSH DE", "op_code": 0xD5, "operand1": "DE", "operand2": None, "addressing": "Reg",
                     "bytes": 2},
 
             "RAL": {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",
@@ -382,7 +394,8 @@ class Instructions:
                 (self.get_operand_one_type(operator) == "E") |
                 (self.get_operand_one_type(operator) == "H") |
                 (self.get_operand_one_type(operator) == "L") |
-                (self.get_operand_one_type(operator) == "BC"))
+                (self.get_operand_one_type(operator) == "BC") |
+                (self.get_operand_one_type(operator) == "DE"))
 
     def is_operand_two_memory(self, operator):
         return self.get_operand_two_type(operator) == "M"
@@ -401,4 +414,5 @@ class Instructions:
                 (self.get_operand_two_type(operator) == "E") |
                 (self.get_operand_two_type(operator) == "H") |
                 (self.get_operand_two_type(operator) == "L") |
-                (self.get_operand_two_type(operator) == "BC"))
+                (self.get_operand_two_type(operator) == "BC") |
+                (self.get_operand_two_type(operator) == "DE"))

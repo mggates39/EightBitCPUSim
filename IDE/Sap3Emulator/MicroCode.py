@@ -672,6 +672,15 @@ operators = {
                          ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
 
+    0xD1: {"operator": "POP DE", "op_code": 0xD1, "operand1": "DE", "operand2": None, "addressing": "Reg",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.SpInc', 'CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.ERegIn'],
+                         ['CPU.SpInc', 'CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.DRegIn'],
+                         ['CPU.RingReset']]},
+
     0xD2: {"operator": "JNC", "op_code": 0xD2, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -686,6 +695,15 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
                          ['CPU.IrOut', 'CPU.OutputSelect'],
                          ['CPU.ARegOut', 'CPU.OutputWrite'],
+                         ['CPU.RingReset']]},
+
+    0xD5: {"operator": "PUSH DE", "op_code": 0xD5, "operand1": "DE", "operand2": None, "addressing": "Reg",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.DRegOut', 'CPU.MemIn', 'CPU.SpDec'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.ERegOut', 'CPU.MemIn', 'CPU.SpDec'],
                          ['CPU.RingReset']]},
 
     0xD6: {"operator": "SUI", "op_code": 0xD6, "operand1": "N", "operand2": None, "addressing": "Imm",
@@ -710,6 +728,13 @@ operators = {
                          # TODO Need input port select
                          ['CPU.RingReset']]},
 
+    0xE2: {"operator": "JPO", "op_code": 0xE2, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
     0xE6: {"operator": "ANI", "op_code": 0xE6, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -717,6 +742,14 @@ operators = {
                          ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
                          ['CPU.AluLand', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
+
+    0xEA: {"operator": "JPE", "op_code": 0xEA, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
     0xEE: {"operator": "XRI", "op_code": 0xEE, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -790,11 +823,19 @@ class MicroCode:
             if op_code == 0xCA and zero_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
-            # JP - If this is the Jump if Plus and negative flag is not set Just use the Jump Microcode
+            # JP - If this is the Jump if Parity Odd and parity flag is not set Just use the Jump Microcode
+            if op_code == 0xE2 and not parity_flag:
+                self.current_microcode = operators[0xC3]["microcode"]
+
+            # JM - If this is the Jump if Parity Even and parity flag is set Just use the Jump Microcode
+            if op_code == 0xEA and parity_flag:
+                self.current_microcode = operators[0xC3]["microcode"]
+
+            # JP - If this is the Jump if Plus and sign flag is not set Just use the Jump Microcode
             if op_code == 0xF2 and not sign_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
 
-            # JM - If this is the Jump if minus and negative flag is set Just use the Jump Microcode
+            # JM - If this is the Jump if minus and sign flag is set Just use the Jump Microcode
             if op_code == 0xFA and sign_flag:
                 self.current_microcode = operators[0xC3]["microcode"]
         else:
