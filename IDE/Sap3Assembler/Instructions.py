@@ -24,7 +24,13 @@ class Instructions:
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
             "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI B"]},
             "MOV": {"operands": 2, "included": 2, "bytes": 1,
-                    "operators": ["MOV A,B", "MOV A,C", "MOV B,A", "MOV B,C", "MOV C,A", "MOV C,B"]},
+                    "operators": ["MOV A,A", "MOV A,B", "MOV A,C", "MOV A,D", "MOV A,E", "MOV A,H", "MOV A,L",
+                                  "MOV B,A", "MOV B,B", "MOV B,C", "MOV B,D", "MOV B,E", "MOV B,H", "MOV B,L",
+                                  "MOV C,A", "MOV C,B", "MOV C,C", "MOV C,D", "MOV C,E", "MOV C,H", "MOV C,L",
+                                  "MOV D,A", "MOV D,B", "MOV D,C", "MOV D,D", "MOV D,E", "MOV D,H", "MOV D,L",
+                                  "MOV E,A", "MOV E,B", "MOV E,E", "MOV E,D", "MOV E,E", "MOV E,H", "MOV C,L",
+                                  "MOV H,A", "MOV H,B", "MOV H,C", "MOV H,D", "MOV H,E", "MOV H,H", "MOV H,L",
+                                  "MOV L,A", "MOV L,B", "MOV L,E", "MOV L,D", "MOV L,E", "MOV L,H", "MOV L,L"]},
             "MVI": {"operands": 2, "included": 1, "bytes": 2, "operators": ["MVI A", "MVI B", "MVI C"]},
             "NOP": {"operands": 0, "included": 0, "bytes": 1, "operators": ["NOP"]},
             "ORA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ORA B", "ORA C"]},
@@ -115,19 +121,109 @@ class Instructions:
             "LXI B": {"operator": "LXI B", "op_code": 0x01, "operand1": "B", "operand2": "M", "addressing": "Imm",
                     "bytes": 3},
 
+            "MOV A,A": {"operator": "MOV A,A", "op_code": 0x7F, "operand1": "A", "operand2": "A", "addressing": "Reg",
+                        "bytes": 1},
             "MOV A,B": {"operator": "MOV A,B", "op_code": 0x78, "operand1": "A", "operand2": "B", "addressing": "Reg",
                         "bytes": 1},
             "MOV A,C": {"operator": "MOV A,C", "op_code": 0x79, "operand1": "A", "operand2": "C", "addressing": "Reg",
                         "bytes": 1},
+            "MOV A,D": {"operator": "MOV A,D", "op_code": 0x7A, "operand1": "A", "operand2": "D", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV A,E": {"operator": "MOV A,E", "op_code": 0x7B, "operand1": "A", "operand2": "E", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV A,H": {"operator": "MOV A,H", "op_code": 0x7C, "operand1": "A", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV A,L": {"operator": "MOV A,L", "op_code": 0x7D, "operand1": "A", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
 
             "MOV B,A": {"operator": "MOV B,A", "op_code": 0x47, "operand1": "B", "operand2": "A", "addressing": "Reg",
                         "bytes": 1},
+            "MOV B,B": {"operator": "MOV B,B", "op_code": 0x40, "operand1": "B", "operand2": "B", "addressing": "Reg",
+                        "bytes": 1},
             "MOV B,C": {"operator": "MOV B,C", "op_code": 0x41, "operand1": "B", "operand2": "C", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV B,D": {"operator": "MOV B,D", "op_code": 0x42, "operand1": "B", "operand2": "D", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV B,E": {"operator": "MOV B,E", "op_code": 0x43, "operand1": "B", "operand2": "E", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV B,H": {"operator": "MOV B,H", "op_code": 0x44, "operand1": "B", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV B,L": {"operator": "MOV B,L", "op_code": 0x45, "operand1": "B", "operand2": "L", "addressing": "Reg",
                         "bytes": 1},
 
             "MOV C,A": {"operator": "MOV C,A", "op_code": 0x4F, "operand1": "C", "operand2": "A", "addressing": "Reg",
                         "bytes": 1},
             "MOV C,B": {"operator": "MOV C,B", "op_code": 0x48, "operand1": "C", "operand2": "B", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV C,C": {"operator": "MOV C,C", "op_code": 0x49, "operand1": "C", "operand2": "C", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV C,D": {"operator": "MOV C,D", "op_code": 0x4A, "operand1": "C", "operand2": "D", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV C,E": {"operator": "MOV C,E", "op_code": 0x4B, "operand1": "C", "operand2": "E", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV C,H": {"operator": "MOV C,H", "op_code": 0x4C, "operand1": "C", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV C,L": {"operator": "MOV C,L", "op_code": 0x4D, "operand1": "C", "operand2": "L", "addressing": "Reg",
+                        "bytes": 1},
+
+            "MOV D,A": {"operator": "MOV D,A", "op_code": 0x57, "operand1": "D", "operand2": "A", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV D,B": {"operator": "MOV D,B", "op_code": 0x50, "operand1": "D", "operand2": "B", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV D,C": {"operator": "MOV D,C", "op_code": 0x51, "operand1": "D", "operand2": "C", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV D,D": {"operator": "MOV D,D", "op_code": 0x52, "operand1": "D", "operand2": "D", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV D,E": {"operator": "MOV D,E", "op_code": 0x53, "operand1": "D", "operand2": "E", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV D,H": {"operator": "MOV D,H", "op_code": 0x54, "operand1": "D", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV D,L": {"operator": "MOV D,L", "op_code": 0x55, "operand1": "D", "operand2": "L", "addressing": "Reg",
+                        "bytes": 1},
+
+            "MOV E,A": {"operator": "MOV E,A", "op_code": 0x5F, "operand1": "E", "operand2": "A", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV E,B": {"operator": "MOV E,B", "op_code": 0x58, "operand1": "E", "operand2": "B", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV E,C": {"operator": "MOV E,C", "op_code": 0x59, "operand1": "E", "operand2": "C", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV E,D": {"operator": "MOV E,D", "op_code": 0x5A, "operand1": "E", "operand2": "D", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV E,E": {"operator": "MOV E,E", "op_code": 0x5B, "operand1": "E", "operand2": "E", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV E,H": {"operator": "MOV E,H", "op_code": 0x5C, "operand1": "E", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV E,L": {"operator": "MOV E,L", "op_code": 0x5D, "operand1": "E", "operand2": "L", "addressing": "Reg",
+                        "bytes": 1},
+
+            "MOV H,A": {"operator": "MOV H,A", "op_code": 0x67, "operand1": "H", "operand2": "A", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV H,B": {"operator": "MOV H,B", "op_code": 0x60, "operand1": "H", "operand2": "B", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV H,C": {"operator": "MOV H,C", "op_code": 0x61, "operand1": "H", "operand2": "C", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV H,D": {"operator": "MOV H,D", "op_code": 0x62, "operand1": "H", "operand2": "D", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV H,E": {"operator": "MOV H,E", "op_code": 0x63, "operand1": "H", "operand2": "E", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV H,H": {"operator": "MOV H,H", "op_code": 0x64, "operand1": "H", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV H,L": {"operator": "MOV H,L", "op_code": 0x65, "operand1": "H", "operand2": "L", "addressing": "Reg",
+                        "bytes": 1},
+
+            "MOV L,A": {"operator": "MOV L,A", "op_code": 0x6F, "operand1": "L", "operand2": "A", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV L,B": {"operator": "MOV L,B", "op_code": 0x68, "operand1": "L", "operand2": "B", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV L,C": {"operator": "MOV L,C", "op_code": 0x69, "operand1": "L", "operand2": "C", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV L,D": {"operator": "MOV L,D", "op_code": 0x6A, "operand1": "L", "operand2": "D", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV L,E": {"operator": "MOV L,E", "op_code": 0x6B, "operand1": "L", "operand2": "E", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV L,H": {"operator": "MOV L,H", "op_code": 0x6C, "operand1": "L", "operand2": "H", "addressing": "Reg",
+                        "bytes": 1},
+            "MOV L,L": {"operator": "MOV L,L", "op_code": 0x6D, "operand1": "L", "operand2": "L", "addressing": "Reg",
                         "bytes": 1},
 
             "MVI A": {"operator": "MVI A", "op_code": 0x3E, "operand1": "A", "operand2": "N", "addressing": "Imm",
@@ -282,6 +378,10 @@ class Instructions:
         return ((self.get_operand_one_type(operator) == "A") |
                 (self.get_operand_one_type(operator) == "B") |
                 (self.get_operand_one_type(operator) == "C") |
+                (self.get_operand_one_type(operator) == "D") |
+                (self.get_operand_one_type(operator) == "E") |
+                (self.get_operand_one_type(operator) == "H") |
+                (self.get_operand_one_type(operator) == "L") |
                 (self.get_operand_one_type(operator) == "BC"))
 
     def is_operand_two_memory(self, operator):
@@ -297,4 +397,8 @@ class Instructions:
         return ((self.get_operand_two_type(operator) == "A") |
                 (self.get_operand_two_type(operator) == "B") |
                 (self.get_operand_two_type(operator) == "C") |
+                (self.get_operand_two_type(operator) == "D") |
+                (self.get_operand_two_type(operator) == "E") |
+                (self.get_operand_two_type(operator) == "H") |
+                (self.get_operand_two_type(operator) == "L") |
                 (self.get_operand_two_type(operator) == "BC"))
