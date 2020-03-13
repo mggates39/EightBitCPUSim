@@ -24,5 +24,6 @@
 ; Top of Stack
 ;
 	.org 128
-Stack:	
+Stack:	.byte 0
+
 	.end
