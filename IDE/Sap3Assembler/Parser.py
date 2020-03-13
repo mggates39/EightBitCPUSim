@@ -75,7 +75,7 @@ class Parser:
                 if previous_segment.overlaps(segment):
                     overlap = True
                     self.errors.append(
-                        "ERROR: Segments overlap: Segment at {} through {} and segment at {} through {}!\n".format(
+                        "ERROR: Segments overlap: Segment at 0x{0:04X} through 0x{1:04X} and segment at 0x{2:04X} through 0x{3:04X}!\n".format(
                             previous_segment.start, previous_segment.address, segment.start, segment.address))
                 previous_segment = segment
 

@@ -52,13 +52,13 @@ class Segment:
             self.length += cell.get_size()
 
         else:
-            self.errors.append("ERROR: Segment will not fit in memory at address {}!\n".format(self.address))
+            self.errors.append("ERROR: Segment will not fit in memory at address 0x{0:04X}!\n".format(self.address))
 
     def add_label(self, line_number, label):
         if self.address <= MAX_ADDRESS:
             self.label_cell = Cell(line_number, self.address, label)
         else:
-            self.errors.append("ERROR: Segment will not fit in memory at address {}!\n".format(self.address))
+            self.errors.append("ERROR: Segment will not fit in memory at address 0x{0:04X}!\n".format(self.address))
 
     def add_instruction(self, line_number, label, operator, first_operand=None, second_operand=None):
         self.add_cell(line_number, label, operator, first_operand, second_operand)
@@ -70,16 +70,21 @@ class Segment:
         self.add_cell(line_number, label, None, (value & 0xFF), ((value >> 8) & 0xFF))
 
     def assemble(self, labels):
+        error = "ERROR: Segment with no operands or directives at address 0x{0:04X}\n".format(self.address)
         for cell in self.cell_list:
             error = cell.assemble_pass_one(self.instructions)
             if error != "":
                 self.errors.append(error)
+                error = ""
 
         if error == "":
             for cell in self.cell_list:
                 error = cell.assemble_pass_two(labels, self.instructions)
                 if error != "":
                     self.errors.append(error)
+        else:
+            self.errors.append(error)
+            error = ""
 
     def load_memory(self, memory):
         for cell in self.cell_list:
