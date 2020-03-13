@@ -61,7 +61,7 @@ class Instructions:
                       "bytes": 1},
             "ADD C": {"operator": "ADD C", "op_code": 0x81, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
-            "ADI": {"operator": "ADI", "op_code": 0xC6, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "ADI": {"operator": "ADI", "op_code": 0xC6, "operand1": "P", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
             "ANA B": {"operator": "ANA B", "op_code": 0xA0, "operand1": "B", "operand2": None, "addressing": "Reg",
@@ -69,10 +69,10 @@ class Instructions:
             "ANA C": {"operator": "ANA C", "op_code": 0xA1, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
 
-            "ANI": {"operator": "ANI", "op_code": 0xE6, "operand1": "N", "operand2": None, "addressing": "Imm",
+            "ANI": {"operator": "ANI", "op_code": 0xE6, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
-            "CALL": {"operator": "CALL", "op_code": 0xCD, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "CALL": {"operator": "CALL", "op_code": 0xCD, "operand1": "P", "operand2": None, "addressing": "Imm",
                      "bytes": 3},
 
             "CMA": {"operator": "CMA", "op_code": 0x2F, "operand1": None, "operand2": None, "addressing": "Imp",
@@ -82,7 +82,7 @@ class Instructions:
                       "bytes": 1},
             "CMP C": {"operator": "CMP C", "op_code": 0xB9, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
-            "CPI": {"operator": "CPI", "op_code": 0xFE, "operand1": "N", "operand2": None, "addressing": "Imm",
+            "CPI": {"operator": "CPI", "op_code": 0xFE, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
             "DCR A": {"operator": "DCR A", "op_code": 0x3D, "operand1": "A", "operand2": None, "addressing": "Reg",
@@ -103,7 +103,7 @@ class Instructions:
             "HLT": {"operator": "HLT", "op_code": 0x76, "operand1": None, "operand2": None, "addressing": "Non",
                     "bytes": 1},
 
-            "IN": {"operator": "IN", "op_code": 0xDB, "operand1": "N", "operand2": None, "addressing": "Dir",
+            "IN": {"operator": "IN", "op_code": 0xDB, "operand1": "1", "operand2": None, "addressing": "Dir",
                    "bytes": 2},
 
             "INR A": {"operator": "INR A", "op_code": 0x3C, "operand1": "A", "operand2": None, "addressing": "Reg",
@@ -121,34 +121,34 @@ class Instructions:
             "INR L": {"operator": "INR L", "op_code": 0x2C, "operand1": "L", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
 
-            "JC": {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JC": {"operator": "JC", "op_code": 0xDA, "operand1": "P", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
-            "JM": {"operator": "JM", "op_code": 0xFA, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JM": {"operator": "JM", "op_code": 0xFA, "operand1": "P", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
-            "JMP": {"operator": "JMP", "op_code": 0xC3, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JMP": {"operator": "JMP", "op_code": 0xC3, "operand1": "P", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
-            "JNC": {"operator": "JNC", "op_code": 0xD2, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JNC": {"operator": "JNC", "op_code": 0xD2, "operand1": "P", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
-            "JNZ": {"operator": "JNZ", "op_code": 0xC2, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JNZ": {"operator": "JNZ", "op_code": 0xC2, "operand1": "P", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
-            "JP": {"operator": "JP", "op_code": 0xF2, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JP": {"operator": "JP", "op_code": 0xF2, "operand1": "P", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
-            "JPE": {"operator": "JPE", "op_code": 0xEA, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JPE": {"operator": "JPE", "op_code": 0xEA, "operand1": "P", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
-            "JPO": {"operator": "JPO", "op_code": 0xE2, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JPO": {"operator": "JPO", "op_code": 0xE2, "operand1": "P", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
-            "JZ": {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "JZ": {"operator": "JZ", "op_code": 0xCA, "operand1": "P", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
 
-            "LDA": {"operator": "LDA", "op_code": 0x3A, "operand1": "M", "operand2": None, "addressing": "Dir",
+            "LDA": {"operator": "LDA", "op_code": 0x3A, "operand1": "P", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
-            "LXI BC": {"operator": "LXI BC", "op_code": 0x01, "operand1": "BC", "operand2": "M", "addressing": "Imm",
+            "LXI BC": {"operator": "LXI BC", "op_code": 0x01, "operand1": "BC", "operand2": "2", "addressing": "Imm",
                        "bytes": 3},
-            "LXI DE": {"operator": "LXI DE", "op_code": 0x11, "operand1": "DE", "operand2": "M", "addressing": "Imm",
+            "LXI DE": {"operator": "LXI DE", "op_code": 0x11, "operand1": "DE", "operand2": "2", "addressing": "Imm",
                        "bytes": 3},
-            "LXI HL": {"operator": "LXI HL", "op_code": 0x21, "operand1": "HL", "operand2": "M", "addressing": "Imm",
+            "LXI HL": {"operator": "LXI HL", "op_code": 0x21, "operand1": "HL", "operand2": "2", "addressing": "Imm",
                        "bytes": 3},
-            "LXI SP": {"operator": "LXI SP", "op_code": 0x31, "operand1": "SP", "operand2": "M", "addressing": "Imm",
+            "LXI SP": {"operator": "LXI SP", "op_code": 0x31, "operand1": "SP", "operand2": "2", "addressing": "Imm",
                        "bytes": 3},
 
             "MOV A,A": {"operator": "MOV A,A", "op_code": 0x7F, "operand1": "A", "operand2": "A", "addressing": "Reg",
@@ -256,19 +256,19 @@ class Instructions:
             "MOV L,L": {"operator": "MOV L,L", "op_code": 0x6D, "operand1": "L", "operand2": "L", "addressing": "Reg",
                         "bytes": 1},
 
-            "MVI A": {"operator": "MVI A", "op_code": 0x3E, "operand1": "A", "operand2": "N", "addressing": "Imm",
+            "MVI A": {"operator": "MVI A", "op_code": 0x3E, "operand1": "A", "operand2": "1", "addressing": "Imm",
                       "bytes": 2},
-            "MVI B": {"operator": "MVI B", "op_code": 0x06, "operand1": "B", "operand2": "N", "addressing": "Imm",
+            "MVI B": {"operator": "MVI B", "op_code": 0x06, "operand1": "B", "operand2": "1", "addressing": "Imm",
                       "bytes": 2},
-            "MVI C": {"operator": "MVI C", "op_code": 0x0E, "operand1": "C", "operand2": "N", "addressing": "Imm",
+            "MVI C": {"operator": "MVI C", "op_code": 0x0E, "operand1": "C", "operand2": "1", "addressing": "Imm",
                       "bytes": 2},
-            "MVI D": {"operator": "MVI E", "op_code": 0x16, "operand1": "E", "operand2": "N", "addressing": "Imm",
+            "MVI D": {"operator": "MVI E", "op_code": 0x16, "operand1": "E", "operand2": "1", "addressing": "Imm",
                       "bytes": 2},
-            "MVI E": {"operator": "MVI E", "op_code": 0x1E, "operand1": "E", "operand2": "N", "addressing": "Imm",
+            "MVI E": {"operator": "MVI E", "op_code": 0x1E, "operand1": "E", "operand2": "1", "addressing": "Imm",
                       "bytes": 2},
-            "MVI H": {"operator": "MVI H", "op_code": 0x26, "operand1": "H", "operand2": "N", "addressing": "Imm",
+            "MVI H": {"operator": "MVI H", "op_code": 0x26, "operand1": "H", "operand2": "1", "addressing": "Imm",
                       "bytes": 2},
-            "MVI L": {"operator": "MVI L", "op_code": 0x2E, "operand1": "L", "operand2": "N", "addressing": "Imm",
+            "MVI L": {"operator": "MVI L", "op_code": 0x2E, "operand1": "L", "operand2": "1", "addressing": "Imm",
                       "bytes": 2},
 
             "NOP": {"operator": "NOP", "op_code": 0x00, "operand1": None, "operand2": None, "addressing": "Non",
@@ -279,10 +279,10 @@ class Instructions:
             "ORA C": {"operator": "ORA C", "op_code": 0xB1, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
 
-            "ORI": {"operator": "ORI", "op_code": 0xF6, "operand1": "N", "operand2": None, "addressing": "Imm",
+            "ORI": {"operator": "ORI", "op_code": 0xF6, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
-            "OUT": {"operator": "OUT", "op_code": 0xD3, "operand1": "N", "operand2": None, "addressing": "Dir",
+            "OUT": {"operator": "OUT", "op_code": 0xD3, "operand1": "1", "operand2": None, "addressing": "Dir",
                     "bytes": 2},
 
             "POP BC": {"operator": "POP BC", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
@@ -309,7 +309,7 @@ class Instructions:
             "RET": {"operator": "RET", "op_code": 0xC9, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
 
-            "STA": {"operator": "STA", "op_code": 0x32, "operand1": "M", "operand2": None, "addressing": "Dir",
+            "STA": {"operator": "STA", "op_code": 0x32, "operand1": "P", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
 
             "SUB A": {"operator": "SUB A", "op_code": 0x97, "operand1": "A", "operand2": None, "addressing": "Reg",
@@ -318,7 +318,7 @@ class Instructions:
                       "bytes": 1},
             "SUB C": {"operator": "SUB C", "op_code": 0x91, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
-            "SUI": {"operator": "SUI", "op_code": 0xD6, "operand1": "M", "operand2": None, "addressing": "Imm",
+            "SUI": {"operator": "SUI", "op_code": 0xD6, "operand1": "P", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
             "XRA B": {"operator": "XRA B", "op_code": 0x90, "operand1": None, "operand2": None, "addressing": "Reg",
@@ -326,7 +326,7 @@ class Instructions:
             "XRA C": {"operator": "XRA C", "op_code": 0x91, "operand1": None, "operand2": None, "addressing": "Reg",
                       "bytes": 1},
 
-            "XRI": {"operator": "XRI", "op_code": 0xEE, "operand1": "N", "operand2": None, "addressing": "Imm",
+            "XRI": {"operator": "XRI", "op_code": 0xEE, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2}
         }
 
@@ -410,13 +410,16 @@ class Instructions:
         return operand_type
 
     def is_operand_one_memory(self, operator):
-        return self.get_operand_one_type(operator) == "M"
+        return self.get_operand_one_type(operator) == "P"
 
     def is_operand_one_none(self, operator):
         return self.get_operand_one_type(operator) is None
 
     def is_operand_one_numeric(self, operator):
-        return self.get_operand_one_type(operator) == "N"
+        return self.get_operand_one_type(operator) == "1"
+
+    def is_operand_one_numeric_word(self, operator):
+        return self.get_operand_two_type(operator) == "2"
 
     def is_operand_one_register(self, operator):
         return ((self.get_operand_one_type(operator) == "A") |
@@ -428,16 +431,21 @@ class Instructions:
                 (self.get_operand_one_type(operator) == "L") |
                 (self.get_operand_one_type(operator) == "BC") |
                 (self.get_operand_one_type(operator) == "DE") |
-                (self.get_operand_one_type(operator) == "SP"))
+                (self.get_operand_one_type(operator) == "SP") |
+                (self.get_operand_one_type(operator) == "M"))
 
     def is_operand_two_memory(self, operator):
-        return self.get_operand_two_type(operator) == "M"
+        return self.get_operand_two_type(operator) == "P"
 
     def is_operand_two_none(self, operator):
         return self.get_operand_two_type(operator) is None
 
     def is_operand_two_numeric(self, operator):
-        return self.get_operand_two_type(operator) == "N"
+        return self.get_operand_two_type(operator) == "1"
+
+    def is_operand_two_numeric_word(self, operator):
+        return self.get_operand_two_type(operator) == "2"
+
 
     def is_operand_two_register(self, operator):
         return ((self.get_operand_two_type(operator) == "A") |
@@ -449,4 +457,5 @@ class Instructions:
                 (self.get_operand_two_type(operator) == "L") |
                 (self.get_operand_two_type(operator) == "BC") |
                 (self.get_operand_two_type(operator) == "DE") |
-                (self.get_operand_two_type(operator) == "SP"))
+                (self.get_operand_two_type(operator) == "SP") |
+                (self.get_operand_two_type(operator) == "M"))
