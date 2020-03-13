@@ -2,6 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 from GuiComponents.LedSegments import LEDSegment
 
 
@@ -26,8 +27,8 @@ class OutputRegister(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.segment = LEDSegment(self.box, 'blue', None, topic='out.set_value')
-        self.leds = LEDArray(self.box, 8, topic="out.set_value", size=10)
+        self.segment = LEDSegment(self.box, 'blue', None, topic='out.set_value', mode=MODE_HEX)
+        self.leds = LEDArray(self.box, 8, topic="out.set_value", size=10, mode=MODE_HEX)
 
         vertical_box.Add(self.segment, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)

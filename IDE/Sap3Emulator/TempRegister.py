@@ -2,6 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 
 
 class TempRegister(wx.Panel):
@@ -23,7 +24,7 @@ class TempRegister(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = LEDArray(self.box, 8, topic="tmp.set_value", size=10)
+        self.leds = LEDArray(self.box, 8, topic="tmp.set_value", size=10, mode=MODE_HEX)
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
 

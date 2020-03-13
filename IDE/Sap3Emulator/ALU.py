@@ -9,6 +9,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 
 
 class Alu(wx.Panel):
@@ -77,7 +78,7 @@ class Alu(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = LEDArray(self.box, 8, topic="alu.set_value")
+        self.leds = LEDArray(self.box, 8, topic="alu.set_value", mode=MODE_HEX)
         self.carry_flag = wx.StaticText(self.box, label="Carry-Bit: False", style=wx.ALIGN_CENTRE)
         self.zero_flag = wx.StaticText(self.box, label="Zero-Bit: False", style=wx.ALIGN_CENTRE)
         self.minus_flag = wx.StaticText(self.box, label="Sign-Bit: False", style=wx.ALIGN_CENTRE)

@@ -2,6 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 from Sap3Emulator.MicroCode import MicroCode
 
 
@@ -38,7 +39,7 @@ class InstructionRegister(wx.Panel):
         self.panel.SetSizer(vbox)
 
         self.instruction = LEDArray(self.box, 8, topic="ip.set_instruction")
-        self.data = LEDArray(self.box, 16, topic="ip.set_data", size=10)
+        self.data = LEDArray(self.box, 16, topic="ip.set_data", size=10, mode=MODE_HEX)
         register_box = wx.BoxSizer(wx.VERTICAL)
         register_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
         register_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)

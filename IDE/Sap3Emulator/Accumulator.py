@@ -2,6 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 
 
 class Accumulator(wx.Panel):
@@ -27,7 +28,7 @@ class Accumulator(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.leds = LEDArray(self.box, 8, topic=self.topic_prefix + ".set_value", size=10)
+        self.leds = LEDArray(self.box, number_leds=8, topic=self.topic_prefix + ".set_value", size=10, mode=MODE_HEX)
 
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
 

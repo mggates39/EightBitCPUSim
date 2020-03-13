@@ -2,6 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 from Sap3Assembler.Segment import MAX_ADDRESS
 
 
@@ -27,7 +28,7 @@ class StackRegister(wx.Panel):
         vbox.Add(self.dec_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 2)
         self.panel.SetSizer(vbox)
 
-        self.leds = LEDArray(self.box, 16, topic="sp.set_value", size=10)
+        self.leds = LEDArray(self.box, 16, topic="sp.set_value", size=10, mode=MODE_HEX)
 
         horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
         horizontal_box.Add(self.panel, 0, wx.EXPAND)

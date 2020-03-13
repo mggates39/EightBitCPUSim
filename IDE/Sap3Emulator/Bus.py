@@ -9,6 +9,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 
 
 class Bus(wx.Panel):
@@ -31,7 +32,7 @@ class Bus(wx.Panel):
         light_color = '#36ff27'
         dark_color = '#077100'
         self.value = 0
-        self.leds = LEDArray(self.box, 16, light_color, dark_color, 'bus.set_lights', size=10)
+        self.leds = LEDArray(self.box, 16, light_color, dark_color, 'bus.set_lights', size=10, mode=MODE_HEX)
         self.pan = wx.Panel(self.box)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALIGN_TOP | wx.ALL | wx.EXPAND, 10)
         vertical_box.Add(self.pan, 1, wx.ALL | wx.EXPAND)

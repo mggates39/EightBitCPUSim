@@ -2,6 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_HEX
 
 
 class MemoryAddressRegister(wx.Panel):
@@ -20,7 +21,7 @@ class MemoryAddressRegister(wx.Panel):
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
-        self.leds = LEDArray(self.box, 16, topic="mar.set_value", size=10)
+        self.leds = LEDArray(self.box, 16, topic="mar.set_value", size=10, mode=MODE_HEX)
 
         horizontal_box.Add(self.panel, 0, wx.EXPAND)
         horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
