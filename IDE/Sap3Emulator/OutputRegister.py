@@ -2,6 +2,7 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
+from GuiComponents.LedArray import MODE_DEC
 from GuiComponents.LedArray import MODE_HEX
 from GuiComponents.LedSegments import LEDSegment
 
@@ -69,9 +70,16 @@ class OutputRegister(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         if self.select == 2:
+            self.segment.set_mode(new_mode=MODE_DEC)
+            self.leds.set_mode(new_mode=MODE_DEC)
+            pub.sendMessage('out.set_value', new_value=self.value)
+        elif self.select == 3:
+            self.segment.set_mode(new_mode=MODE_HEX)
+            self.leds.set_mode(new_mode=MODE_HEX)
             pub.sendMessage('out.set_value', new_value=self.value)
         else:
             print("{}".format(self.value))
+
 
     def on_reset(self):
         self.value = 0
