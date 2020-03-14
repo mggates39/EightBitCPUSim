@@ -38,15 +38,8 @@ class LEDArray(wx.Panel):
         self.number_leds = number_leds
         self.value = 0
         self.leds = []
-        if mode == MODE_HEX:
-            if number_leds <= 4:
-                self.format_mask = "0x{0:01X}"
-            elif number_leds <=8:
-                self.format_mask = "0x{0:02X}"
-            else:
-                self.format_mask = "0x{0:04X}"
-        else:
-            self.format_mask = "{}"
+        self.mode = MODE_DEC
+        self.format_mask = "{}"
 
         self.label = wx.StaticText(self, label=self.format_mask.format(0), style=wx.ALIGN_CENTRE)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -60,6 +53,8 @@ class LEDArray(wx.Panel):
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
+
+        self.set_mode(mode)
 
         if topic is not None:
             pub.subscribe(self.set_value, topic)
@@ -91,3 +86,19 @@ class LEDArray(wx.Panel):
         """
         self.label.SetLabel("{}".format(new_label))
         self.sizer.Layout()
+
+    def set_mode(self, new_mode):
+        self.mode = new_mode
+        if new_mode == MODE_HEX:
+            if self.number_leds <= 4:
+                self.format_mask = "0x{0:01X}"
+            elif self.number_leds <=8:
+                self.format_mask = "0x{0:02X}"
+            else:
+                self.format_mask = "0x{0:04X}"
+        else:
+            self.format_mask = "{}"
+
+        old_value = self.value
+        self.value = None
+        self.set_value(old_value)
