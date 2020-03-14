@@ -39,6 +39,7 @@ control_messages = [
     {"topic": "CPU.AluLdl", "label": "LDL"},
     {"topic": "CPU.AluLor", "label": "LOR"},
     {"topic": "CPU.AluLxor", "label": "LXOR"},
+    {"topic": "CPU.AluIn", "label": "EI"},
     {"topic": "CPU.AluOut", "label": "EO"},
     {"topic": "CPU.AluRar", "label": "RAR"},
     {"topic": "CPU.AluRal", "label": "RAL"},
@@ -47,6 +48,7 @@ control_messages = [
     {"topic": "CPU.AluSub", "label": "SUB"},
 
     {"topic": "CPU.TempIn", "label": "TI"},
+    {"topic": "CPU.TempOut", "label": "TO"},
 
     {"topic": "CPU.OutputWrite", "label": "OI"},
     {"topic": "CPU.OutputSelect", "label": "OS"},
@@ -102,6 +104,7 @@ decode_messages = {
     "CPU.AluLand": "LAND ",
     "CPU.AluLor": "LOR ",
     "CPU.AluLxor": "LXOR ",
+    "CPU.AluIn": "EI ",
     "CPU.AluOut": "EO ",
     "CPU.AluAdd": "ADD ",
     "CPU.AluSub": "SUB ",
@@ -113,6 +116,7 @@ decode_messages = {
     "CPU.AluRalC": "RALC ",
     "CPU.AluCma": "CMA ",
     "CPU.TempIn": "TI ",
+    "CPU.TempOut": "TO ",
     "CPU.OutputWrite": "OI ",
     "CPU.OutputSelect": "OS ",
     "CPU.PcOut": "CO ",
