@@ -27,6 +27,7 @@ class Alu(wx.Panel):
         wx.Panel.__init__(self, parent, size=(100, 300))
         self.parent = parent
         self.result = 0
+        self.buffer = 0
         self.value = 0
         self.a_value = 0
         self.b_value = 0
@@ -56,6 +57,7 @@ class Alu(wx.Panel):
 
         self.panel = wx.Panel(self.box, size=(50, 75))
         self.read_indicator = wx.StaticText(self.panel, label="EO")
+        self.write_indicator = wx.StaticText(self.panel, label="EI")
         self.add_indicator = wx.StaticText(self.panel, label="ADD")
         self.subtract_indicator = wx.StaticText(self.panel, label="SUB")
         self.complement_indicator = wx.StaticText(self.panel, label="CMA")
@@ -65,6 +67,7 @@ class Alu(wx.Panel):
         self.logical_roll_right_indicator = wx.StaticText(self.panel, label="RAR")
         self.logical_roll_left_indicator = wx.StaticText(self.panel, label="RAL")
         vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.add_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.subtract_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
@@ -96,6 +99,8 @@ class Alu(wx.Panel):
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
+        pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
+        pub.subscribe(self.on_in, 'CPU.AluIn')
         pub.subscribe(self.on_out, 'CPU.AluOut')
         pub.subscribe(self.on_add, 'CPU.AluAdd')
         pub.subscribe(self.on_subtract, 'CPU.AluSub')
@@ -148,6 +153,13 @@ class Alu(wx.Panel):
         """
         self.complement_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
+
+    def set_in_display_flag(self):
+        """
+        Turn on the Execution In Control signal display.
+        """
+        self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
     def set_out_display_flag(self):
         """
         Turn on the Execution Out Control signal display.
@@ -197,6 +209,8 @@ class Alu(wx.Panel):
         self.logical_xor_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.logical_roll_right_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.logical_roll_left_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         """
@@ -211,6 +225,7 @@ class Alu(wx.Panel):
         Receive the CPU Reset control signal
         """
         self.result = 0
+        self.buffer = 0
         self.value = 0
         self.a_value = 0
         self.b_value = 0
@@ -508,6 +523,14 @@ class Alu(wx.Panel):
         self.set_zero_label(self.zero)
         self.set_sign_label(self.sign)
         pub.sendMessage('alu.set_value', new_value=self.result)
+
+    def on_bus_change(self, new_value):
+        self.buffer = new_value
+
+    def on_in(self):
+        self.value = self.buffer
+        self.set_in_display_flag()
+        pub.sendMessage('alu.set_value', new_value=self.value)
 
     def on_out(self):
         """
