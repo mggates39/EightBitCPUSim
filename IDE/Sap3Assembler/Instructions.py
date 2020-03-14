@@ -346,14 +346,16 @@ class Instructions:
 
             "POP BC": {"operator": "POP BC", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
                        "bytes": 2},
-
             "POP DE": {"operator": "POP DE", "op_code": 0xD1, "operand1": "DE", "operand2": None, "addressing": "Reg",
+                       "bytes": 2},
+            "POP HL": {"operator": "POP HL", "op_code": 0xE1, "operand1": "HL", "operand2": None, "addressing": "Reg",
                        "bytes": 2},
 
             "PUSH BC": {"operator": "PUSH BC", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
                         "bytes": 2},
-
             "PUSH DE": {"operator": "PUSH DE", "op_code": 0xD5, "operand1": "DE", "operand2": None, "addressing": "Reg",
+                        "bytes": 2},
+            "PUSH HL": {"operator": "PUSH HL", "op_code": 0xE5, "operand1": "HL", "operand2": None, "addressing": "Reg",
                         "bytes": 2},
 
             "RAL": {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",

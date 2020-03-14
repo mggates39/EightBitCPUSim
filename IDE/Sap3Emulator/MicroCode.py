@@ -1035,11 +1035,29 @@ operators = {
                          # TODO Need input port select
                          ['CPU.RingReset']]},
 
+    0xE1: {"operator": "POP HL", "op_code": 0xE1, "operand1": "HL", "operand2": None, "addressing": "Reg",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.SpInc', 'CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.LRegIn'],
+                         ['CPU.SpInc', 'CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.HRegIn'],
+                         ['CPU.RingReset']]},
+
     0xE2: {"operator": "JPO", "op_code": 0xE2, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcInc'],
                          ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
+    0xE5: {"operator": "PUSH HL", "op_code": 0xE5, "operand1": "HL", "operand2": None, "addressing": "Reg",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.HRegOut', 'CPU.MemIn', 'CPU.SpDec'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.LRegOut', 'CPU.MemIn', 'CPU.SpDec'],
                          ['CPU.RingReset']]},
 
     0xE6: {"operator": "ANI", "op_code": 0xE6, "operand1": "N", "operand2": None, "addressing": "Imm",
