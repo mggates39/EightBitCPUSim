@@ -38,10 +38,7 @@ class LEDSegment(wx.Panel):
         pos = wx.DefaultPosition
         size = (100, 50)  # wx.DefaultSize
         style = gizmos.LED_ALIGN_RIGHT  # | gizmos.LED_DRAW_FADED
-        if mode == MODE_HEX:
-            self.segment = LEDHexCtrl(self, -1, pos, size, style)
-        else:
-            self.segment = gizmos.LEDNumberCtrl(self, -1, pos, size, style)
+        self.segment = LEDHexCtrl(self, -1, pos, size, style)
 
         # default colours are green on black
         self.segment.SetBackgroundColour(background_color)
@@ -69,3 +66,9 @@ class LEDSegment(wx.Panel):
                 self.segment.SetValue("{0:X}".format(self.value))
             else:
                 self.segment.SetValue("{}".format(self.value))
+
+    def set_mode(self, new_mode):
+        self.mode = new_mode
+        old_value = self.value
+        self.value = None
+        self.set_value(old_value)
