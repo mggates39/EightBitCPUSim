@@ -19,8 +19,17 @@
 	POP DE
 	MVI H,0
 	MVI L,0
+	LXI HL,(Test)
+	ADD M
+	INR M
+	MVI M,15
 	HLT
 ;
+; Top of Stack
+;
+	.org 100
+Test:	.byte 52
+
 ; Top of Stack
 ;
 	.org 128
