@@ -18,7 +18,10 @@ class TempRegister(wx.Panel):
 
         self.panel = wx.Panel(self.box, size=(30, 75))
         self.write_indicator = wx.StaticText(self.panel, label="TI")
+        self.read_indicator = wx.StaticText(self.panel, label="TO")
+
         vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
@@ -39,12 +42,17 @@ class TempRegister(wx.Panel):
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.TempIn')
+        pub.subscribe(self.on_out, 'CPU.TempOut')
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
+    def set_out_display_flag(self):
+        self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
     def clear_display_flags(self):
         self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()
@@ -63,3 +71,7 @@ class TempRegister(wx.Panel):
         self.set_in_display_flag()
         pub.sendMessage('tmp.set_value', new_value=self.value)
         pub.sendMessage('alu.set_value_temp', new_value=self.value)
+
+    def on_out(self):
+        self.set_out_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=self.value)
