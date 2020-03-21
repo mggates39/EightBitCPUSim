@@ -47,8 +47,24 @@ class MyTestCase(unittest.TestCase):
             details = instructions.get_operator(micro_details["operator"])
 
             if details is None:
-                print("Warning: operator {0} - 0x{1:02X} is not parseable.".format(micro_details["operator"], micro_details["op_code"]))
+                print("Warning: operator {0} - 0x{1:02X} is not parseable.".format(micro_details["operator"],
+                                                                                   micro_details["op_code"]))
                 result = False
+
+        self.assertEqual(True, result)
+
+    def test_all_microcode_is_real(self):
+        result = True
+
+        for operator in operators:
+            details = operators[operator]
+            for cycle in details["microcode"]:
+                for message in cycle:
+                    if message not in decode_messages:
+                        print("Warning: operator {0} - 0x{1:02X} has bad microcode message {2}.".format(details["operator"],
+                                                                                                        details["op_code"],
+                                                                                                        message))
+                        result = False
 
         self.assertEqual(True, result)
 
