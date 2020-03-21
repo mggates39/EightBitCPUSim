@@ -20,7 +20,7 @@ class LEDSegment(wx.Panel):
     The LEDSegment class implements a seven segement display
     """
 
-    def __init__(self, parent, led_color='#36ff27', background_color='#077100', topic=None, mode=MODE_DEC):
+    def __init__(self, parent, led_color='#36ff27', background_color='#077100', size = (100, 50), topic=None, mode=MODE_DEC):
         """
 
         :param parent: Panel that will hold the Seven Segment display
@@ -36,7 +36,6 @@ class LEDSegment(wx.Panel):
         self.mode = mode
 
         pos = wx.DefaultPosition
-        size = (100, 50)  # wx.DefaultSize
         style = gizmos.LED_ALIGN_RIGHT  # | gizmos.LED_DRAW_FADED
         self.segment = LEDHexCtrl(self, -1, pos, size, style)
 

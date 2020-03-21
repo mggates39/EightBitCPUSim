@@ -1,5 +1,6 @@
 control_messages = [
     {"topic": "CPU.Halt", "label": "HLT"},
+    {"topic": "CPU.Pause", "label": "WAIT"},
 
     {"topic": "CPU.MarIn", "label": "MI"},
     {"topic": "CPU.MemIn", "label": "RI"},
@@ -50,8 +51,12 @@ control_messages = [
     {"topic": "CPU.TempIn", "label": "TI"},
     {"topic": "CPU.TempOut", "label": "TO"},
 
-    {"topic": "CPU.OutputWrite", "label": "OI"},
+    {"topic": "CPU.OutputWrite", "label": "OO"},
     {"topic": "CPU.OutputSelect", "label": "OS"},
+
+    {"topic": "CPU.InputRequest", "label": "NI"},
+    {"topic": "CPU.InputResponse", "label": "NO"},
+    {"topic": "CPU.InputSelect", "label": "NS"},
 
     {"topic": "CPU.PcOut", "label": "CO"},
     {"topic": "CPU.PcOutLow", "label": "COL"},
@@ -73,6 +78,7 @@ control_messages = [
 
 decode_messages = {
     "CPU.Halt": "HLT ",
+    "CPU.Pause": "WAIT ",
     "CPU.MarIn": "MI ",
     "CPU.MemIn": "RI ",
     "CPU.MemOut": "RO ",
@@ -117,8 +123,11 @@ decode_messages = {
     "CPU.AluCma": "CMA ",
     "CPU.TempIn": "TI ",
     "CPU.TempOut": "TO ",
-    "CPU.OutputWrite": "OI ",
+    "CPU.OutputWrite": "OO ",
     "CPU.OutputSelect": "OS ",
+    "CPU.InputRequest": "NI ",
+    "CPU.InputResponse": "NO ",
+    "CPU.InputSelect": "NS ",
     "CPU.PcOut": "CO ",
     "CPU.PcOutLow": "COL ",
     "CPU.PcOutHigh": "COH ",
@@ -1032,7 +1041,10 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrAlIn', 'CPU.PcInc'],
-                         # TODO Need input port select
+                         ['CPU.IrOut', 'CPU.InputSelect'],
+                         ['CPU.InputRequest'],
+                         ['CPU.ARegIn'],
+                         # TODO Need input port select]
                          ['CPU.RingReset']]},
 
     0xE1: {"operator": "POP HL", "op_code": 0xE1, "operand1": "HL", "operand2": None, "addressing": "Reg",

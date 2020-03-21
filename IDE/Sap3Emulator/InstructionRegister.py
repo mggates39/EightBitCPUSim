@@ -16,6 +16,7 @@ class InstructionRegister(wx.Panel):
         self.tick = 0
         self.cycle = 0
         self.ring_count = 0
+        self.active = False
         self.carry_flag = False
         self.zero_flag = False
         self.sign_flag = False
@@ -63,6 +64,7 @@ class InstructionRegister(wx.Panel):
         pub.subscribe(self.on_out, 'CPU.IrOut')
         pub.subscribe(self.on_read_flags, 'alu.FlagValues')
         pub.subscribe(self.on_ring_reset, 'CPU.RingReset')
+        pub.subscribe(self.on_active, 'clock.active')
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -82,14 +84,18 @@ class InstructionRegister(wx.Panel):
         self.load_operand_high_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
+    def on_active(self,new_active):
+        self.active = new_active
+
     def on_clock(self):
         self.clear_display_flags()
-        microcode = self.microcode[self.ring_count]
-        pub.sendMessage("ir.ring", tick=self.tick, cycle=self.cycle, ring=self.ring_count)
-        for send in microcode:
-            pub.sendMessage(send)
-        self.tick += 1
-        self.ring_count += 1
+        if self.active:
+            microcode = self.microcode[self.ring_count]
+            pub.sendMessage("ir.ring", tick=self.tick, cycle=self.cycle, ring=self.ring_count)
+            for send in microcode:
+                pub.sendMessage(send)
+            self.tick += 1
+            self.ring_count += 1
 
     def on_reset(self):
         self.value = 0
@@ -98,6 +104,7 @@ class InstructionRegister(wx.Panel):
         self.tick = 0
         self.cycle = 0
         self.ring_count = 0
+        self.active = False
         self.carry_flag = False
         self.zero_flag = False
         self.sign_flag = False

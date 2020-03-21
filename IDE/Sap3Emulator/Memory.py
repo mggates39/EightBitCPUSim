@@ -29,6 +29,7 @@ class Memory(wx.Panel):
         self.address = 0
         self.buffer = 0
         self.value = 0
+        self.max_address = 0
         self.box = wx.StaticBox(self, wx.ID_ANY, "Memory", wx.DefaultPosition, (100, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
 
@@ -71,6 +72,7 @@ class Memory(wx.Panel):
             index = self.list.InsertItem(idx, i[0])
             self.list.SetItem(index, 1, i[1])
             idx += 1
+        self.max_address = idx - 1
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -100,7 +102,8 @@ class Memory(wx.Panel):
     def on_set_address(self, new_value):
         self.list.Select(self.address, 0)
 
-        self.address = new_value
+        if new_value >=0 and new_value <= self.max_address:
+            self.address = new_value
 
         self.list.Focus(self.address)
         self.list.Select(self.address)

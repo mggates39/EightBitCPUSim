@@ -7,6 +7,7 @@ from Sap3Emulator.Bus import Bus
 from Sap3Emulator.Clock import Clock
 from Sap3Emulator.ControlLogic import ControlLogic
 from Sap3Emulator.History import ExecutionHistory
+from Sap3Emulator.InputRegister import InputRegister
 from Sap3Emulator.InstructionRegister import InstructionRegister
 from Sap3Emulator.Memory import Memory
 from Sap3Emulator.MemoryAddressRegister import MemoryAddressRegister
@@ -44,6 +45,7 @@ class CPU(wx.Panel):
         self.alu = Alu(self)
         self.tmp = TempRegister(self)
         self.out = OutputRegister(self)
+        self.input = InputRegister(self)
         self.cl = ControlLogic(self)
         self.sr = StatusRegister(self)
         self.ir = InstructionRegister(self, self.microcode_engine)
@@ -54,7 +56,7 @@ class CPU(wx.Panel):
         self.sizer.Add(self.bus, pos=(0,1), span=(6,1), flag=wx.EXPAND)
         self.sizer.Add(self.pc, pos=(0, 2), span=(1, 2), flag=wx.EXPAND)
         self.sizer.Add(self.sp, pos=(0, 4), span=(1, 2), flag=wx.EXPAND)
-        self.sizer.Add(self.history, pos=(0, 6), span=(6, 1), flag=wx.EXPAND)
+        self.sizer.Add(self.history, pos=(0, 6), span=(4, 1), flag=wx.EXPAND)
 
         self.sizer.Add(self.mem, pos=(1, 0), span=(5, 1), flag=wx.EXPAND)
         self.sizer.Add(self.a_register, pos=(1, 2), flag=wx.EXPAND)
@@ -69,6 +71,7 @@ class CPU(wx.Panel):
         self.sizer.Add(self.alu, pos=(3, 4), span=(3, 2), flag=wx.EXPAND)
         self.sizer.Add(self.out, pos=(4, 2), flag=wx.EXPAND)
         self.sizer.Add(self.tmp, pos=(4, 3), flag=wx.EXPAND)
+        self.sizer.Add(self.input, pos=(4, 6), span=(2, 1), flag=wx.EXPAND)
 
         self.sizer.Add(self.reset, pos=(5, 2), span=(1, 2), flag=wx.EXPAND)
         self.sizer.Add(self.clock, pos=(6, 0), span=(1, 2), flag=wx.EXPAND)

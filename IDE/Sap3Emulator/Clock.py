@@ -25,6 +25,8 @@ class Clock(wx.Panel):
         self.parent = parent
         self.index = 0
         self.halted = False
+        self.paused = False
+        self.resume_timer = False
         self.speed = 100
         self.timer = wx.Timer(self)
         self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (300, 150))
@@ -50,8 +52,10 @@ class Clock(wx.Panel):
 
         self.panel = wx.Panel(self.box, size=(40, 75))
         self.halt_indicator = wx.StaticText(self.panel, label="HLT")
+        self.pause_indicator = wx.StaticText(self.panel, label="WAIT")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.halt_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.pause_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
         horizontal_box.Add(self.panel, 0)
@@ -62,7 +66,9 @@ class Clock(wx.Panel):
         self.SetSizer(static_box_sizer)
 
         pub.subscribe(self.on_halt, 'CPU.Halt')
+        pub.subscribe(self.on_pause, 'CPU.Pause')
         pub.subscribe(self.on_reset, 'CPU.Reset')
+        pub.subscribe(self.on_resume, 'CPU.InputResponse')
 
         self.start_clock.Bind(wx.EVT_BUTTON, self.on_start_clock_click)
         self.stop_clock.Bind(wx.EVT_BUTTON, self.on_stop_clock_click)
@@ -78,7 +84,10 @@ class Clock(wx.Panel):
         """
         self.index = 0
         self.halted = False
+        self.paused = False
+        self.resume_timer = False
         self.halt_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.pause_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.start_clock.Enable(True)
         self.stop_clock.Enable(False)
         self.single_step.Enable(True)
@@ -98,6 +107,32 @@ class Clock(wx.Panel):
         self.single_step.Enable(False)
         if self.timer.IsRunning():
             self.timer.Stop()
+
+    def on_pause(self) -> None:
+        """
+        Process the CPU.Pause signal.
+
+        Halts the clock timer if running and set the Halt indicator.
+        """
+        self.paused = True
+        self.resume_timer = False
+        self.pause_indicator.SetForegroundColour((0, 0, 255))  # set text color
+        if self.timer.IsRunning():
+            self.timer.Stop()
+            self.resume_timer = True
+
+    def on_resume(self) -> None:
+        """
+        Process the CPU.Pause signal.
+
+        Halts the clock timer if running and set the Halt indicator.
+        """
+        self.paused = False
+        self.pause_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        if self.resume_timer:
+            self.on_start_clock_click(None)
+
+        self.resume_timer = False
 
     def on_start_clock_click(self, e: wx.MouseEvent) -> None:
         """
@@ -132,8 +167,10 @@ class Clock(wx.Panel):
         :param e: Mouse or Timer Event - Unused
         """
         if not self.halted:
+            pub.sendMessage('clock.active', new_active=True)
             pub.sendMessage("CPU.ClearControl")
             pub.sendMessage('CPU.Clock')
+            pub.sendMessage('clock.active', new_active=False)
 
         self.parent.parent.Refresh()
 
