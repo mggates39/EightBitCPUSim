@@ -44,7 +44,17 @@ class Assembler:
 
             for segment in segments:
                 listing += segment.get_listing()
-            listing += "\n\t.end"
+            listing += "\n\t.end\n\n"
+
+            listing += 'Labels:\n'
+            lc = 0
+            for symbol in self.symbols:
+                listing +=("{0} - 0x{1:04X}\t".format(symbol[1], symbol[0]))
+                lc += 1
+                if lc > 3:
+                    listing += '\n'
+                    lc = 0
+            listing += '\n'
 
         return listing
 
