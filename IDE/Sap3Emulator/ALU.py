@@ -66,6 +66,7 @@ class Alu(wx.Panel):
         self.logical_xor_indicator = wx.StaticText(self.panel, label="LXOR")
         self.logical_roll_right_indicator = wx.StaticText(self.panel, label="RAR")
         self.logical_roll_left_indicator = wx.StaticText(self.panel, label="RAL")
+        self.use_carry_indicator = wx.StaticText(self.panel, label="USC")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
@@ -77,6 +78,7 @@ class Alu(wx.Panel):
         vbox.Add(self.logical_xor_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.logical_roll_right_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.logical_roll_left_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.use_carry_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
@@ -102,19 +104,23 @@ class Alu(wx.Panel):
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.AluIn')
         pub.subscribe(self.on_out, 'CPU.AluOut')
+
         pub.subscribe(self.on_add, 'CPU.AluAdd')
         pub.subscribe(self.on_subtract, 'CPU.AluSub')
+
         pub.subscribe(self.on_complement, 'CPU.AluCma')
+
         pub.subscribe(self.on_decrement, 'CPU.AluDec')
         pub.subscribe(self.on_increment, 'CPU.AluInc')
 
         pub.subscribe(self.on_and, 'CPU.AluLand')
         pub.subscribe(self.on_or, 'CPU.AluLor')
         pub.subscribe(self.on_xor, 'CPU.AluLxor')
+
         pub.subscribe(self.on_rar, 'CPU.AluRar')
         pub.subscribe(self.on_ral, 'CPU.AluRal')
-        pub.subscribe(self.on_rar_carry, 'CPU.AluRarC')
-        pub.subscribe(self.on_ral_carry, 'CPU.AluRalC')
+
+        pub.subscribe(self.on_use_carry, 'CPU.AluUseCarry')
 
         pub.subscribe(self.on_use_a_value, 'CPU.AluLda')
         pub.subscribe(self.on_use_b_value, 'CPU.AluLdb')
@@ -149,10 +155,15 @@ class Alu(wx.Panel):
 
     def set_complement_display_flag(self):
         """
-        Turn on the 2s complement Control signal display.
+        Turn on the 2's complement Control signal display.
         """
         self.complement_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
+    def set_use_carry_display_flag(self):
+        """
+        Turn on the use carry Control signal display.
+        """
+        self.use_carry_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_in_display_flag(self):
         """
@@ -211,6 +222,7 @@ class Alu(wx.Panel):
         self.logical_roll_left_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.use_carry_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         """
@@ -218,6 +230,7 @@ class Alu(wx.Panel):
         """
         self.subtract = False
         self.logical_and = False
+        self.through_carry = False
         self.clear_display_flags()
 
     def on_reset(self):
@@ -396,29 +409,17 @@ class Alu(wx.Panel):
         self.set_rar_display_flag()
         self.logical_roll_right = True
         self.logical_roll_left = False
-        self.through_carry = False
         self.do_logic()
 
     def on_ral(self):
         self.set_ral_display_flag()
         self.logical_roll_right = False
         self.logical_roll_left = True
-        self.through_carry = False
         self.do_logic()
 
-    def on_rar_carry(self):
-        self.set_rar_display_flag()
-        self.logical_roll_right = True
-        self.logical_roll_left = False
+    def on_use_carry(self):
+        self.set_use_carry_display_flag()
         self.through_carry = True
-        self.do_logic()
-
-    def on_ral_carry(self):
-        self.set_ral_display_flag()
-        self.logical_roll_right = False
-        self.logical_roll_left = True
-        self.through_carry = True
-        self.do_logic()
 
     def do_math(self):
         """
@@ -426,14 +427,19 @@ class Alu(wx.Panel):
         the subtract flag is set.
         Then update the carry and zero flag values accordingly
         """
+        if self.through_carry and self.carry:
+            used_carry = 1
+        else:
+            used_carry = 0
+
         if self.subtract:
-            self.result = self.value - self.temp_value
-            if self.value != 0:
+            self.result = self.value - self.temp_value - used_carry
+            if self.value < self.temp_value:
                 self.carry = True
             else:
                 self.carry = False
         else:
-            self.result = self.value + self.temp_value
+            self.result = self.value + self.temp_value + used_carry
             if self.result >= 0xFF:
                 self.result = self.result & 0xFF
                 self.carry = True
