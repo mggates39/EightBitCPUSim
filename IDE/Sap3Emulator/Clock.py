@@ -117,6 +117,9 @@ class Clock(wx.Panel):
         self.paused = True
         self.resume_timer = False
         self.pause_indicator.SetForegroundColour((0, 0, 255))  # set text color
+        self.start_clock.Enable(False)
+        self.stop_clock.Enable(False)
+        self.single_step.Enable(False)
         if self.timer.IsRunning():
             self.timer.Stop()
             self.resume_timer = True
@@ -131,6 +134,8 @@ class Clock(wx.Panel):
         self.pause_indicator.SetForegroundColour((0, 0, 0))  # set text color
         if self.resume_timer:
             self.on_start_clock_click(None)
+        else:
+            self.on_stop_clock_click(None)
 
         self.resume_timer = False
 

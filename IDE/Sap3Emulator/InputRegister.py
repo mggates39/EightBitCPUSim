@@ -26,7 +26,7 @@ class InputRegister(wx.Panel):
 
         self.panel = wx.Panel(self, size=(30, 75))
         self.request_indicator = wx.StaticText(self.panel, label="NI")
-        self.reponse_indicator = wx.StaticText(self.panel, label="No")
+        self.reponse_indicator = wx.StaticText(self.panel, label="NO")
         self.select_indicator = wx.StaticText(self.panel, label="NS")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.request_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
