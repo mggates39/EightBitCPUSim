@@ -80,7 +80,7 @@ class Instructions:
         }
 
         self.operators = {
-            "ACI": {"operator": "ACI", "op_code": 0xCE, "operand1": "P", "operand2": None, "addressing": "Imm",
+            "ACI": {"operator": "ACI", "op_code": 0xCE, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
             "ADC A": {"operator": "ADC A", "op_code": 0x8F, "operand1": "A", "operand2": None, "addressing": "Reg",
@@ -115,7 +115,7 @@ class Instructions:
                       "bytes": 1},
             "ADD M": {"operator": "ADD M", "op_code": 0x86, "operand1": "M", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
-            "ADI": {"operator": "ADI", "op_code": 0xC6, "operand1": "P", "operand2": None, "addressing": "Imm",
+            "ADI": {"operator": "ADI", "op_code": 0xC6, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
             "ANA B": {"operator": "ANA B", "op_code": 0xA0, "operand1": "B", "operand2": None, "addressing": "Reg",
@@ -453,7 +453,7 @@ class Instructions:
             "STAX DE": {"operator": "STAX DE", "op_code": 0x12, "operand1": "DE", "operand2": None, "addressing": "Ind",
                         "bytes": 1},
 
-            "SBI": {"operator": "SBI", "op_code": 0xDE, "operand1": "P", "operand2": None, "addressing": "Imm",
+            "SBI": {"operator": "SBI", "op_code": 0xDE, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
             "SBB A": {"operator": "SBB A", "op_code": 0x9F, "operand1": "A", "operand2": None, "addressing": "Reg",
@@ -489,7 +489,7 @@ class Instructions:
                       "bytes": 1},
             "SUB M": {"operator": "SUB M", "op_code": 0x96, "operand1": "M", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
-            "SUI": {"operator": "SUI", "op_code": 0xD6, "operand1": "P", "operand2": None, "addressing": "Imm",
+            "SUI": {"operator": "SUI", "op_code": 0xD6, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
             "XRA A": {"operator": "XRA A", "op_code": 0xAF, "operand1": "A", "operand2": None, "addressing": "Reg",
