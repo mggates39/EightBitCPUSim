@@ -14,8 +14,8 @@ class InputRegister(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, size=(100, 100))
         self.parent = parent
-        self.address_value = 0
-        self.data_value = 0
+        self.address_value = '----'
+        self.data_value = '--'
         self.select = 0
         self.buffer = 0
         self.mode = None
@@ -37,8 +37,8 @@ class InputRegister(wx.Panel):
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.addr_segment = LEDSegment(self, 'blue', None, size = (75, 50), topic='in.set_addr_value', mode=MODE_HEX)
-        self.data_segment = LEDSegment(self, 'blue', None, size = (30, 50), topic='in.set_data_value', mode=MODE_HEX)
+        self.addr_segment = LEDSegment(self, 'blue', None, size = (75, 50), topic='in.set_addr_value', mode=MODE_HEX, num_digits=4)
+        self.data_segment = LEDSegment(self, 'blue', None, size = (30, 50), topic='in.set_data_value', mode=MODE_HEX, num_digits=2)
         b = wx.Button(self, -1, label='Enter')
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
         hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -124,8 +124,12 @@ class InputRegister(wx.Panel):
 
         if label == 'ADDR' and self.mode != self.MODE_INPUT:
             self.mode = self.MODE_ADDR
+            if self.address_value == '----':
+                self.address_value = 0
         elif label == 'DATA' and self.mode != self.MODE_INPUT:
             self.mode = self.MODE_DATA
+            if self.data_value == '--':
+                self.data_value = 0
         elif label == 'exam' and self.mode != self.MODE_INPUT:
             self.examine_memory()
         elif label == 'exnxt' and self.mode != self.MODE_INPUT:
@@ -176,14 +180,16 @@ class InputRegister(wx.Panel):
     def on_read(self):
         self.set_request_display_flag()
         self.mode = self.MODE_INPUT
+        if self.data_value == '--':
+            self.data_value = 0
         pub.sendMessage('CPU.Pause')
 
 
     def on_reset(self):
         self.address_value = 0
         self.data_value = 0
-        self.select = 0
-        self.buffer = 0
+        self.address_value = '----'
+        self.data_value = '--'
         self.mode = None
         self.clear_display_flags()
         pub.sendMessage('in.set_addr_value', new_value=self.address_value)
