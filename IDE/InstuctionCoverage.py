@@ -90,10 +90,25 @@ class MyTestCase(unittest.TestCase):
             for cycle in details["microcode"]:
                 for message in cycle:
                     if message not in decode_messages:
-                        print("Warning: operator {0} - 0x{1:02X} has bad microcode message {2}.".format(details["operator"],
-                                                                                                        details["op_code"],
-                                                                                                        message))
+                        print("Warning: operator {0} - 0x{1:02X} has bad microcode message {2}.".format(
+                            details["operator"],
+                            details["op_code"],
+                            message))
                         result = False
+
+        self.assertEqual(True, result)
+
+    def test_all_operator_op_code_match(self):
+        result = True
+
+        for operator in operators:
+            details = operators[operator]
+            if operator != details["op_code"]:
+                print(
+                    "Warning: operator {0} - 0x{1:02X} has bad op code 0x{2:02X}.".format(details["operator"], operator,
+                                                                                          details["op_code"]
+                                                                                          ))
+                result = False
 
         self.assertEqual(True, result)
 
