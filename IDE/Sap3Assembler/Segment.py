@@ -93,7 +93,7 @@ class Segment:
         return memory
 
     def get_listing(self):
-        listing = "\n\t.org {}\n".format(self.start)
+        listing = "\n\t.org 0x{0:04X}\n".format(self.start)
         for cell in self.cell_list:
             listing += cell.get_listing()
 
