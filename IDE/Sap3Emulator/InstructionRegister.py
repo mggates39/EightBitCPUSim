@@ -62,6 +62,8 @@ class InstructionRegister(wx.Panel):
         pub.subscribe(self.on_operand_low, 'CPU.IrAlIn')
         pub.subscribe(self.on_operand_high, 'CPU.IrAhIn')
         pub.subscribe(self.on_out, 'CPU.IrOut')
+        pub.subscribe(self.on_set_carry, "CPU.SetCarry")
+        pub.subscribe(self.on_invert_carry, "CPU.CompCarry")
         pub.subscribe(self.on_read_flags, 'alu.FlagValues')
         pub.subscribe(self.on_ring_reset, 'CPU.RingReset')
         pub.subscribe(self.on_active, 'clock.active')
@@ -163,3 +165,9 @@ class InstructionRegister(wx.Panel):
         self.zero_flag = new_zero
         self.sign_flag = new_sign
         self.parity_flag = new_parity
+
+    def on_set_carry(self):
+        self.carry_flag = True
+
+    def on_invert_carry(self):
+        self.carry_flag = not self.carry_flag

@@ -12,6 +12,7 @@ class Instructions:
             "ANI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ANI"]},
             "CALL": {"operands": 1, "included": 0, "bytes": 3, "operators": ["CALL"]},
             "CMA": {"operands": 0, "included": 0, "bytes": 1, "operators": ["CMA"]},
+            "CMC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["CMC"]},
             "CMP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["CMP A", "CMP B", "CMP C", "CMP D", "CMP E", "CMP H", "CMP L", "CMP M"]},
             "CPI": {"operands": 1, "included": 0, "bytes": 1, "operators": ["CPI"]},
             "DCR": {"operands": 1, "included": 1, "bytes": 1,
@@ -66,6 +67,7 @@ class Instructions:
             "RRC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RRC"]},
             "RET": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RET"]},
             "STA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["STA"]},
+            "STC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["STC"]},
             "STAX": {"operands": 1, "included": 1, "bytes": 1, "operators": ["STAX BC", "STAX DE"]},
             "SBB": {"operands": 1, "included": 1, "bytes": 1,
                     "operators": ["SBB A", "SBB B", "SBB C", "SBB D", "SBB E", "SBB H", "SBB L", "SBB M"]},
@@ -140,6 +142,9 @@ class Instructions:
                      "bytes": 3},
 
             "CMA": {"operator": "CMA", "op_code": 0x2F, "operand1": None, "operand2": None, "addressing": "Imp",
+                    "bytes": 1},
+
+            "CMC": {"operator": "CMC", "op_code": 0x3F, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
 
             "CMP A": {"operator": "CMP A", "op_code": 0xBF, "operand1": "A", "operand2": None, "addressing": "Reg",
@@ -439,6 +444,8 @@ class Instructions:
             "RET": {"operator": "RET", "op_code": 0xC9, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
 
+            "STC": {"operator": "STC", "op_code": 0x37, "operand1": None, "operand2": None, "addressing": "Imp",
+                    "bytes": 1},
             "STA": {"operator": "STA", "op_code": 0x32, "operand1": "P", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
             "STAX BC": {"operator": "STAX BC", "op_code": 0x02, "operand1": "BC", "operand2": None, "addressing": "Ind",

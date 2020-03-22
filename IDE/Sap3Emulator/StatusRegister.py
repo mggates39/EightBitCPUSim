@@ -58,8 +58,12 @@ class StatusRegister(wx.Panel):
 
         self.panel = wx.Panel(self.box, size=(30, 75))
         self.write_indicator = wx.StaticText(self.panel, label="FI")
+        self.set_carry_indicator = wx.StaticText(self.panel, label="SC")
+        self.complement_carry_indicator = wx.StaticText(self.panel, label="CC")
         vbox = wx.BoxSizer(wx.VERTICAL)
-        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 1)
+        vbox.Add(self.set_carry_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 1)
+        vbox.Add(self.complement_carry_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 1)
         self.panel.SetSizer(vbox)
         horizontal_box.Add(self.panel, 0, wx.EXPAND)
 
@@ -70,13 +74,23 @@ class StatusRegister(wx.Panel):
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.set_in_display_flag, "CPU.FlagIn")
-        pub.subscribe(self.on_get_flags, "alu.FlagValues")
+        pub.subscribe(self.on_set_carry, "CPU.SetCarry")
+        pub.subscribe(self.on_invert_carry, "CPU.CompCarry")
+        pub.subscribe(self.on_set_flags, "alu.FlagValues")
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
+    def set_carry_display_flag(self):
+        self.set_carry_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
+    def set_comp_display_flag(self):
+        self.complement_carry_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
     def clear_display_flags(self):
         self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.set_carry_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.complement_carry_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()
@@ -90,7 +104,17 @@ class StatusRegister(wx.Panel):
         self.clear_display_flags()
         self.display_flags()
 
-    def on_get_flags(self, new_carry, new_zero, new_sign, new_parity, new_auxillary_carry):
+    def on_set_carry(self):
+        self.set_carry_display_flag()
+        self.carry = True
+        self.display_flags()
+
+    def on_invert_carry(self):
+        self.set_comp_display_flag()
+        self.carry = not self.carry
+        self.display_flags()
+
+    def on_set_flags(self, new_carry, new_zero, new_sign, new_parity, new_auxillary_carry):
         self.set_in_display_flag()
         self.auxillary_carry = new_auxillary_carry
         self.carry = new_carry

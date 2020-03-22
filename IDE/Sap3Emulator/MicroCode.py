@@ -69,6 +69,8 @@ control_messages = [
     {"topic": "CPU.SpDec", "label": "S-"},
 
     {"topic": "CPU.FlagIn", "label": "FI"},
+    {"topic": "CPU.SetCarry", "label": "SC"},
+    {"topic": "CPU.CompCarry", "label": "CC"},
 
     {"topic": "CPU.RingReset", "label": "RCR"},
 
@@ -136,6 +138,8 @@ decode_messages = {
     "CPU.SpInc": "S+ ",
     "CPU.SpDec": "S- ",
     "CPU.FlagIn": "FI ",
+    "CPU.SetCarry": "SC ",
+    "CPU.CompCarry": "CC ",
     "CPU.RingReset": "RCR ",
     "CPU.IllegalInst": "ILL "
 }
@@ -393,6 +397,11 @@ operators = {
                          ['CPU.IrOut', 'CPU.MarIn'],
                          ['CPU.TempOut', 'CPU.MemIn'],
                          ['CPU.RingReset']]},
+    0x37: {"operator": "STC", "op_code": 0x37, "operand1": None, "operand2": None, "addressing": "Imp",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.SetCarry'],
+                         ['CPU.RingReset']]},
 
     0x3A: {"operator": "LDA", "op_code": 0x3A, "operand1": "M", "operand2": None, "addressing": "Dir",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
@@ -420,6 +429,11 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.ARegIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
+    0x3F: {"operator": "CMC", "op_code": 0x3F, "operand1": None, "operand2": None, "addressing": "Imp",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.CompCarry'],
                          ['CPU.RingReset']]},
 
     0x40: {"operator": "MOV B,B", "op_code": 0x40, "operand1": "B", "operand2": "B", "addressing": "Reg",
