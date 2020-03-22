@@ -51,6 +51,9 @@ class Parser:
     def process_directives(self, line_number, label, directive, argument=None):
         if argument is None:
             argument = 0
+        else:
+            if argument[-1] == 'H':
+                argument = int(argument[:-1], 16)
         if directive == '.org':
             self.start_segment(int(argument), 'C')
         elif directive == '.corg':

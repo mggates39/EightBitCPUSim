@@ -85,6 +85,8 @@ class Cell:
                             self.second_value = (value >> 8) & 0xFF
                             self.first_operand = "(0x{0:04X}) ; {1}".format(value, self.first_operand)
                     elif instructions.is_operand_one_numeric(self.real_operator):
+                        if self.first_operand[-1] == 'H':
+                            self.first_operand = int(self.first_operand[:-1], 16)
                         self.first_value, error = self.back_patch_label(self.first_operand, labels)
                         self.first_operand = "0x{0:02X}".format(self.first_value)
                     elif instructions.is_operand_one_register(self.real_operator):
@@ -93,6 +95,8 @@ class Cell:
                     if not instructions.is_operand_two_none(self.real_operator):
                         if self.second_operand is not None:
                             if instructions.is_operand_two_numeric(self.real_operator):
+                                if self.second_operand[-1] == 'H':
+                                    self.second_operand = int(self.second_operand[:-1], 16)
                                 self.second_value, error = self.back_patch_label(self.second_operand, labels)
                                 self.second_operand = "0x{0:02X}".format(self.second_value)
                             elif instructions.is_operand_two_numeric_word(self.real_operator):
