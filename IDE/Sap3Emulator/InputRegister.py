@@ -7,9 +7,10 @@ from GuiComponents.LedSegments import LEDSegment
 
 
 class InputRegister(wx.Panel):
-    MODE_ADDR = 0
-    MODE_DATA = 1
-    MODE_INPUT = 2
+    MODE_PC = 0
+    MODE_ADDR = 1
+    MODE_DATA = 2
+    MODE_INPUT = 3
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, size=(100, 100))
@@ -47,11 +48,11 @@ class InputRegister(wx.Panel):
         hbox.Add(b, 1, wx.EXPAND | wx.ALL, 5)
 
 
-        gs = wx.GridSizer(4, 6, 5, 5)
-        for row in (('C', 'D', 'E', 'F', 'ADDR', 'DATA'),
-                    ('8', '9', 'A', 'B', 'exam', 'dep'),
-                    ('4', '5', '6', '7', 'exnxt', 'dpnxt'),
-                    ('0', '1', '2', '3', 'exprv', 'dpprv')):
+        gs = wx.GridSizer(4, 7, 5, 5)
+        for row in (('C', 'D', 'E', 'F', 'PC', 'ADDR', 'DATA'),
+                    ('8', '9', 'A', 'B', 'set','exprv', 'dpprv'),
+                    ('4', '5', '6', '7', 'sbkpt', 'exam', 'dep'),
+                    ('0', '1', '2', '3', 'cbkpt', 'exnxt', 'dpnxt')):
             for label in row:
                 b = wx.Button(self, -1, label=label)
                 gs.Add(b, 0, wx.EXPAND)
@@ -116,7 +117,36 @@ class InputRegister(wx.Panel):
         self.set_response_display_flag()
         self.mode = None
         pub.sendMessage('CPU.ChangeBus', new_value=self.data_value)
+        self.resume_wait()
+
+    def resume_wait(self):
         pub.sendMessage('CPU.InputResponse')
+
+    def load_program_counter(self):
+        pub.sendMessage("CPU.ClearControl")
+        pub.sendMessage('CPU.Clock')
+        pub.sendMessage('ir.ring', tick=-1, cycle=-1, ring=-1)
+        pub.sendMessage("CPU.PcOut")
+        self.address_value = self.buffer
+
+    def set_program_counter(self):
+        pub.sendMessage("CPU.ClearControl")
+        pub.sendMessage('CPU.Clock')
+        pub.sendMessage('ir.ring', tick=-1, cycle=-1, ring=-1)
+        pub.sendMessage('CPU.ChangeBus', new_value=self.address_value)
+        pub.sendMessage('CPU.PcJump')
+
+    def set_break_point(self):
+        pub.sendMessage("CPU.ClearControl")
+        pub.sendMessage('CPU.Clock')
+        pub.sendMessage('ir.ring', tick=-1, cycle=-1, ring=-1)
+        pub.sendMessage('mar.set_break', address=self.address_value)
+
+    def clear_break_point(self):
+        pub.sendMessage("CPU.ClearControl")
+        pub.sendMessage('CPU.Clock')
+        pub.sendMessage('ir.ring', tick=-1, cycle=-1, ring=-1)
+        pub.sendMessage('mar.clear_break', address=self.address_value)
 
 
     def OnButton(self, evt):
@@ -130,6 +160,12 @@ class InputRegister(wx.Panel):
             self.mode = self.MODE_DATA
             if self.data_value == '--':
                 self.data_value = 0
+        elif label == 'PC' and self.mode != self.MODE_INPUT:
+            self.mode = self.MODE_PC
+            if self.address_value == '----':
+                self.address_value = 0
+                self.load_program_counter()
+                pub.sendMessage('in.set_addr_value', new_value=self.address_value)
         elif label == 'exam' and self.mode != self.MODE_INPUT:
             self.examine_memory()
         elif label == 'exnxt' and self.mode != self.MODE_INPUT:
@@ -150,10 +186,18 @@ class InputRegister(wx.Panel):
             self.address_value -= 1
             pub.sendMessage('in.set_addr_value', new_value=self.address_value)
             self.deposit_memory()
+        elif label == 'go' and self.mode == self.MODE_PC:
+            self.set_program_counter()
+        elif label == 'sbkpt' and self.mode == self.MODE_PC:
+            self.set_break_point()
+        elif label == 'cbkpt' and self.mode == self.MODE_PC:
+            self.clear_break_point()
         elif label == 'Enter' and self.mode == self.MODE_INPUT:
             self.respond_input()
+        elif label == 'Enter' and self.mode == self.MODE_PC:
+            self.resume_wait()
         else:
-            if self.mode == self.MODE_ADDR:
+            if self.mode == self.MODE_ADDR or self.mode == self.MODE_PC:
                 new_value = self.address_value << 4
                 new_value = new_value | int(label, 16)
                 new_value = new_value & 0xFFFF

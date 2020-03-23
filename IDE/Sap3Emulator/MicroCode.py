@@ -1,6 +1,7 @@
 control_messages = [
     {"topic": "CPU.Halt", "label": "HLT"},
     {"topic": "CPU.Pause", "label": "WAIT"},
+    {"topic": "CPU.Break", "label": "BRK"},
 
     {"topic": "CPU.MarIn", "label": "MI"},
     {"topic": "CPU.MemIn", "label": "RI"},
@@ -80,6 +81,7 @@ control_messages = [
 decode_messages = {
     "CPU.Halt": "HLT ",
     "CPU.Pause": "WAIT ",
+    "CPU.Break": "BRK ",
     "CPU.MarIn": "MI ",
     "CPU.MemIn": "RI ",
     "CPU.MemOut": "RO ",

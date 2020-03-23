@@ -67,6 +67,7 @@ class Clock(wx.Panel):
 
         pub.subscribe(self.on_halt, 'CPU.Halt')
         pub.subscribe(self.on_pause, 'CPU.Pause')
+        pub.subscribe(self.on_break, 'CPU.Break')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_resume, 'CPU.InputResponse')
 
@@ -109,6 +110,22 @@ class Clock(wx.Panel):
             self.timer.Stop()
 
     def on_pause(self) -> None:
+        """
+        Process the CPU.Pause signal.
+
+        Halts the clock timer if running and set the Halt indicator.
+        """
+        self.paused = True
+        self.resume_timer = False
+        self.pause_indicator.SetForegroundColour((0, 0, 255))  # set text color
+        self.start_clock.Enable(False)
+        self.stop_clock.Enable(False)
+        self.single_step.Enable(False)
+        if self.timer.IsRunning():
+            self.timer.Stop()
+            self.resume_timer = True
+
+    def on_break(self) -> None:
         """
         Process the CPU.Pause signal.
 

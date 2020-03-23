@@ -11,6 +11,7 @@ class MemoryAddressRegister(wx.Panel):
         self.parent = parent
         self.value = 0
         self.buffer = 0
+        self.break_points = []
         self.box = wx.StaticBox(self, wx.ID_ANY, "Memory Address Register", wx.DefaultPosition, (250, 100))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -34,6 +35,8 @@ class MemoryAddressRegister(wx.Panel):
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.MarIn')
+        pub.subscribe(self.set_breakpoint, 'mar.set_break')
+        pub.subscribe(self.clear_breakpoint, 'mar.clear_break')
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -53,8 +56,19 @@ class MemoryAddressRegister(wx.Panel):
     def on_bus_change(self, new_value):
         self.buffer = new_value
 
+    def set_breakpoint(self, address):
+        if address not in self.break_points:
+            self.break_points.append(address)
+
+    def clear_breakpoint(self, address):
+        if address in self.break_points:
+            self.break_points.remove(address)
+
     def on_in(self):
         self.value = self.buffer
         self.set_in_display_flag()
         pub.sendMessage('mar.set_value', new_value=self.value)
         pub.sendMessage('mem.set_address', new_value=self.value)
+        # Execute breakpoint if accessing break boint memory
+        if self.value in self.break_points:
+            pub.sendMessage('CPU.Break')

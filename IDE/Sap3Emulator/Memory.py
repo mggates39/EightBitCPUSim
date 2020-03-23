@@ -45,6 +45,7 @@ class Memory(wx.Panel):
         self.list = wx.ListCtrl(self.box, wx.ID_ANY, style=wx.LC_REPORT)
         self.list.InsertColumn(0, 'Addr', width=70)
         self.list.InsertColumn(1, 'Value', width=100)
+        self.list.InsertColumn(2,'BK', width=30)
 
         self.load_data(test)
 
@@ -59,6 +60,8 @@ class Memory(wx.Panel):
         pub.subscribe(self.on_in, 'CPU.MemIn')
         pub.subscribe(self.on_out, 'CPU.MemOut')
         pub.subscribe(self.on_set_address, 'mem.set_address')
+        pub.subscribe(self.set_breakpoint, 'mar.set_break')
+        pub.subscribe(self.clear_breakpoint, 'mar.clear_break')
 
     def load_data(self, data):
         self.list.DeleteAllItems()
@@ -112,7 +115,7 @@ class Memory(wx.Panel):
         self.value = self.buffer
         self.set_in_display_flag()
         new_data = "{0:08b}".format(self.value)
-        new_address = "0x{0:X}:".format(self.address)
+        new_address = "0x{0:04X}:".format(self.address)
 
         self.data[self.address] = (new_address, new_data)
         self.list.SetItem(self.address, 1, self.data[self.address][1])
@@ -121,3 +124,9 @@ class Memory(wx.Panel):
         self.set_out_display_flag()
         self.value = int(self.data[self.address][1], 2)
         pub.sendMessage('CPU.ChangeBus', new_value=self.value)
+
+    def set_breakpoint(self, address):
+        self.list.SetItem(address, 2, '*')
+
+    def clear_breakpoint(self, address):
+        self.list.SetItem(address, 2, ' ')
