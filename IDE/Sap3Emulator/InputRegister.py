@@ -164,8 +164,8 @@ class InputRegister(wx.Panel):
             self.mode = self.MODE_PC
             if self.address_value == '----':
                 self.address_value = 0
-                self.load_program_counter()
-                pub.sendMessage('in.set_addr_value', new_value=self.address_value)
+            self.load_program_counter()
+            pub.sendMessage('in.set_addr_value', new_value=self.address_value)
         elif label == 'exam' and self.mode != self.MODE_INPUT:
             self.examine_memory()
         elif label == 'exnxt' and self.mode != self.MODE_INPUT:
@@ -186,7 +186,7 @@ class InputRegister(wx.Panel):
             self.address_value -= 1
             pub.sendMessage('in.set_addr_value', new_value=self.address_value)
             self.deposit_memory()
-        elif label == 'go' and self.mode == self.MODE_PC:
+        elif label == 'set' and self.mode == self.MODE_PC:
             self.set_program_counter()
         elif label == 'sbkpt' and self.mode == self.MODE_PC:
             self.set_break_point()
@@ -235,6 +235,7 @@ class InputRegister(wx.Panel):
         self.address_value = '----'
         self.data_value = '--'
         self.mode = None
+        self.buffer = 0
         self.clear_display_flags()
         pub.sendMessage('in.set_addr_value', new_value=self.address_value)
         pub.sendMessage('in.set_data_value', new_value=self.data_value)

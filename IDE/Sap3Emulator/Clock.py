@@ -52,10 +52,12 @@ class Clock(wx.Panel):
 
         self.panel = wx.Panel(self.box, size=(40, 75))
         self.halt_indicator = wx.StaticText(self.panel, label="HLT")
-        self.pause_indicator = wx.StaticText(self.panel, label="WAIT")
+        self.pause_indicator = wx.StaticText(self.panel, label="WT")
+        self.break_indicator = wx.StaticText(self.panel, label="BRK")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.halt_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         vbox.Add(self.pause_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.break_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
         horizontal_box.Add(self.panel, 0)
@@ -89,6 +91,7 @@ class Clock(wx.Panel):
         self.resume_timer = False
         self.halt_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.pause_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.break_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.start_clock.Enable(True)
         self.stop_clock.Enable(False)
         self.single_step.Enable(True)
@@ -133,13 +136,13 @@ class Clock(wx.Panel):
         """
         self.paused = True
         self.resume_timer = False
-        self.pause_indicator.SetForegroundColour((0, 0, 255))  # set text color
-        self.start_clock.Enable(False)
+        self.break_indicator.SetForegroundColour((0, 0, 255))  # set text color
+        self.start_clock.Enable(True)
         self.stop_clock.Enable(False)
-        self.single_step.Enable(False)
+        self.single_step.Enable(True)
         if self.timer.IsRunning():
             self.timer.Stop()
-            self.resume_timer = True
+            self.resume_timer = False
 
     def on_resume(self) -> None:
         """
@@ -162,6 +165,7 @@ class Clock(wx.Panel):
 
         :param e: Mouse Event - Unused
         """
+        self.break_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.start_clock.Enable(False)
         self.stop_clock.Enable(True)
         self.single_step.Enable(False)
@@ -188,6 +192,7 @@ class Clock(wx.Panel):
 
         :param e: Mouse or Timer Event - Unused
         """
+        self.break_indicator.SetForegroundColour((0, 0, 0))  # set text color
         if not self.halted:
             pub.sendMessage('clock.active', new_active=True)
             pub.sendMessage("CPU.ClearControl")
