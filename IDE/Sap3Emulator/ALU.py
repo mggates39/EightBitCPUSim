@@ -87,10 +87,12 @@ class Alu(wx.Panel):
         self.carry_flag = wx.StaticText(self.box, label="Carry-Bit: False", style=wx.ALIGN_CENTRE)
         self.zero_flag = wx.StaticText(self.box, label="Zero-Bit: False", style=wx.ALIGN_CENTRE)
         self.minus_flag = wx.StaticText(self.box, label="Sign-Bit: False", style=wx.ALIGN_CENTRE)
+        self.parity_flag = wx.StaticText(self.box, label="Parity-Bit: False", style=wx.ALIGN_CENTRE)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
         vertical_box.Add(self.carry_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
         vertical_box.Add(self.zero_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
         vertical_box.Add(self.minus_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
+        vertical_box.Add(self.parity_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
 
         hbox.Add(vertical_box, 1, wx.EXPAND)
         hbox.Add(self.panel, 0, wx.EXPAND)
@@ -421,6 +423,28 @@ class Alu(wx.Panel):
         self.set_use_carry_display_flag()
         self.through_carry = True
 
+    def determine_status_flags(self, new_value):
+        if new_value == 0:
+            self.zero = True
+        else:
+            self.zero = False
+
+        if new_value & 0x80 == 0x80:
+            self.sign = True
+        else:
+            self.sign = False
+
+        number_bits = 0
+        for i in range(0,8):
+            bit = 2 ** i
+            if new_value & bit == bit:
+                number_bits += 1
+        print("number of bits: {}".format(number_bits))
+        if number_bits % 2 == 0:
+            self.parity = True
+        else:
+            self.parity = False
+
     def do_math(self):
         """
         Do the math calculation.  Addition by default, but subtraction if
@@ -446,19 +470,12 @@ class Alu(wx.Panel):
             else:
                 self.carry = False
 
-        if self.result == 0:
-            self.zero = True
-        else:
-            self.zero = False
-
-        if self.result & 0x80 == 0x80:
-            self.sign = True
-        else:
-            self.sign = False
+        self.determine_status_flags(self.result)
 
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
         self.set_sign_label(self.sign)
+        self.set_parity_label(self.parity)
         pub.sendMessage('alu.set_value', new_value=self.result)
 
     def do_logic(self):
@@ -515,19 +532,12 @@ class Alu(wx.Panel):
             self.carry = False
 
         if not is_roll:
-            if self.result == 0:
-                self.zero = True
-            else:
-                self.zero = False
-
-            if self.result & 0x80 == 0x80:
-                 self.sign = True
-            else:
-                self.sign = False
+            self.determine_status_flags(self.result)
 
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
         self.set_sign_label(self.sign)
+        self.set_parity_label(self.parity)
         pub.sendMessage('alu.set_value', new_value=self.result)
 
     def on_bus_change(self, new_value):
@@ -576,4 +586,13 @@ class Alu(wx.Panel):
         :param new_label: New state of the zero flag
         """
         self.minus_flag.SetLabel("Sign-Bit: {}".format(new_label))
+        self.static_box_sizer.Layout()
+
+    def set_parity_label(self, new_label: bool) -> None:
+        """
+        Set the label to be displayed for the Minus Flag.
+
+        :param new_label: New state of the zero flag
+        """
+        self.parity_flag.SetLabel("parity-Bit: {}".format(new_label))
         self.static_box_sizer.Layout()
