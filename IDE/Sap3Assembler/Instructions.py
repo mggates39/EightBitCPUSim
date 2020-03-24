@@ -14,7 +14,7 @@ class Instructions:
             "CMA": {"operands": 0, "included": 0, "bytes": 1, "operators": ["CMA"]},
             "CMC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["CMC"]},
             "CMP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["CMP A", "CMP B", "CMP C", "CMP D", "CMP E", "CMP H", "CMP L", "CMP M"]},
-            "CPI": {"operands": 1, "included": 0, "bytes": 1, "operators": ["CPI"]},
+            "CPI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["CPI"]},
             "DCR": {"operands": 1, "included": 1, "bytes": 1,
                     "operators": ["DCR A", "DCR B", "DCR C", "DCR D", "DCR E", "DCR H", "DCR L", "DCR M"]},
             # "DCX": {"operands": 1, "included": 1, "bytes": 1,
