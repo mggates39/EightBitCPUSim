@@ -424,6 +424,12 @@ class Alu(wx.Panel):
         self.through_carry = True
 
     def determine_status_flags(self, new_value):
+        if new_value >= 0xFF:
+            new_value = new_value & 0xFF
+            self.carry = True
+        else:
+            self.carry = False
+
         if new_value == 0:
             self.zero = True
         else:
@@ -457,20 +463,16 @@ class Alu(wx.Panel):
             used_carry = 0
 
         if self.subtract:
-            self.result = self.value - self.temp_value - used_carry
-            if self.value < self.temp_value:
-                self.carry = True
-            else:
-                self.carry = False
+            temp_value = self.temp_value - used_carry
+            temp_value = ~ temp_value
+            temp_value += 1
         else:
-            self.result = self.value + self.temp_value + used_carry
-            if self.result >= 0xFF:
-                self.result = self.result & 0xFF
-                self.carry = True
-            else:
-                self.carry = False
+            temp_value = self.temp_value + used_carry
 
+        self.result = self.value + temp_value
         self.determine_status_flags(self.result)
+
+        self.result &= 0xFF
 
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
