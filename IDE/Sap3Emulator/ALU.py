@@ -424,11 +424,6 @@ class Alu(wx.Panel):
         self.through_carry = True
 
     def determine_status_flags(self, new_value):
-        if new_value >= 0xFF:
-            new_value = new_value & 0xFF
-            self.carry = True
-        else:
-            self.carry = False
 
         if new_value == 0:
             self.zero = True
@@ -451,28 +446,48 @@ class Alu(wx.Panel):
         else:
             self.parity = False
 
+    def perform_add(self, a, b):
+        if self.through_carry and self.carry:
+            used_carry = 1
+        else:
+            used_carry = 0
+
+        value = a + b + used_carry
+        return_value = value & 0xFF
+        if value & 0x100 == 0x100:
+            self.carry = True
+        else:
+            self.carry = False
+        return return_value
+
+    def perform_sub(self, minuend, subtrahend):
+        subt_ones = (~subtrahend) & 0xFF
+
+        if self.through_carry and self.carry:
+            used_carry = 0
+        else:
+            used_carry = 1
+
+        value = minuend + subt_ones + used_carry
+        return_value = value & 0xFF
+        if value & 0x100 == 0x100:
+            self.carry = False
+        else:
+            self.carry = True
+        return return_value
+
     def do_math(self):
         """
         Do the math calculation.  Addition by default, but subtraction if
         the subtract flag is set.
         Then update the carry and zero flag values accordingly
         """
-        if self.through_carry and self.carry:
-            used_carry = 1
-        else:
-            used_carry = 0
-
         if self.subtract:
-            temp_value = self.temp_value - used_carry
-            temp_value = ~ temp_value
-            temp_value += 1
+            self.result = self.perform_sub(self.value, self.temp_value)
         else:
-            temp_value = self.temp_value + used_carry
+            self.result = self.perform_add(self.value, self.temp_value)
 
-        self.result = self.value + temp_value
         self.determine_status_flags(self.result)
-
-        self.result &= 0xFF
 
         self.set_carry_label(self.carry)
         self.set_zero_label(self.zero)
