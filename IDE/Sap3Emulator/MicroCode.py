@@ -1239,6 +1239,10 @@ operators = {
                          ['CPU.AluSub', 'CPU.FlagIn'],
                          ['CPU.RingReset']]},
 
+    0xC0: {"operator": "RNZ", "op_code": 0xC0, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xC1: {"operator": "POP BC", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1263,7 +1267,12 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrAhIn', 'CPU.PcInc'],
                          ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
-
+    0xC4: {"operator": "CNZ", "op_code": 0xC4, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xC5: {"operator": "PUSH BC", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1281,6 +1290,10 @@ operators = {
                          ['CPU.AluAdd', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
+    0xC8: {"operator": "RZ", "op_code": 0xC8, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xC9: {"operator": "RET", "op_code": 0xC9, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1298,6 +1311,12 @@ operators = {
                          ['CPU.PcInc'],
                          ['CPU.RingReset']]},
 
+    0xCC: {"operator": "CZ", "op_code": 0xCC, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xCD: {"operator": "CALL", "op_code": 0xCD, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1322,6 +1341,10 @@ operators = {
                          ['CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
+    0xD0: {"operator": "RNC", "op_code": 0xD0, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xD1: {"operator": "POP DE", "op_code": 0xD1, "operand1": "DE", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1330,14 +1353,12 @@ operators = {
                          ['CPU.SpInc', 'CPU.SpOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.DRegIn'],
                          ['CPU.RingReset']]},
-
     0xD2: {"operator": "JNC", "op_code": 0xD2, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcInc'],
                          ['CPU.PcInc'],
                          ['CPU.RingReset']]},
-
     0xD3: {"operator": "OUT", "op_code": 0xD3, "operand1": "N", "operand2": None, "addressing": "Dir",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1346,7 +1367,12 @@ operators = {
                          ['CPU.IrOut', 'CPU.OutputSelect'],
                          ['CPU.ARegOut', 'CPU.OutputWrite'],
                          ['CPU.RingReset']]},
-
+    0xD4: {"operator": "CNC", "op_code": 0xD4, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xD5: {"operator": "PUSH DE", "op_code": 0xD5, "operand1": "DE", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1362,6 +1388,11 @@ operators = {
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
                          ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.RingReset']]},
+
+    0xD8: {"operator": "RC", "op_code": 0xD8, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
 
     0xDA: {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
@@ -1380,6 +1411,13 @@ operators = {
                          ['CPU.ARegIn'],
                          # TODO Need input port select]
                          ['CPU.RingReset']]},
+    0xDC: {"operator": "CC", "op_code": 0xDC, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
     0xDE: {"operator": "SBI", "op_code": 0xDE, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1390,6 +1428,10 @@ operators = {
                          ['CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
+    0xE0: {"operator": "RPO", "op_code": 0xE0, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xE1: {"operator": "POP HL", "op_code": 0xE1, "operand1": "HL", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1406,6 +1448,12 @@ operators = {
                          ['CPU.PcInc'],
                          ['CPU.RingReset']]},
 
+    0xE4: {"operator": "CPO", "op_code": 0xE4, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xE5: {"operator": "PUSH HL", "op_code": 0xE5, "operand1": "HL", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1420,10 +1468,23 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.TempIn', 'CPU.PcInc', 'CPU.AluLda'],
-                         ['CPU.AluLand', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.AluLand', 'CPU.FlagIn'],
+                         ['CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.RingReset']]},
+
+    0xE8: {"operator": "RPE", "op_code": 0xE8, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
 
     0xEA: {"operator": "JPE", "op_code": 0xEA, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
+    0xEC: {"operator": "CPE", "op_code": 0xEC, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcInc'],
@@ -1438,7 +1499,18 @@ operators = {
                          ['CPU.AluLxor', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
+    0xF0: {"operator": "RP", "op_code": 0xF0, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
     0xF2: {"operator": "JP", "op_code": 0xF2, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
+    0xF4: {"operator": "CP", "op_code": 0xF4, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcInc'],
@@ -1453,7 +1525,19 @@ operators = {
                          ['CPU.AluLor', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
+    0xF8: {"operator": "RM", "op_code": 0xF8, "operand1": None, "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
     0xFA: {"operator": "JM", "op_code": 0xFA, "operand1": "M", "operand2": None, "addressing": "Imm",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.PcInc'],
+                         ['CPU.RingReset']]},
+
+    0xFC: {"operator": "CM", "op_code": 0xFC, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcInc'],
@@ -1476,48 +1560,137 @@ invalid_operator = {"operator": "***", "op_code": 0x00, "operand1": None, "opera
                                   ['CPU.IllegalInst', 'CPU.Halt'],
                                   ['CPU.RingReset']]}
 
+CALL_OP_CODE = 0xCD
+JUMP_OP_CODE = 0xC3
+RETURN_OP_CODE = 0xC9
 
 class MicroCode:
     def __init__(self):
         self.current_operator = operators[0]
         self.current_microcode = self.current_operator["microcode"]
 
+    def process_carry_modifier(self, op_code, carry_flag):
+        # Jump related instructions
+        # JNC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xD2 and not carry_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # JC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xDA and carry_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # Call related instructions
+        # CNC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xD4 and not carry_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # CC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xDC and carry_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # Return relaged instructions
+        # RNC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xD0 and not carry_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
+        # RC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xD8 and carry_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
+    def process_zero_modifier(self, op_code, zero_flag):
+        # Jump related instructions
+        # JNZ - If this is the Jump if Not Zero and zero flag is clear Just use the Jump Microcode
+        if op_code == 0xC2 and not zero_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # JZ - If this is the Jump if Zero and zero flag is set Just use the Jump Microcode
+        if op_code == 0xCA and zero_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # Call related instructions
+        # CNZ - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xC4 and not zero_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # CZ - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xCC and zero_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # Return relaged instructions
+        # RNZ - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xC0 and not zero_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
+        # RZ - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xC8 and zero_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
+    def process_sign_modifier(self, op_code, sign_flag):
+        # Jump related instructions
+        # JP - If this is the Jump if Plus and sign flag is not set Just use the Jump Microcode
+        if op_code == 0xF2 and not sign_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # JM - If this is the Jump if minus and sign flag is set Just use the Jump Microcode
+        if op_code == 0xFA and sign_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # Call related instructions
+        # CP - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xF4 and not sign_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # CM - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xFC and sign_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # Return relaged instructions
+        # RP - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xF0 and not sign_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
+        # RM - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xF8 and sign_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
+    def process_parity_modifier(self, op_code, parity_flag):
+        # Jump related instructions
+        # JP - If this is the Jump if Parity Odd and parity flag is not set Just use the Jump Microcode
+        if op_code == 0xE2 and not parity_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # JM - If this is the Jump if Parity Even and parity flag is set Just use the Jump Microcode
+        if op_code == 0xEA and parity_flag:
+            self.current_microcode = operators[JUMP_OP_CODE]["microcode"]
+
+        # Call related instructions
+        # CPO - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xE4 and not parity_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # CPE - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xEC and parity_flag:
+            self.current_microcode = operators[CALL_OP_CODE]["microcode"]
+
+        # Return relaged instructions
+        # RPO - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xE0 and not parity_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
+        # RPE - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
+        if op_code == 0xE8 and parity_flag:
+            self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
+
     def decode_op_code(self, op_code, carry_flag=False, zero_flag=False, sign_flag=False, parity_flag=False, auxillary_carry_flag=False):
         if op_code in operators:
             self.current_operator = operators[op_code]
             self.current_microcode = self.current_operator["microcode"]
 
-            # JNC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
-            if op_code == 0xD2 and not carry_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
+            self.process_carry_modifier(op_code, carry_flag)
+            self.process_zero_modifier(op_code, zero_flag)
+            self.process_sign_modifier(op_code, sign_flag)
+            self.process_parity_modifier(op_code, parity_flag)
 
-            # JC - If this is the Jump if Carry and carry flag is set Just use the Jump Microcode
-            if op_code == 0xDA and carry_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
-
-            # JNZ - If this is the Jump if Not Zero and zero flag is clear Just use the Jump Microcode
-            if op_code == 0xC2 and not zero_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
-
-            # JZ - If this is the Jump if Zero and zero flag is set Just use the Jump Microcode
-            if op_code == 0xCA and zero_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
-
-            # JP - If this is the Jump if Parity Odd and parity flag is not set Just use the Jump Microcode
-            if op_code == 0xE2 and not parity_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
-
-            # JM - If this is the Jump if Parity Even and parity flag is set Just use the Jump Microcode
-            if op_code == 0xEA and parity_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
-
-            # JP - If this is the Jump if Plus and sign flag is not set Just use the Jump Microcode
-            if op_code == 0xF2 and not sign_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
-
-            # JM - If this is the Jump if minus and sign flag is set Just use the Jump Microcode
-            if op_code == 0xFA and sign_flag:
-                self.current_microcode = operators[0xC3]["microcode"]
         else:
             self.current_operator = invalid_operator
             self.current_microcode = self.current_operator["microcode"]
