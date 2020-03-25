@@ -426,7 +426,7 @@ operators = {
     0x3D: {"operator": "DCR A", "op_code": 0x3D, "operand1": "A", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         ['CPU.AluLda', 'CPU.AluInc', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.AluLda', 'CPU.AluDec', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
     0x3E: {"operator": "MVI A", "op_code": 0x3E, "operand1": "A", "operand2": "N", "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
