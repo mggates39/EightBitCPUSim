@@ -136,7 +136,9 @@ class Parser:
             if line.startswith('#') or line.startswith(';'):
                 continue
 
-            fields = line.split()
+            rest = line.split(';',1)[0]
+
+            fields = rest.split()
             self.parse_fields(line_number, fields)
 
         if self.end_segment():
