@@ -232,6 +232,10 @@ class Alu(wx.Panel):
         """
         self.subtract = False
         self.logical_and = False
+        self.logical_or = False
+        self.logical_xor = False
+        self.logical_roll_right = False
+        self.logical_roll_left = False
         self.through_carry = False
         self.clear_display_flags()
 
@@ -440,7 +444,7 @@ class Alu(wx.Panel):
             bit = 2 ** i
             if new_value & bit == bit:
                 number_bits += 1
-        print("number of bits: {}".format(number_bits))
+
         if number_bits % 2 == 0:
             self.parity = True
         else:
