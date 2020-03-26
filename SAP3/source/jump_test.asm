@@ -375,7 +375,7 @@ CPUER:	MVI A,255
 	OUT 3
 	HLT
 
-	.org 512
+	.org 1024
 STACK:	.byte 0
 
 	.end
