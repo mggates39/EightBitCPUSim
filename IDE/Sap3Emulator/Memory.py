@@ -45,7 +45,7 @@ class Memory(wx.Panel):
         self.list = wx.ListCtrl(self.box, wx.ID_ANY, style=wx.LC_REPORT)
         self.list.InsertColumn(0, 'Addr', width=70)
         self.list.InsertColumn(1, 'Value', width=100)
-        self.list.InsertColumn(2,'BK', width=30)
+        self.list.InsertColumn(2, 'BK', width=30)
 
         self.load_data(test)
 
@@ -105,7 +105,7 @@ class Memory(wx.Panel):
     def on_set_address(self, new_value):
         self.list.Select(self.address, 0)
 
-        if new_value >=0 and new_value <= self.max_address:
+        if new_value >= 0 and new_value <= self.max_address:
             self.address = new_value
 
         self.list.Focus(self.address)

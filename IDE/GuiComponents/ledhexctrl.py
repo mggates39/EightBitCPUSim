@@ -1,4 +1,4 @@
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # Name:        wx.lib.gizmos.ledctrl
 # Purpose:
 #
@@ -8,17 +8,17 @@
 # Copyright:   (c) 2018 by Total Control Software
 # Licence:     wxWindows license
 # Tags:
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 """
 Widget to display a series of digits, spaces, dashes or colons in a segmented style.
 """
 
 import wx
 
-LED_ALIGN_LEFT   = 0x01
-LED_ALIGN_RIGHT  = 0x02
+LED_ALIGN_LEFT = 0x01
+LED_ALIGN_RIGHT = 0x02
 LED_ALIGN_CENTER = 0x04
-LED_ALIGN_MASK   = 0x07
+LED_ALIGN_MASK = 0x07
 
 LED_DRAW_FADED = 0x08
 
@@ -64,8 +64,6 @@ class LEDHexCtrl(wx.Control):
         }
         DIGITALL = 0xFFFF
 
-
-
     def __init__(self, *args, **kw):
         """
         Create a new LEDNumberCtrl.
@@ -95,18 +93,16 @@ class LEDHexCtrl(wx.Control):
 
     def _init_full(self, parent, id=wx.ID_ANY,
                    pos=wx.DefaultPosition, size=wx.DefaultSize,
-                   style=LED_ALIGN_LEFT|LED_DRAW_FADED, name='ledctrl'):
+                   style=LED_ALIGN_LEFT | LED_DRAW_FADED, name='ledctrl'):
         super(LEDHexCtrl, self).__init__(parent, id, pos, size, style, name=name)
         self._init()
         self._post_create()
 
-
     def Create(self, parent, id=wx.ID_ANY,
                pos=wx.DefaultPosition, size=wx.DefaultSize,
-               style=LED_ALIGN_LEFT|LED_DRAW_FADED, name='ledctrl'):
+               style=LED_ALIGN_LEFT | LED_DRAW_FADED, name='ledctrl'):
         super(LEDHexCtrl, self).Create(parent, id, pos, size, style, name=name)
         return self._post_create()
-
 
     def _init(self):
         # set default attributes
@@ -119,7 +115,6 @@ class LEDHexCtrl(wx.Control):
         self.m_leftStartPos = -1
         self.m_value = ''
 
-
     def _post_create(self):
         self.SetBackgroundColour(wx.BLACK)
         self.SetForegroundColour(wx.GREEN)
@@ -129,7 +124,7 @@ class LEDHexCtrl(wx.Control):
         style = self.GetWindowStyle()
         if style & LED_DRAW_FADED:
             self.SetDrawFaded(True)
-        if style  & LED_ALIGN_MASK:
+        if style & LED_ALIGN_MASK:
             self.SetAlignment(style & LED_ALIGN_MASK)
 
         # event bindings
@@ -139,18 +134,14 @@ class LEDHexCtrl(wx.Control):
 
         return True
 
-
     def GetAlignment(self):
         return self.m_alignment
-
 
     def GetDrawFaded(self):
         return self.m_drawFaded
 
-
     def GetValue(self):
         return self.m_value
-
 
     def SetAlignment(self, alignment, redraw=True):
         """
@@ -166,7 +157,6 @@ class LEDHexCtrl(wx.Control):
             if redraw:
                 self.Refresh(False)
 
-
     def SetDrawFaded(self, drawFaded, redraw=True):
         """
         Set whether unlit segments will still be draw with a faded version of
@@ -177,7 +167,6 @@ class LEDHexCtrl(wx.Control):
 
             if redraw:
                 self.Refresh(False)
-
 
     def SetValue(self, value, redraw=True):
         """
@@ -193,16 +182,13 @@ class LEDHexCtrl(wx.Control):
             if redraw:
                 self.Refresh(False)
 
-
     Alignment = property(GetAlignment, SetAlignment)
     DrawFaded = property(GetDrawFaded, SetDrawFaded)
     Value = property(GetValue, SetValue)
 
-
     def OnSize(self, evt):
         self._recalcInternals(evt.GetSize())
         evt.Skip()
-
 
     def OnPaint(self, evt):
         c = self.const
@@ -229,7 +215,6 @@ class LEDHexCtrl(wx.Control):
                 continue
             else:
                 self._drawHexDigit(dc, c.DIGITS[ch], i)
-
 
     def _recalcInternals(self, size):
         height = size.Height
@@ -266,7 +251,6 @@ class LEDHexCtrl(wx.Control):
         else:
             raise AssertionError("Unknown alignment value for LEDNumberCtrl.")
 
-
     def _drawHexDigit(self, dc, digit, column):
         lineColor = self.GetForegroundColour()
         c = self.const
@@ -292,11 +276,13 @@ class LEDHexCtrl(wx.Control):
 
         if digit & c.LINE3:
             dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength + (self.m_lineMargin * 4),
-                        XPos + self.m_lineLength + self.m_lineMargin * 3, self.m_lineLength * 2 + (self.m_lineMargin * 4))
+                        XPos + self.m_lineLength + self.m_lineMargin * 3,
+                        self.m_lineLength * 2 + (self.m_lineMargin * 4))
 
         if digit & c.LINE4:
             dc.DrawLine(XPos + self.m_lineMargin * 2, self.m_lineLength * 2 + (self.m_lineMargin * 5),
-                        XPos + self.m_lineLength + self.m_lineMargin * 2, self.m_lineLength * 2 + (self.m_lineMargin * 5))
+                        XPos + self.m_lineLength + self.m_lineMargin * 2,
+                        self.m_lineLength * 2 + (self.m_lineMargin * 5))
 
         if digit & c.LINE5:
             dc.DrawLine(XPos + self.m_lineMargin, self.m_lineLength + (self.m_lineMargin * 4),
@@ -311,8 +297,10 @@ class LEDHexCtrl(wx.Control):
                         XPos + self.m_lineMargin * 2 + self.m_lineLength, self.m_lineLength + (self.m_lineMargin * 3))
 
         if digit & c.DECIMALSIGN:
-            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 4, self.m_lineLength * 2 + (self.m_lineMargin * 5),
-                        XPos + self.m_lineLength + self.m_lineMargin * 4, self.m_lineLength * 2 + (self.m_lineMargin * 5))
+            dc.DrawLine(XPos + self.m_lineLength + self.m_lineMargin * 4,
+                        self.m_lineLength * 2 + (self.m_lineMargin * 5),
+                        XPos + self.m_lineLength + self.m_lineMargin * 4,
+                        self.m_lineLength * 2 + (self.m_lineMargin * 5))
 
         if digit & c.COLON:
             dc.SetBrush(wx.Brush(lineColor))

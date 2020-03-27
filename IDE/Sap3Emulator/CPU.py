@@ -53,7 +53,7 @@ class CPU(wx.Panel):
 
         self.sizer = wx.GridBagSizer(7, 7)
         self.sizer.Add(self.mar, pos=(0, 0), flag=wx.EXPAND)
-        self.sizer.Add(self.bus, pos=(0,1), span=(6,1), flag=wx.EXPAND)
+        self.sizer.Add(self.bus, pos=(0, 1), span=(6, 1), flag=wx.EXPAND)
         self.sizer.Add(self.pc, pos=(0, 2), span=(1, 2), flag=wx.EXPAND)
         self.sizer.Add(self.sp, pos=(0, 4), span=(1, 2), flag=wx.EXPAND)
         self.sizer.Add(self.history, pos=(0, 6), span=(4, 1), flag=wx.EXPAND)

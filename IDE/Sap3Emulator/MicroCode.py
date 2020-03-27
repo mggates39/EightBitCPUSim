@@ -696,7 +696,7 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.ARegOut', 'CPU.ERegIn'],
                          ['CPU.RingReset']]},
-    
+
     0x60: {"operator": "MOV H,B", "op_code": 0x60, "operand1": "H", "operand2": "B", "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1646,6 +1646,7 @@ CALL_OP_CODE = 0xCD
 JUMP_OP_CODE = 0xC3
 RETURN_OP_CODE = 0xC9
 
+
 class MicroCode:
     def __init__(self):
         self.current_operator = operators[0]
@@ -1763,7 +1764,8 @@ class MicroCode:
         if op_code == 0xE8 and parity_flag:
             self.current_microcode = operators[RETURN_OP_CODE]["microcode"]
 
-    def decode_op_code(self, op_code, carry_flag=False, zero_flag=False, sign_flag=False, parity_flag=False, auxillary_carry_flag=False):
+    def decode_op_code(self, op_code, carry_flag=False, zero_flag=False, sign_flag=False, parity_flag=False,
+                       auxillary_carry_flag=False):
         if op_code in operators:
             self.current_operator = operators[op_code]
             self.current_microcode = self.current_operator["microcode"]

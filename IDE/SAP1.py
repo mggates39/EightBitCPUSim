@@ -10,8 +10,6 @@ from Sap1Assembler.Assembler import Assembler
 from Sap1Assembler.Parser import is_label
 from Sap1Assembler.Parser import make_label
 from Sap1Assembler.Parser import make_target
-
-
 # Define the tab content as classes:
 from Sap1Emulator.CPU import CPU
 
@@ -111,7 +109,7 @@ class MainWindow(wx.Frame):
         # Create a panel and notebook (tabs holder)
         # p = wx.Panel(self)
         p = wx.lib.scrolledpanel.ScrolledPanel(self, -1, size=(screenWidth, screenHeight), pos=(0, 0),
-                                                    style=wx.SIMPLE_BORDER)
+                                               style=wx.SIMPLE_BORDER)
         p.SetupScrolling()
         self.nb = wx.Notebook(p)
 

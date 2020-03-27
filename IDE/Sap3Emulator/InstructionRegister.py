@@ -102,7 +102,7 @@ class InstructionRegister(wx.Panel):
         self.load_operand_high_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
-    def on_active(self,new_active):
+    def on_active(self, new_active):
         self.active = new_active
 
     def on_clock(self):

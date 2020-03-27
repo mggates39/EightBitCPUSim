@@ -9,7 +9,8 @@ import wx
 
 
 class LED(wx.Panel):
-    def __init__(self, parent: wx.Panel, light_color: str = '#36ff27', dark_color: str = '#077100', size:int = 14) -> None:
+    def __init__(self, parent: wx.Panel, light_color: str = '#36ff27', dark_color: str = '#077100',
+                 size: int = 14) -> None:
         """
         This class creates a visual representation of an LED that can be turned on and off
 
@@ -24,7 +25,7 @@ class LED(wx.Panel):
         self.lit = False
         self.light_color = light_color
         self.dark_color = dark_color
-        self.size = size-1
+        self.size = size - 1
 
     def light(self, on_off: bool) -> None:
         """

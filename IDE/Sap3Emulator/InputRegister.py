@@ -1,9 +1,8 @@
 import wx
 from pubsub import pub
 
-from GuiComponents.LedSegments import MODE_DEC
-from GuiComponents.LedSegments import MODE_HEX
 from GuiComponents.LedSegments import LEDSegment
+from GuiComponents.LedSegments import MODE_HEX
 
 
 class InputRegister(wx.Panel):
@@ -35,11 +34,12 @@ class InputRegister(wx.Panel):
         vbox.Add(self.select_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
-
         vertical_box = wx.BoxSizer(wx.VERTICAL)
 
-        self.addr_segment = LEDSegment(self, 'blue', None, size = (75, 50), topic='in.set_addr_value', mode=MODE_HEX, num_digits=4)
-        self.data_segment = LEDSegment(self, 'blue', None, size = (30, 50), topic='in.set_data_value', mode=MODE_HEX, num_digits=2)
+        self.addr_segment = LEDSegment(self, 'blue', None, size=(75, 50), topic='in.set_addr_value', mode=MODE_HEX,
+                                       num_digits=4)
+        self.data_segment = LEDSegment(self, 'blue', None, size=(30, 50), topic='in.set_data_value', mode=MODE_HEX,
+                                       num_digits=2)
         b = wx.Button(self, -1, label='Enter')
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
         hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -47,17 +47,15 @@ class InputRegister(wx.Panel):
         hbox.Add(self.data_segment, 1, wx.EXPAND | wx.ALL, 5)
         hbox.Add(b, 1, wx.EXPAND | wx.ALL, 5)
 
-
         gs = wx.GridSizer(4, 7, 5, 5)
         for row in (('C', 'D', 'E', 'F', 'PC', 'ADDR', 'DATA'),
-                    ('8', '9', 'A', 'B', 'set','exprv', 'dpprv'),
+                    ('8', '9', 'A', 'B', 'set', 'exprv', 'dpprv'),
                     ('4', '5', '6', '7', 'sbkpt', 'exam', 'dep'),
                     ('0', '1', '2', '3', 'cbkpt', 'exnxt', 'dpnxt')):
             for label in row:
                 b = wx.Button(self, -1, label=label)
                 gs.Add(b, 0, wx.EXPAND)
                 self.Bind(wx.EVT_BUTTON, self.OnButton, b)
-
 
         vertical_box.Add(hbox, 1, wx.EXPAND)
         vertical_box.Add(gs, proportion=1, flag=wx.EXPAND)
@@ -148,7 +146,6 @@ class InputRegister(wx.Panel):
         pub.sendMessage('ir.ring', tick=-1, cycle=-1, ring=-1)
         pub.sendMessage('mar.clear_break', address=self.address_value)
 
-
     def OnButton(self, evt):
         label = evt.GetEventObject().GetLabel()
 
@@ -211,9 +208,6 @@ class InputRegister(wx.Panel):
                 self.data_value = new_value
                 pub.sendMessage('in.set_data_value', new_value=self.data_value)
 
-
-
-
     def on_bus_change(self, new_value):
         self.buffer = new_value
 
@@ -227,7 +221,6 @@ class InputRegister(wx.Panel):
         if self.data_value == '--':
             self.data_value = 0
         pub.sendMessage('CPU.Pause')
-
 
     def on_reset(self):
         self.address_value = 0

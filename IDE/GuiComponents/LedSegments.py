@@ -20,7 +20,8 @@ class LEDSegment(wx.Panel):
     The LEDSegment class implements a seven segement display
     """
 
-    def __init__(self, parent, led_color='#36ff27', background_color='#077100', size = (100, 50), topic=None, mode=MODE_DEC, num_digits=4):
+    def __init__(self, parent, led_color='#36ff27', background_color='#077100', size=(100, 50), topic=None,
+                 mode=MODE_DEC, num_digits=4):
         """
 
         :param parent: Panel that will hold the Seven Segment display
@@ -65,7 +66,7 @@ class LEDSegment(wx.Panel):
         if self.value != new_value:
             self.value = new_value
             if self.mode == MODE_HEX:
-                formatted_value=''
+                formatted_value = ''
                 try:
                     formatted_value = self.format_string.format(self.value)
                 except ValueError:

@@ -13,13 +13,15 @@ from GuiComponents.Led import LED
 MODE_DEC = 0x0001
 MODE_HEX = 0x0002
 
+
 class LEDArray(wx.Panel):
     """
     This class implements an array of n LEDs with a label.
     The label is the value being displayed by the LEDs.
     """
 
-    def __init__(self, parent, number_leds, light_color='#36ff27', dark_color='#077100', topic=None, size:int = 14, mode=MODE_DEC):
+    def __init__(self, parent, number_leds, light_color='#36ff27', dark_color='#077100', topic=None, size: int = 14,
+                 mode=MODE_DEC):
         """
         Create the string of LEDs and put a label underneath.  If a topic is provided it will
         subscribe to the topic and update the display everytime it receives a message.
@@ -92,7 +94,7 @@ class LEDArray(wx.Panel):
         if new_mode == MODE_HEX:
             if self.number_leds <= 4:
                 self.format_mask = "0x{0:01X}"
-            elif self.number_leds <=8:
+            elif self.number_leds <= 8:
                 self.format_mask = "0x{0:02X}"
             else:
                 self.format_mask = "0x{0:04X}"

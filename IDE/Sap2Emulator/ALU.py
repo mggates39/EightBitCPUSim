@@ -431,7 +431,7 @@ class Alu(wx.Panel):
                 self.zero = False
 
             if self.result & 0x80 == 0x80:
-                 self.minus = True
+                self.minus = True
             else:
                 self.minus = False
 

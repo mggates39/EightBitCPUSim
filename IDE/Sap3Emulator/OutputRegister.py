@@ -80,7 +80,6 @@ class OutputRegister(wx.Panel):
         else:
             print("{}".format(self.value))
 
-
     def on_reset(self):
         self.value = 0
         self.select = 0

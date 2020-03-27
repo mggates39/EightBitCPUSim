@@ -440,7 +440,7 @@ class Alu(wx.Panel):
             self.sign = False
 
         number_bits = 0
-        for i in range(0,8):
+        for i in range(0, 8):
             bit = 2 ** i
             if new_value & bit == bit:
                 number_bits += 1
@@ -580,7 +580,8 @@ class Alu(wx.Panel):
         """
         Send out the current carry and zero status flags.
         """
-        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero, new_sign=self.sign, new_parity=self.parity, new_auxillary_carry=self.auxillary_carry)
+        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero, new_sign=self.sign,
+                        new_parity=self.parity, new_auxillary_carry=self.auxillary_carry)
 
     def set_carry_label(self, new_label: bool) -> None:
         """
