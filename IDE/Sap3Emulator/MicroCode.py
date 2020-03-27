@@ -53,6 +53,7 @@ control_messages = [
 
     {"topic": "CPU.TempIn", "label": "TI"},
     {"topic": "CPU.TempOut", "label": "TO"},
+    {"topic": "CPU.TempZero", "label": "TZ"},
 
     {"topic": "CPU.OutputWrite", "label": "OO"},
     {"topic": "CPU.OutputSelect", "label": "OS"},
@@ -131,6 +132,7 @@ decode_messages = {
     "CPU.AluCma": "CMA ",
     "CPU.TempIn": "TI ",
     "CPU.TempOut": "TO ",
+    "CPU.TempZero": "TZ ",
     "CPU.OutputWrite": "OO ",
     "CPU.OutputSelect": "OS ",
     "CPU.InputRequest": "NI ",
