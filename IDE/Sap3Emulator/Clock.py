@@ -55,9 +55,9 @@ class Clock(wx.Panel):
         self.pause_indicator = wx.StaticText(self.panel, label="WT")
         self.break_indicator = wx.StaticText(self.panel, label="BRK")
         vbox = wx.BoxSizer(wx.VERTICAL)
-        vbox.Add(self.halt_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.pause_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.break_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.halt_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.pause_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.break_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
         self.panel.SetSizer(vbox)
 
         horizontal_box.Add(self.panel, 0)
