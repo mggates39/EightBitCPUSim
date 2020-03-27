@@ -101,9 +101,11 @@ class Instructions:
             "SUB": {"operands": 1, "included": 1, "bytes": 1,
                     "operators": ["SUB A", "SUB B", "SUB C", "SUB D", "SUB E", "SUB H", "SUB L", "SUB M"]},
             "SUI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["SUI"]},
+            "XCHG": {"operands": 0, "included": 0, "bytes": 1, "operators": ["XCHG"]},
             "XRA": {"operands": 1, "included": 1, "bytes": 1,
                     "operators": ["XRA A", "XRA B", "XRA C", "XRA D", "XRA E", "XRA H", "XRA L", "XRA M"]},
             "XRI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["XRI"]},
+            "XTHL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["XTHL"]},
         }
 
         self.operators = {
@@ -592,6 +594,8 @@ class Instructions:
             "SUI": {"operator": "SUI", "op_code": 0xD6, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
+            "XCHG": {"operator": "XCHG", "op_code": 0xEB, "operand1": None, "operand2": None, "addressing": "Imm",
+                    "bytes": 1},
             "XRA A": {"operator": "XRA A", "op_code": 0xAF, "operand1": "A", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "XRA B": {"operator": "XRA B", "op_code": 0xA8, "operand1": "B", "operand2": None, "addressing": "Reg",
@@ -610,7 +614,9 @@ class Instructions:
                       "bytes": 1},
 
             "XRI": {"operator": "XRI", "op_code": 0xEE, "operand1": "1", "operand2": None, "addressing": "Imm",
-                    "bytes": 2}
+                    "bytes": 2},
+            "XTHL": {"operator": "XTHL", "op_code": 0xE3, "operand1": None, "operand2": None, "addressing": "Imm",
+                    "bytes": 1}
         }
 
     def is_mnemonic(self, mnemonic):
