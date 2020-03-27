@@ -59,9 +59,13 @@ class InstructionRegister(wx.Panel):
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.IrIn')
-        pub.subscribe(self.on_operand_low, 'CPU.IrAlIn')
-        pub.subscribe(self.on_operand_high, 'CPU.IrAhIn')
+        pub.subscribe(self.on_get_operand_low, 'CPU.IrAlIn')
+        pub.subscribe(self.on_get_operand_high, 'CPU.IrAhIn')
+        pub.subscribe(self.on_get_full_operand, 'CPU.IrAddrIn')
         pub.subscribe(self.on_out, 'CPU.IrOut')
+        pub.subscribe(self.on_out_low, 'CPU.IrAlOut')
+        pub.subscribe(self.on_out_high, 'CPU.IrAhOut')
+
         pub.subscribe(self.on_set_carry, "CPU.SetCarry")
         pub.subscribe(self.on_invert_carry, "CPU.CompCarry")
         pub.subscribe(self.on_read_flags, 'alu.FlagValues')
@@ -73,6 +77,18 @@ class InstructionRegister(wx.Panel):
 
     def set_out_display_flag(self):
         self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
+    def set_out_low_display_flag(self):
+        self.set_in_display_flag()
+        self.set_load_low_display_flag()
+
+    def set_out_high_display_flag(self):
+        self.set_in_display_flag()
+        self.set_load_high_display_flag()
+
+    def set_load_full_display_flag(self):
+        self.set_load_low_display_flag()
+        self.set_load_high_display_flag()
 
     def set_load_low_display_flag(self):
         self.load_operand_low_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -145,19 +161,32 @@ class InstructionRegister(wx.Panel):
         pub.sendMessage('ip.set_instruction_label', new_label=operator_name)
         pub.sendMessage('ip.set_data', new_value=self.operand)
 
-    def on_operand_low(self):
+    def on_get_operand_low(self):
         self.operand = int(self.buffer)
         self.set_load_low_display_flag()
         pub.sendMessage('ip.set_data', new_value=self.operand)
 
-    def on_operand_high(self):
+    def on_get_operand_high(self):
         self.operand = (int(self.buffer) << 8) + self.operand
         self.set_load_high_display_flag()
+        pub.sendMessage('ip.set_data', new_value=self.operand)
+
+    def on_get_full_operand(self):
+        self.operand = int(self.buffer)
+        self.set_load_full_display_flag()
         pub.sendMessage('ip.set_data', new_value=self.operand)
 
     def on_out(self):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=self.operand)
+
+    def on_out_low(self):
+        self.set_out_low_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=(self.operand & 0xFF))
+
+    def on_out_high(self):
+        self.set_out_high_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=((self.operand >> 8) & 0xFF))
 
     def on_read_flags(self, new_carry, new_zero, new_sign, new_parity, new_auxillary_carry):
         self.auxillary_carry_flag = new_auxillary_carry

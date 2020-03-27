@@ -24,7 +24,7 @@ class Instructions:
             "CPE": {"operands": 1, "included": 0, "bytes": 3, "operators": ["CPE"]},
             "CP": {"operands": 1, "included": 0, "bytes": 3, "operators": ["CP"]},
             "CM": {"operands": 1, "included": 0, "bytes": 3, "operators": ["CM"]},
-
+            "DAD": {"operands": 1, "included": 1, "bytes": 1, "operators": ["DAD BC", "DAD DE", "DAD HL", "DAD SP"]},
             "DCR": {"operands": 1, "included": 1, "bytes": 1,
                     "operators": ["DCR A", "DCR B", "DCR C", "DCR D", "DCR E", "DCR H", "DCR L", "DCR M"]},
             "DCX": {"operands": 1, "included": 1, "bytes": 1,
@@ -203,6 +203,14 @@ class Instructions:
             "CPI": {"operator": "CPI", "op_code": 0xFE, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
+            "DAD BC": {"operator": "DAD BC", "op_code": 0x09, "operand1": "BC", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
+            "DAD DE": {"operator": "DAD DE", "op_code": 0x19, "operand1": "DE", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
+            "DAD HL": {"operator": "DAD HL", "op_code": 0x29, "operand1": "HL", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
+            "DAD SP": {"operator": "DAD SP", "op_code": 0x39, "operand1": "SP", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
             "DCR A": {"operator": "DCR A", "op_code": 0x3D, "operand1": "A", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "DCR B": {"operator": "DCR B", "op_code": 0x05, "operand1": "B", "operand2": None, "addressing": "Reg",
