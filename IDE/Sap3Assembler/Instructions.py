@@ -72,8 +72,8 @@ class Instructions:
                     "operators": ["ORA A", "ORA B", "ORA C", "ORA D", "ORA E", "ORA H", "ORA L", "ORA M"]},
             "ORI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ORI"]},
             "OUT": {"operands": 1, "included": 0, "bytes": 2, "operators": ["OUT"]},
-            "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP BC", "POP DE", "POP HL"]},
-            "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH BC", "PUSH DE", "PUSH HL"]},
+            "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP PSW", "POP BC", "POP DE", "POP HL"]},
+            "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH PSW", "PUSH BC", "PUSH DE", "PUSH HL"]},
             "RAL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAL"]},
             "RAR": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAR"]},
             "RLC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RLC"]},
@@ -493,12 +493,16 @@ class Instructions:
                        "bytes": 2},
             "POP HL": {"operator": "POP HL", "op_code": 0xE1, "operand1": "HL", "operand2": None, "addressing": "Reg",
                        "bytes": 2},
+            "POP PSW": {"operator": "POP PSW", "op_code": 0xF1, "operand1": "PSW", "operand2": None, "addressing": "Reg",
+                        "bytes": 2},
 
             "PUSH BC": {"operator": "PUSH BC", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
                         "bytes": 2},
             "PUSH DE": {"operator": "PUSH DE", "op_code": 0xD5, "operand1": "DE", "operand2": None, "addressing": "Reg",
                         "bytes": 2},
             "PUSH HL": {"operator": "PUSH HL", "op_code": 0xE5, "operand1": "HL", "operand2": None, "addressing": "Reg",
+                        "bytes": 2},
+            "PUSH PSW": {"operator": "PUSH PSW", "op_code": 0xF5, "operand1": "PSW", "operand2": None, "addressing": "Reg",
                         "bytes": 2},
 
             "RAL": {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",
@@ -721,6 +725,7 @@ class Instructions:
                 (self.get_operand_one_type(operator) == "BC") |
                 (self.get_operand_one_type(operator) == "DE") |
                 (self.get_operand_one_type(operator) == "SP") |
+                (self.get_operand_one_type(operator) == "PSW") |
                 (self.get_operand_one_type(operator) == "M"))
 
     def is_operand_two_memory(self, operator):
@@ -746,4 +751,5 @@ class Instructions:
                 (self.get_operand_two_type(operator) == "BC") |
                 (self.get_operand_two_type(operator) == "DE") |
                 (self.get_operand_two_type(operator) == "SP") |
+                (self.get_operand_two_type(operator) == "PSW") |
                 (self.get_operand_two_type(operator) == "M"))

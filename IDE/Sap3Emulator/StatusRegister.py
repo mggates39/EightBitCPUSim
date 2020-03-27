@@ -3,6 +3,12 @@ from pubsub import pub
 
 from GuiComponents.Led import LED
 
+SIGN_BIT = 0x80
+ZERO_BIT = 0x40
+AUX_CARRY_BIT = 0x10
+PARITY_BIT = 0x04
+CARRY_BIT = 0x01
+
 
 class StatusRegister(wx.Panel):
     def __init__(self, parent):
@@ -13,6 +19,7 @@ class StatusRegister(wx.Panel):
         self.sign = False
         self.parity = False
         self.auxillary_carry = False
+        self.buffer = 0
         light_color = '#36ff27'
         dark_color = '#077100'
         self.box = wx.StaticBox(self, wx.ID_ANY, "Status Register", wx.DefaultPosition, (100, 75))
@@ -57,11 +64,13 @@ class StatusRegister(wx.Panel):
         horizontal_box.Add(carry_box, 1, wx.ALIGN_CENTER)
 
         self.panel = wx.Panel(self.box, size=(30, 75))
+        self.read_indicator = wx.StaticText(self.panel, label="FO")
         self.write_indicator = wx.StaticText(self.panel, label="FI")
         self.set_carry_indicator = wx.StaticText(self.panel, label="SC")
         self.complement_carry_indicator = wx.StaticText(self.panel, label="CC")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 1)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 1)
         vbox.Add(self.set_carry_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 1)
         vbox.Add(self.complement_carry_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 1)
         self.panel.SetSizer(vbox)
@@ -73,13 +82,20 @@ class StatusRegister(wx.Panel):
 
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
+        pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.set_in_display_flag, "CPU.FlagIn")
         pub.subscribe(self.on_set_carry, "CPU.SetCarry")
         pub.subscribe(self.on_invert_carry, "CPU.CompCarry")
+        pub.subscribe(self.on_in_psw, "CPU.PswIn")
+        pub.subscribe(self.on_out_psw, "CPU.PswOut")
         pub.subscribe(self.on_set_flags, "alu.FlagValues")
+
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
+    def set_out_display_flag(self):
+        self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_carry_display_flag(self):
         self.set_carry_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -89,6 +105,7 @@ class StatusRegister(wx.Panel):
 
     def clear_display_flags(self):
         self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.set_carry_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.complement_carry_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
@@ -101,6 +118,7 @@ class StatusRegister(wx.Panel):
         self.sign = False
         self.parity = False
         self.auxillary_carry = False
+        self.buffer = 0
         self.clear_display_flags()
         self.display_flags()
 
@@ -113,6 +131,47 @@ class StatusRegister(wx.Panel):
         self.set_comp_display_flag()
         self.carry = not self.carry
         self.display_flags()
+
+    def encode_psw(self):
+        psw = 0x02
+        if self.sign:
+            psw |= SIGN_BIT
+        if self.zero:
+            psw |= ZERO_BIT
+        if self.auxillary_carry:
+            psw |= AUX_CARRY_BIT
+        if self.parity:
+            psw |= PARITY_BIT
+        if self.carry:
+            psw |= CARRY_BIT
+
+        return psw
+
+    def decode_psw(self, psw):
+        if psw & SIGN_BIT == SIGN_BIT:
+            self.sign = True
+        else:
+            self.sign = False
+
+        if psw & ZERO_BIT == ZERO_BIT:
+            self.zero = True
+        else:
+            self.zero = False
+
+        if psw & AUX_CARRY_BIT == AUX_CARRY_BIT:
+            self.auxillary_carry = True
+        else:
+            self.auxillary_carry = False
+
+        if psw & PARITY_BIT == PARITY_BIT:
+            self.parity = True
+        else:
+            self.parity = False
+
+        if psw & CARRY_BIT == CARRY_BIT:
+            self.carry = True
+        else:
+            self.carry = False
 
     def on_set_flags(self, new_carry, new_zero, new_sign, new_parity, new_auxillary_carry):
         self.set_in_display_flag()
@@ -129,3 +188,16 @@ class StatusRegister(wx.Panel):
         self.zero_led.light(self.zero)
         self.sign_led.light(self.sign)
         self.parity_led.light(self.parity)
+
+    def on_bus_change(self, new_value):
+        self.buffer = new_value
+
+    def on_in_psw(self):
+        self.set_in_display_flag()
+        self.decode_psw(self.buffer)
+        self.display_flags()
+
+    def on_out_psw(self):
+        psw = self.encode_psw()
+        self.set_out_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=psw)
