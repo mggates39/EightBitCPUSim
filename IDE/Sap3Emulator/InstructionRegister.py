@@ -147,7 +147,6 @@ class InstructionRegister(wx.Panel):
 
     def on_in(self):
         self.value = self.buffer
-        self.operand = 0
         self.set_in_display_flag()
         op_code = int(self.value)
         self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag,
@@ -156,6 +155,7 @@ class InstructionRegister(wx.Panel):
         operator = self.instruction_decoder.get_current_operator()
         operator_name = operator["operator"]
         self.microcode = self.instruction_decoder.get_current_microcode()
+        self.operand = self.instruction_decoder.get_current_call_address()
 
         pub.sendMessage('ip.set_instruction', new_value=op_code)
         pub.sendMessage('ip.set_instruction_label', new_label=operator_name)

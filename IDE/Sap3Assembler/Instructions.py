@@ -89,6 +89,9 @@ class Instructions:
             "RP": {"operands": 1, "included": 0, "bytes": 1, "operators": ["RP"]},
             "RM": {"operands": 1, "included": 0, "bytes": 1, "operators": ["RM"]},
 
+            "RST": {"operands": 1, "included": 1, "bytes": 1,
+                    "operators": ["RST 0", "RST 1", "RST 2", "RST 3", "RST 4", "RST 5", "RST 6", "RST 7"]},
+
             "STA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["STA"]},
             "STC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["STC"]},
             "STAX": {"operands": 1, "included": 1, "bytes": 1, "operators": ["STAX BC", "STAX DE"]},
@@ -523,6 +526,23 @@ class Instructions:
                    "bytes": 1},
             "RM": {"operator": "RM", "op_code": 0xF8, "operand1": None, "operand2": None, "addressing": "Imm",
                    "bytes": 1},
+
+            "RST 0": {"operator": "RST 0", "op_code": 0xC7, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
+            "RST 1": {"operator": "RST 1", "op_code": 0xCF, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
+            "RST 2": {"operator": "RST 2", "op_code": 0xD7, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
+            "RST 3": {"operator": "RST 3", "op_code": 0xDF, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
+            "RST 4": {"operator": "RST 4", "op_code": 0xE7, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
+            "RST 5": {"operator": "RST 5", "op_code": 0xEF, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
+            "RST 6": {"operator": "RST 6", "op_code": 0xF7, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
+            "RST 7": {"operator": "RST 7", "op_code": 0xFF, "operand1": None, "operand2": None, "addressing": "Imm",
+                      "bytes": 1},
 
             "STC": {"operator": "STC", "op_code": 0x37, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
