@@ -159,7 +159,6 @@ operators = {
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
-
     0x01: {"operator": "LXI BC", "op_code": 0x01, "operand1": "BC", "operand2": "M", "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -198,7 +197,6 @@ operators = {
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.BRegIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
-
     0x07: {"operator": "RLC", "op_code": 0x07, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -244,7 +242,6 @@ operators = {
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.CRegIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
-
     0x0F: {"operator": "RRC", "op_code": 0x0F, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -290,7 +287,6 @@ operators = {
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.DRegIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
-
     0x17: {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -337,7 +333,6 @@ operators = {
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.ERegIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
-
     0x1F: {"operator": "RAR", "op_code": 0x1F, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -386,6 +381,7 @@ operators = {
                          ['CPU.HRegOut', 'CPU.TempIn'],
                          ['CPU.AluUseCarry', 'CPU.AluLdh', 'CPU.AluAdd', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.HRegIn'],
                          ['CPU.RingReset']]},
+
     0x2B: {"operator": "DCX HL", "op_code": 0x2B, "operand1": "HL", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -408,7 +404,6 @@ operators = {
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.LRegIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
-
     0x2F: {"operator": "CMA", "op_code": 0x2F, "operand1": None, "operand2": None, "addressing": "Imp",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -564,7 +559,6 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.ARegOut', 'CPU.BRegIn'],
                          ['CPU.RingReset']]},
-
     0x48: {"operator": "MOV C,B", "op_code": 0x48, "operand1": "C", "operand2": "B", "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -652,7 +646,6 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.ARegOut', 'CPU.DRegIn'],
                          ['CPU.RingReset']]},
-
     0x58: {"operator": "MOV E,B", "op_code": 0x58, "operand1": "E", "operand2": "B", "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -740,7 +733,6 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.ARegOut', 'CPU.HRegIn'],
                          ['CPU.RingReset']]},
-
     0x68: {"operator": "MOV L,B", "op_code": 0x68, "operand1": "L", "operand2": "B", "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1052,7 +1044,6 @@ operators = {
                          ['CPU.AluLda', 'CPU.ARegOut', 'CPU.TempIn'],
                          ['CPU.AluSub', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
-
     0x98: {"operator": "SBB B", "op_code": 0x98, "operand1": "B", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1164,7 +1155,6 @@ operators = {
                          ['CPU.AluLda', 'CPU.ARegOut', 'CPU.TempIn'],
                          ['CPU.AluLand', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
-
     0xA8: {"operator": "XRA B", "op_code": 0xA8, "operand1": "B", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1268,7 +1258,6 @@ operators = {
                          ['CPU.AluLda', 'CPU.ARegOut', 'CPU.TempIn'],
                          ['CPU.AluLor', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
-
     0xB8: {"operator": "CMP B", "op_code": 0xB8, "operand1": "B", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1333,7 +1322,6 @@ operators = {
                          ['CPU.SpInc', 'CPU.SpOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.BRegIn'],
                          ['CPU.RingReset']]},
-
     0xC2: {"operator": "JNZ", "op_code": 0xC2, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1363,7 +1351,6 @@ operators = {
                          ['CPU.SpOut', 'CPU.MarIn'],
                          ['CPU.CRegOut', 'CPU.MemIn', 'CPU.SpDec'],
                          ['CPU.RingReset']]},
-
     0xC6: {"operator": "ADI", "op_code": 0xC6, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1393,7 +1380,6 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrAhIn'],
                          ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
-
     0xCA: {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1420,7 +1406,6 @@ operators = {
                          ['CPU.PcOutLow', 'CPU.MemIn', 'CPU.SpDec'],
                          ['CPU.IrOut', 'CPU.PcJump'],
                          ['CPU.RingReset']]},
-
     0xCE: {"operator": "ACI", "op_code": 0xCE, "operand1": "N", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1554,7 +1539,6 @@ operators = {
                          ['CPU.SpInc', 'CPU.SpOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.HRegIn'],
                          ['CPU.RingReset']]},
-
     0xE2: {"operator": "JPO", "op_code": 0xE2, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1633,6 +1617,7 @@ operators = {
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.RingReset']]},
+
     0xF2: {"operator": "JP", "op_code": 0xF2, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
