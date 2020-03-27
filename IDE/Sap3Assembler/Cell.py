@@ -100,6 +100,8 @@ class Cell:
                                 self.second_value, error = self.back_patch_label(self.second_operand, labels)
                                 self.second_operand = "0x{0:02X}".format(self.second_value)
                             elif instructions.is_operand_two_numeric_word(self.real_operator):
+                                if self.second_operand[-1] == 'H':
+                                    self.second_operand = int(self.second_operand[:-1], 16)
                                 value, error = self.back_patch_label(self.second_operand, labels)
                                 if self.good:
                                     self.first_value = value & 0xFF
