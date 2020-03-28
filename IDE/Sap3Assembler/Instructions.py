@@ -51,6 +51,7 @@ class Instructions:
             "JZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JZ"]},
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
             "LDAX": {"operands": 1, "included": 1, "bytes": 1, "operators": ["LDAX BC", "LDAX DE"]},
+            "LHLD": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LHLD"]},
             "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI BC", "LXI DE", "LXI HL", "LXI SP"]},
             "MOV": {"operands": 2, "included": 2, "bytes": 1,
                     "operators": ["MOV A,A", "MOV A,B", "MOV A,C", "MOV A,D", "MOV A,E", "MOV A,H", "MOV A,L",
@@ -75,6 +76,7 @@ class Instructions:
                     "operators": ["ORA A", "ORA B", "ORA C", "ORA D", "ORA E", "ORA H", "ORA L", "ORA M"]},
             "ORI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ORI"]},
             "OUT": {"operands": 1, "included": 0, "bytes": 2, "operators": ["OUT"]},
+            "PCHL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["PCHL"]},
             "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP PSW", "POP BC", "POP DE", "POP HL"]},
             "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH PSW", "PUSH BC", "PUSH DE", "PUSH HL"]},
             "RAL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAL"]},
@@ -95,6 +97,8 @@ class Instructions:
             "RST": {"operands": 1, "included": 1, "bytes": 1,
                     "operators": ["RST 0", "RST 1", "RST 2", "RST 3", "RST 4", "RST 5", "RST 6", "RST 7"]},
 
+            "SHLD": {"operands": 1, "included": 0, "bytes": 3, "operators": ["SHLD"]},
+            "SPHL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["SPHL"]},
             "STA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["STA"]},
             "STC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["STC"]},
             "STAX": {"operands": 1, "included": 1, "bytes": 1, "operators": ["STAX BC", "STAX DE"]},
@@ -310,6 +314,8 @@ class Instructions:
                         "bytes": 1},
             "LDAX DE": {"operator": "LDAX DE", "op_code": 0x1A, "operand1": "DE", "operand2": None, "addressing": "Ind",
                         "bytes": 1},
+            "LHLD": {"operator": "LHLD", "op_code": 0x2A, "operand1": "P", "operand2": None, "addressing": "Dir",
+                    "bytes": 3},
             "LXI BC": {"operator": "LXI BC", "op_code": 0x01, "operand1": "BC", "operand2": "2", "addressing": "Imm",
                        "bytes": 3},
             "LXI DE": {"operator": "LXI DE", "op_code": 0x11, "operand1": "DE", "operand2": "2", "addressing": "Imm",
@@ -496,6 +502,8 @@ class Instructions:
             "OUT": {"operator": "OUT", "op_code": 0xD3, "operand1": "1", "operand2": None, "addressing": "Dir",
                     "bytes": 2},
 
+            "PCHL": {"operator": "PCHL", "op_code": 0xE9, "operand1": None, "operand2": None, "addressing": "Non",
+                    "bytes": 1},
             "POP BC": {"operator": "POP BC", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
                        "bytes": 2},
             "POP DE": {"operator": "POP DE", "op_code": 0xD1, "operand1": "DE", "operand2": None, "addressing": "Reg",
@@ -559,15 +567,6 @@ class Instructions:
             "RST 7": {"operator": "RST 7", "op_code": 0xFF, "operand1": None, "operand2": None, "addressing": "Imm",
                       "bytes": 1},
 
-            "STC": {"operator": "STC", "op_code": 0x37, "operand1": None, "operand2": None, "addressing": "Imp",
-                    "bytes": 1},
-            "STA": {"operator": "STA", "op_code": 0x32, "operand1": "P", "operand2": None, "addressing": "Dir",
-                    "bytes": 3},
-            "STAX BC": {"operator": "STAX BC", "op_code": 0x02, "operand1": "BC", "operand2": None, "addressing": "Ind",
-                        "bytes": 1},
-            "STAX DE": {"operator": "STAX DE", "op_code": 0x12, "operand1": "DE", "operand2": None, "addressing": "Ind",
-                        "bytes": 1},
-
             "SBI": {"operator": "SBI", "op_code": 0xDE, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
 
@@ -587,6 +586,21 @@ class Instructions:
                       "bytes": 1},
             "SBB M": {"operator": "SBB M", "op_code": 0x9E, "operand1": "M", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
+
+            "SHLD": {"operator": "SHLD", "op_code": 0x22, "operand1": "P", "operand2": None, "addressing": "Dir",
+                    "bytes": 3},
+
+            "SPHL": {"operator": "SPHL", "op_code": 0xF0, "operand1": None, "operand2": None, "addressing": "Imp",
+                    "bytes": 1},
+
+            "STA": {"operator": "STA", "op_code": 0x32, "operand1": "P", "operand2": None, "addressing": "Dir",
+                    "bytes": 3},
+            "STAX BC": {"operator": "STAX BC", "op_code": 0x02, "operand1": "BC", "operand2": None, "addressing": "Ind",
+                        "bytes": 1},
+            "STAX DE": {"operator": "STAX DE", "op_code": 0x12, "operand1": "DE", "operand2": None, "addressing": "Ind",
+                        "bytes": 1},
+            "STC": {"operator": "STC", "op_code": 0x37, "operand1": None, "operand2": None, "addressing": "Imp",
+                    "bytes": 1},
 
             "SUB A": {"operator": "SUB A", "op_code": 0x97, "operand1": "A", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
