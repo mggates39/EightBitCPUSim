@@ -49,6 +49,7 @@ class Alu(wx.Panel):
         self.logical_roll_right = False
         self.logical_roll_left = False
         self.through_carry = False
+        self.decimal_adjust_accumulator = False
 
         self.box = wx.StaticBox(self, wx.ID_ANY, "ALU", wx.DefaultPosition, (100, 300))
         self.static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -67,18 +68,20 @@ class Alu(wx.Panel):
         self.logical_roll_right_indicator = wx.StaticText(self.panel, label="RAR")
         self.logical_roll_left_indicator = wx.StaticText(self.panel, label="RAL")
         self.use_carry_indicator = wx.StaticText(self.panel, label="USC")
+        self.daa_indicator = wx.StaticText(self.panel, label="DAA")
         vbox = wx.BoxSizer(wx.VERTICAL)
-        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.add_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.subtract_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.complement_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.logical_and_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.logical_or_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.logical_xor_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.logical_roll_right_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.logical_roll_left_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        vbox.Add(self.use_carry_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.read_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.add_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.subtract_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.complement_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.logical_and_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.logical_or_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.logical_xor_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.logical_roll_right_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.logical_roll_left_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.use_carry_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
+        vbox.Add(self.daa_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 3)
         self.panel.SetSizer(vbox)
 
         vertical_box = wx.BoxSizer(wx.VERTICAL)
@@ -124,6 +127,8 @@ class Alu(wx.Panel):
 
         pub.subscribe(self.on_use_carry, 'CPU.AluUseCarry')
 
+        pub.subscribe(self.on_decimal_adjust, 'CPU.AluDaa')
+
         pub.subscribe(self.on_use_a_value, 'CPU.AluLda')
         pub.subscribe(self.on_use_b_value, 'CPU.AluLdb')
         pub.subscribe(self.on_use_c_value, 'CPU.AluLdc')
@@ -166,6 +171,12 @@ class Alu(wx.Panel):
         Turn on the use carry Control signal display.
         """
         self.use_carry_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
+    def set_daa_display_flag(self):
+        """
+        Turn on the use carry Control signal display.
+        """
+        self.daa_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_in_display_flag(self):
         """
@@ -225,6 +236,7 @@ class Alu(wx.Panel):
         self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.use_carry_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.daa_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         """
@@ -237,6 +249,7 @@ class Alu(wx.Panel):
         self.logical_roll_right = False
         self.logical_roll_left = False
         self.through_carry = False
+        self.decimal_adjust_accumulator = False
         self.clear_display_flags()
 
     def on_reset(self):
@@ -266,6 +279,7 @@ class Alu(wx.Panel):
         self.logical_roll_right = False
         self.logical_roll_left = False
         self.through_carry = False
+        self.decimal_adjust_accumulator = False
         self.clear_display_flags()
         pub.sendMessage('alu.set_value', new_value=self.result)
 
@@ -426,6 +440,11 @@ class Alu(wx.Panel):
     def on_use_carry(self):
         self.set_use_carry_display_flag()
         self.through_carry = True
+
+    def on_decimal_adjust(self):
+        self.set_daa_display_flag()
+        self.decimal_adjust_accumulator = True
+        # @todo Descimal Adjust Accumulater requires a working Aux Carry
 
     def determine_status_flags(self, new_value):
 

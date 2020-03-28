@@ -44,6 +44,7 @@ control_messages = [
     {"topic": "CPU.AluLdl", "label": "LDL"},
     {"topic": "CPU.AluLor", "label": "LOR"},
     {"topic": "CPU.AluLxor", "label": "LXOR"},
+    {"topic": "CPU.AluDaa", "label": "DAA"},
     {"topic": "CPU.AluIn", "label": "EI"},
     {"topic": "CPU.AluOut", "label": "EO"},
     {"topic": "CPU.AluRar", "label": "RAR"},
@@ -78,6 +79,9 @@ control_messages = [
     {"topic": "CPU.PswOut", "label": "FO"},
     {"topic": "CPU.SetCarry", "label": "SC"},
     {"topic": "CPU.CompCarry", "label": "CC"},
+
+    {"topic": "CPU.InteruptsOff", "label": "ID"},
+    {"topic": "CPU.InteruptsOn", "label": "IE"},
 
     {"topic": "CPU.RingReset", "label": "RCR"},
 
@@ -122,6 +126,7 @@ decode_messages = {
     "CPU.AluLand": "LAND ",
     "CPU.AluLor": "LOR ",
     "CPU.AluLxor": "LXOR ",
+    "CPU.AluDaa": "DAA ",
     "CPU.AluIn": "EI ",
     "CPU.AluOut": "EO ",
     "CPU.AluAdd": "ADD ",
@@ -154,6 +159,8 @@ decode_messages = {
     "CPU.PswOut": "FO ",
     "CPU.SetCarry": "SC ",
     "CPU.CompCarry": "CC ",
+    "CPU.InteruptsOff": "ID ",
+    "CPU.InteruptsOn": "IE ",
     "CPU.RingReset": "RCR ",
     "CPU.IllegalInst": "ILL "
 }
@@ -375,6 +382,12 @@ operators = {
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.HRegIn', 'CPU.PcInc'],
+                         ['CPU.RingReset']]},
+    0x27: {"operator": "DAA", "op_code": 0x27, "operand1": None, "operand2": None, "addressing": "Reg",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.AluLda'],
+                         ['CPU.AluDaa', 'CPU.FlagIn', 'CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
     0x29: {"operator": "DAD HL", "op_code": 0x29, "operand1": "HL", "operand2": None, "addressing": "Reg",
@@ -1655,7 +1668,11 @@ operators = {
                          ['CPU.PcInc'],
                          ['CPU.PcInc'],
                          ['CPU.RingReset']]},
-
+    0xF3: {"operator": "DI", "op_code": 0xF3, "operand1": None, "operand2": None, "addressing": "Non",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.InteruptsOff'],
+                         ['CPU.RingReset']]},
     0xF4: {"operator": "CP", "op_code": 0xF4, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
@@ -1697,7 +1714,11 @@ operators = {
                          ['CPU.PcInc'],
                          ['CPU.PcInc'],
                          ['CPU.RingReset']]},
-
+    0xFB: {"operator": "EI", "op_code": 0xFB, "operand1": None, "operand2": None, "addressing": "Non",
+           "microcode": [['CPU.PcOut', 'CPU.MarIn'],
+                         ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
+                         ['CPU.InteruptsOn'],
+                         ['CPU.RingReset']]},
     0xFC: {"operator": "CM", "op_code": 0xFC, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
