@@ -405,8 +405,8 @@ class Alu(wx.Panel):
 
     def on_complement(self):
         self.set_complement_display_flag()
-        self.value = self.value ^ 0xFF
-        self.temp_value = 1
+        self.value = ~self.value
+        self.temp_value = 0
         self.subtract = False
         self.do_math()
 
