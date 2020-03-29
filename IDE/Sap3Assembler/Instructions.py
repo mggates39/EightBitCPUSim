@@ -590,7 +590,7 @@ class Instructions:
             "SHLD": {"operator": "SHLD", "op_code": 0x22, "operand1": "P", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
 
-            "SPHL": {"operator": "SPHL", "op_code": 0xF0, "operand1": None, "operand2": None, "addressing": "Imp",
+            "SPHL": {"operator": "SPHL", "op_code": 0xF9, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
 
             "STA": {"operator": "STA", "op_code": 0x32, "operand1": "P", "operand2": None, "addressing": "Dir",
