@@ -196,6 +196,8 @@ class StatusRegister(wx.Panel):
         self.set_in_display_flag()
         self.decode_psw(self.buffer)
         self.display_flags()
+        pub.sendMessage("alu.FlagValues", new_carry=self.carry, new_zero=self.zero, new_sign=self.sign,
+                        new_parity=self.parity, new_auxillary_carry=self.auxillary_carry)
 
     def on_out_psw(self):
         psw = self.encode_psw()
