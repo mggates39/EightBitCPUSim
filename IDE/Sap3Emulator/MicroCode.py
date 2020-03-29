@@ -1596,7 +1596,7 @@ operators = {
                          ['CPU.SpOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.TempIn', 'CPU.SpDec'],
                          ['CPU.HRegOut', 'CPU.MemIn'],
-                         ['CPU.TempOut', 'CPU.LRegIn'],
+                         ['CPU.TempOut', 'CPU.HRegIn'],
                          ['CPU.RingReset']]},
     0xE4: {"operator": "CPO", "op_code": 0xE4, "operand1": "M", "operand2": None, "addressing": "Imm",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
