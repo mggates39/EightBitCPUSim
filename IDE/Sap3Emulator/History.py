@@ -21,7 +21,8 @@ class ExecutionHistory(wx.Panel):
         self.list.InsertColumn(0, 'tick', width=50)
         self.list.InsertColumn(1, 'cycle', width=50)
         self.list.InsertColumn(2, 'ring', width=50)
-        self.list.InsertColumn(3, 'control', width=200)
+        self.list.InsertColumn(3, 'control', width=175)
+        self.list.InsertColumn(4, 'addr', width=75)
 
         hbox.Add(self.list, 1, wx.EXPAND)
         static_box_sizer.Add(hbox, 1, wx.EXPAND)
@@ -32,6 +33,7 @@ class ExecutionHistory(wx.Panel):
         pub.subscribe(self.on_clock, 'CPU.Clock')
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_start_message, 'ir.ring')
+        pub.subscribe(self.on_address, 'mem.set_address')
 
     def on_clock(self):
         self.last_control = ""
@@ -52,3 +54,6 @@ class ExecutionHistory(wx.Panel):
         if topic_name in decode_messages:
             self.last_control += decode_messages[topic_name]
             self.list.SetItem(self.last_index, 3, self.last_control)
+
+    def on_address(self, new_value):
+        self.list.SetItem(self.last_index, 4, "0x{0:04X}".format(new_value))
