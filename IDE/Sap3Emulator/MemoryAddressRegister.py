@@ -18,8 +18,10 @@ class MemoryAddressRegister(wx.Panel):
 
         self.panel = wx.Panel(self.box, size=(30, 75))
         self.write_indicator = wx.StaticText(self.panel, label="MI")
+        self.increment_indicator = wx.StaticText(self.panel, label="M+")
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.write_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        vbox.Add(self.increment_indicator, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         self.panel.SetSizer(vbox)
 
         self.leds = LEDArray(self.box, 16, topic="mar.set_value", size=10, mode=MODE_HEX)
@@ -35,14 +37,19 @@ class MemoryAddressRegister(wx.Panel):
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.MarIn')
+        pub.subscribe(self.on_inc, 'CPU.MarInc')
         pub.subscribe(self.set_breakpoint, 'mar.set_break')
         pub.subscribe(self.clear_breakpoint, 'mar.clear_break')
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
+    def set_inc_display_flag(self):
+        self.increment_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
     def clear_display_flags(self):
         self.write_indicator.SetForegroundColour((0, 0, 0))  # set text color
+        self.increment_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
     def on_clock(self):
         self.clear_display_flags()
@@ -67,6 +74,15 @@ class MemoryAddressRegister(wx.Panel):
     def on_in(self):
         self.value = self.buffer
         self.set_in_display_flag()
+        pub.sendMessage('mar.set_value', new_value=self.value)
+        pub.sendMessage('mem.set_address', new_value=self.value)
+        # Execute breakpoint if accessing break boint memory
+        if self.value in self.break_points:
+            pub.sendMessage('CPU.Break')
+
+    def on_inc(self):
+        self.value += 1
+        self.set_inc_display_flag()
         pub.sendMessage('mar.set_value', new_value=self.value)
         pub.sendMessage('mem.set_address', new_value=self.value)
         # Execute breakpoint if accessing break boint memory
