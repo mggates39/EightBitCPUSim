@@ -305,8 +305,8 @@ operators = {
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
                          ['CPU.AluLda'],
-                         ['CPU.AluRal', 'CPU.FlagIn'],
-                         ['CPU.AluUseCarry', 'CPU.AluOut', 'CPU.ARegIn'],
+                         ['CPU.AluUseCarry', 'CPU.AluRal', 'CPU.FlagIn'],
+                         ['CPU.AluOut', 'CPU.ARegIn'],
                          ['CPU.RingReset']]},
 
     0x19: {"operator": "DAD DE", "op_code": 0x19, "operand1": "DE", "operand2": None, "addressing": "Reg",
