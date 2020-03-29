@@ -43,7 +43,7 @@ class Clock(wx.Panel):
         button_box.Add(self.stop_clock, 0, wx.ALL | wx.EXPAND, 2)
         button_box.Add(self.single_step, 0, wx.ALL | wx.EXPAND, 2)
 
-        self.slider = wx.Slider(self.box, value=self.speed, maxValue=1000, minValue=5, size=(240, 20),
+        self.slider = wx.Slider(self.box, value=self.speed, maxValue=1000, minValue=1, size=(240, 20),
                                 style=wx.HORIZONTAL)
         self.slider.SetFocus()
 
@@ -169,7 +169,7 @@ class Clock(wx.Panel):
         self.start_clock.Enable(False)
         self.stop_clock.Enable(True)
         self.single_step.Enable(False)
-        self.timer.Start(1005 - self.speed)
+        self.timer.Start(1001 - self.speed)
 
     def on_stop_clock_click(self, e: wx.MouseEvent) -> None:
         """
