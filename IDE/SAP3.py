@@ -91,6 +91,7 @@ class ExecutionTab(wx.Panel):
 
 class MainWindow(wx.Frame):
     def __init__(self, parent, title):
+        self.is_windows = sys.platform.startswith('win')
         self.directory_name = ''
         self.filename = 'untitled'
         self.base_title = title
@@ -269,12 +270,17 @@ class MainWindow(wx.Frame):
             if dlg.ShowModal() == wx.ID_OK:
                 self.filename = dlg.GetFilename()
                 self.directory_name = dlg.GetDirectory()
+                if self.is_windows:
+                    self.source_code_tab.control.Freeze()
                 f = open(os.path.join(self.directory_name, self.filename), 'r')
                 self.source_code_tab.control.SetValue(f.read())
                 f.close()
-                self.highlight_code(e)
+                if not self.is_windows:
+                    self.highlight_code(e)
                 self.source_code_tab.control.SetModified(False)
                 self.source_code_tab.control.DiscardEdits()
+                if self.is_windows:
+                    self.source_code_tab.control.Thaw()
                 self.SetTitle(self.generate_title(self.filename))
                 self.listing_tab.reset_listing()
                 self.memory_tab.reset_memory()
