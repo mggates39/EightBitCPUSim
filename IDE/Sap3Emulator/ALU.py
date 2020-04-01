@@ -539,7 +539,7 @@ class Alu(wx.Panel):
                 else:
                     new_zero_bit = 0x00
 
-            self.result = self.value << 1 | new_zero_bit
+            self.result = (self.value << 1 | new_zero_bit) & 0xFF
             self.carry = new_carry
 
         if self.logical_roll_right:
@@ -556,7 +556,7 @@ class Alu(wx.Panel):
                 else:
                     new_bit_seven = 0x00
 
-            self.result = self.value >> 1 | new_bit_seven
+            self.result = (self.value >> 1 | new_bit_seven) & 0xFF
             self.carry = new_carry
 
         if self.logical_and:
