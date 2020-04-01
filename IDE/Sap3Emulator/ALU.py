@@ -446,7 +446,30 @@ class Alu(wx.Panel):
     def on_decimal_adjust(self):
         self.set_daa_display_flag()
         self.decimal_adjust_accumulator = True
-        # @todo Descimal Adjust Accumulater requires a working Aux Carry
+
+        old_alu = self.value
+        old_carry = self.carry
+        self.carry = False
+        value = self.value
+        if (((self.value & 0x0F) > 9) or self.auxillary_carry):
+            value += 6
+            if value & 0x100 == 0x100:
+                carry = True
+            else:
+                carry = False
+            self.carry = old_carry or carry
+            self.auxillary_carry = True
+        else:
+            self.auxillary_carry = False
+
+        if old_alu > 0x99 or old_carry:
+            value += 0x60
+            self.carry = True
+        else:
+            self.carry = False
+
+        self.result = value
+        self.show_results()
 
     def determine_status_flags(self, new_value):
 
