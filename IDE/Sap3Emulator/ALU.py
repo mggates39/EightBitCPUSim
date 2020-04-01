@@ -88,10 +88,12 @@ class Alu(wx.Panel):
 
         self.leds = LEDArray(self.box, 8, topic="alu.set_value", mode=MODE_HEX)
         self.carry_flag = wx.StaticText(self.box, label="Carry-Bit: False", style=wx.ALIGN_CENTRE)
+        self.auxillary_carry_flag = wx.StaticText(self.box, label="Aux Carry-Bit: False", style=wx.ALIGN_CENTRE)
         self.zero_flag = wx.StaticText(self.box, label="Zero-Bit: False", style=wx.ALIGN_CENTRE)
         self.minus_flag = wx.StaticText(self.box, label="Sign-Bit: False", style=wx.ALIGN_CENTRE)
         self.parity_flag = wx.StaticText(self.box, label="Parity-Bit: False", style=wx.ALIGN_CENTRE)
         vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        vertical_box.Add(self.auxillary_carry_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
         vertical_box.Add(self.carry_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
         vertical_box.Add(self.zero_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
         vertical_box.Add(self.minus_flag, 0, wx.ALIGN_CENTER | wx.ALL, 2)
@@ -475,6 +477,12 @@ class Alu(wx.Panel):
         else:
             used_carry = 0
 
+        aux_value = (a & 0xF) + (b & 0xF) + used_carry
+        if aux_value & 0x10 == 0x10:
+            self.auxillary_carry = True
+        else:
+            self.auxillary_carry = False
+
         value = a + b + used_carry
         return_value = value & 0xFF
         if value & 0x100 == 0x100:
@@ -490,6 +498,12 @@ class Alu(wx.Panel):
             used_carry = 0
         else:
             used_carry = 1
+
+        aux_value = (minuend & 0xF) + (subt_ones & 0xF) + used_carry
+        if aux_value & 0x10 == 0x10:
+            self.auxillary_carry = False
+        else:
+            self.auxillary_carry = True
 
         value = minuend + subt_ones + used_carry
         return_value = value & 0xFF
@@ -512,11 +526,7 @@ class Alu(wx.Panel):
 
         self.determine_status_flags(self.result)
 
-        self.set_carry_label(self.carry)
-        self.set_zero_label(self.zero)
-        self.set_sign_label(self.sign)
-        self.set_parity_label(self.parity)
-        pub.sendMessage('alu.set_value', new_value=self.result)
+        self.show_results()
 
     def do_logic(self):
         """
@@ -561,24 +571,32 @@ class Alu(wx.Panel):
 
         if self.logical_and:
             self.result = self.value & self.temp_value
+            self.auxillary_carry = False
             self.carry = False
 
         if self.logical_or:
             self.result = self.value | self.temp_value
+            self.auxillary_carry = False
             self.carry = False
 
         if self.logical_xor:
             self.result = self.value ^ self.temp_value
+            self.auxillary_carry = False
             self.carry = False
 
         if not is_roll:
             self.determine_status_flags(self.result)
 
+        self.show_results()
+
+    def show_results(self):
         self.set_carry_label(self.carry)
+        self.set_auxiliary_carry_label(self.auxillary_carry)
         self.set_zero_label(self.zero)
         self.set_sign_label(self.sign)
         self.set_parity_label(self.parity)
         pub.sendMessage('alu.set_value', new_value=self.result)
+        self.value = self.result
 
     def on_bus_change(self, new_value):
         self.buffer = new_value
@@ -609,6 +627,15 @@ class Alu(wx.Panel):
         :param new_label: New state of the carry flag
         """
         self.carry_flag.SetLabel("Carry-Bit: {}".format(new_label))
+        self.static_box_sizer.Layout()
+
+    def set_auxiliary_carry_label(self, new_label: bool) -> None:
+        """
+        Set the label to be displayed for the Carry Flag.
+
+        :param new_label: New state of the carry flag
+        """
+        self.auxillary_carry_flag.SetLabel("Aux Carry-Bit: {}".format(new_label))
         self.static_box_sizer.Layout()
 
     def set_zero_label(self, new_label: bool) -> None:
