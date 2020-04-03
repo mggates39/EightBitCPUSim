@@ -2,15 +2,18 @@
 # Test Carry and Zero Flags
 ###############
 	.corg 0
+	MVI B,1
 	LDA (x)
-	OUT
-	ADD (y)
-	OUT
+	OUT 2
+	ADD B
+	OUT 2
+	SUB B
+	SUB B
+	OUT 2
 	HLT
 
-	.dorg 14
+	.dorg 16
 # Variables
 x:	.byte 255
-y:	.byte 1
 
 	.end

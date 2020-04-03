@@ -1,7 +1,7 @@
 import wx
 from pubsub import pub
 
-from Sap1Emulator.MicroCode import control_messages, decode_messages
+from Sap2Emulator.MicroCode import control_messages, decode_messages
 
 
 class ExecutionHistory(wx.Panel):

@@ -2,23 +2,23 @@
 # Multipy two numbers x and y
 ###############
 	.corg 0
+	MVI	B,1
+	LDA (y)
+	MOV C,A
 Top:	LDA (x)
-	SUB (One)
+	SUB B
 	JC (Continue)
 	LDA (product)
-	OUT
+	OUT 2
 	HLT
 Continue:
 	STA (x)
 	LDA (product)
-	ADD (y)
+	ADD C
 	STA (product)
 	JMP (Top)
 
-	.dorg 12
-# Constant Data
-One:	.byte 1
-#
+	.dorg 32
 # Variables
 product:
 	.byte 0

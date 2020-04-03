@@ -21,13 +21,13 @@ class Clock(wx.Panel):
 
         :param parent: Panel that will contain this Bus Panel
         """
-        wx.Panel.__init__(self, parent, size=(250, 100))
+        wx.Panel.__init__(self, parent, size=(300, 75))
         self.parent = parent
         self.index = 0
         self.halted = False
         self.speed = 100
         self.timer = wx.Timer(self)
-        self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (250, 100))
+        self.box = wx.StaticBox(self, wx.ID_ANY, "Clock", wx.DefaultPosition, (300, 75))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
         horizontal_box = wx.BoxSizer(wx.HORIZONTAL)
         vertical_box = wx.BoxSizer(wx.VERTICAL)
@@ -129,11 +129,13 @@ class Clock(wx.Panel):
         a CPU.Clock signal to all the components in the CPU.  This is the
         driving force of the Emulator.
 
-        :param e: Mouse or Iimer Event - Unused
+        :param e: Mouse or Timer Event - Unused
         """
         if not self.halted:
             pub.sendMessage("CPU.ClearControl")
             pub.sendMessage('CPU.Clock')
+
+        self.parent.parent.Refresh()
 
     def on_scroll(self, e: wx.ScrollEvent) -> None:
         """

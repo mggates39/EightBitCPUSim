@@ -2,41 +2,57 @@ class Instructions:
     def __init__(self) -> None:
         super().__init__()
         self.mnemonics = {
-            "ADD": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ADD B", "ADD C"]},
+            "ADD": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ADD A", "ADD B", "ADD C"]},
+            "ADI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ADI"]},
             "ANA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ANA B", "ANA C"]},
             "ANI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ANI"]},
             "CALL": {"operands": 1, "included": 0, "bytes": 3, "operators": ["CALL"]},
             "CMA": {"operands": 0, "included": 0, "bytes": 1, "operators": ["CMA"]},
+            "CMP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["CMP B", "CMP C"]},
+            "CPI": {"operands": 1, "included": 0, "bytes": 1, "operators": ["CPI"]},
             "DCR": {"operands": 1, "included": 1, "bytes": 1, "operators": ["DCR A", "DCR B", "DCR C"]},
             "HLT": {"operands": 0, "included": 0, "bytes": 1, "operators": ["HLT"]},
             "IN": {"operands": 1, "included": 0, "bytes": 2, "operators": ["IN"]},
             "INR": {"operands": 1, "included": 1, "bytes": 1, "operators": ["INR A", "INR B", "INR C"]},
+            "JC": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JC"]},
             "JM": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JM"]},
             "JMP": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JMP"]},
+            "JNC": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNC"]},
             "JNZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JNZ"]},
+            "JP": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JP"]},
             "JZ": {"operands": 1, "included": 0, "bytes": 3, "operators": ["JZ"]},
             "LDA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["LDA"]},
-            "MOV": {"operands": 2, "included": 21, "bytes": 1,
+            "LXI": {"operands": 2, "included": 1, "bytes": 3, "operators": ["LXI B"]},
+            "MOV": {"operands": 2, "included": 2, "bytes": 1,
                     "operators": ["MOV A,B", "MOV A,C", "MOV B,A", "MOV B,C", "MOV C,A", "MOV C,B"]},
-            "MVI": {"operands": 2, "included": 0, "bytes": 2, "operators": ["MVI A", "MVI B", "MVI C"]},
+            "MVI": {"operands": 2, "included": 1, "bytes": 2, "operators": ["MVI A", "MVI B", "MVI C"]},
             "NOP": {"operands": 0, "included": 0, "bytes": 1, "operators": ["NOP"]},
             "ORA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["ORA B", "ORA C"]},
             "ORI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ORI"]},
+            "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP BC"]},
+            "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH BC"]},
             "OUT": {"operands": 1, "included": 0, "bytes": 2, "operators": ["OUT"]},
             "RAL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAL"]},
             "RAR": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAR"]},
+            "RLC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RLC"]},
+            "RRC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RRC"]},
             "RET": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RET"]},
             "STA": {"operands": 1, "included": 0, "bytes": 3, "operators": ["STA"]},
-            "SUB": {"operands": 1, "included": 1, "bytes": 1, "operators": ["SUB B", "SUB C"]},
+            "SUB": {"operands": 1, "included": 1, "bytes": 1, "operators": ["SUB A", "SUB B", "SUB C"]},
+            "SUI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["SUI"]},
             "XRA": {"operands": 1, "included": 1, "bytes": 1, "operators": ["XRA B", "XRA C"]},
             "XRI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["XRI"]},
         }
 
         self.operators = {
+            "ADD A": {"operator": "ADD A", "op_code": 0x87, "operand1": "A", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
             "ADD B": {"operator": "ADD B", "op_code": 0x80, "operand1": "B", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "ADD C": {"operator": "ADD C", "op_code": 0x81, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
+            "ADI": {"operator": "ADI", "op_code": 0xC6, "operand1": "M", "operand2": None, "addressing": "Imm",
+                      "bytes": 2},
 
             "ANA B": {"operator": "ANA B", "op_code": 0xA0, "operand1": "B", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
@@ -51,6 +67,13 @@ class Instructions:
 
             "CMA": {"operator": "CMA", "op_code": 0x2F, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
+
+            "CMP B": {"operator": "CMP B", "op_code": 0xB8, "operand1": "B", "operand2": None, "addressing": "Reg",
+                    "bytes": 1},
+            "CMP C": {"operator": "CMP C", "op_code": 0xB9, "operand1": "C", "operand2": None, "addressing": "Reg",
+                    "bytes": 1},
+            "CPI": {"operator": "CPI", "op_code": 0xFE, "operand1": "N", "operand2": None, "addressing": "Imm",
+                      "bytes": 2},
 
             "DCR A": {"operator": "DCR A", "op_code": 0x3D, "operand1": "A", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
@@ -72,16 +95,24 @@ class Instructions:
             "INR C": {"operator": "INR C", "op_code": 0x0C, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
 
+            "JC": {"operator": "JC", "op_code": 0xDA, "operand1": "M", "operand2": None, "addressing": "Imm",
+                   "bytes": 3},
             "JM": {"operator": "JM", "op_code": 0xFA, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
             "JMP": {"operator": "JMP", "op_code": 0xC3, "operand1": "M", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
+            "JNC": {"operator": "JNC", "op_code": 0xD2, "operand1": "M", "operand2": None, "addressing": "Imm",
+                    "bytes": 3},
             "JNZ": {"operator": "JNZ", "op_code": 0xC2, "operand1": "M", "operand2": None, "addressing": "Imm",
                     "bytes": 3},
+            "JP": {"operator": "JP", "op_code": 0xF2, "operand1": "M", "operand2": None, "addressing": "Imm",
+                   "bytes": 3},
             "JZ": {"operator": "JZ", "op_code": 0xCA, "operand1": "M", "operand2": None, "addressing": "Imm",
                    "bytes": 3},
 
             "LDA": {"operator": "LDA", "op_code": 0x3A, "operand1": "M", "operand2": None, "addressing": "Dir",
+                    "bytes": 3},
+            "LXI B": {"operator": "LXI B", "op_code": 0x01, "operand1": "B", "operand2": "M", "addressing": "Imm",
                     "bytes": 3},
 
             "MOV A,B": {"operator": "MOV A,B", "op_code": 0x78, "operand1": "A", "operand2": "B", "addressing": "Reg",
@@ -120,9 +151,19 @@ class Instructions:
             "OUT": {"operator": "OUT", "op_code": 0xD3, "operand1": "N", "operand2": None, "addressing": "Dir",
                     "bytes": 2},
 
+            "POP BC": {"operator": "POP B", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
+                    "bytes": 2},
+
+            "PUSH BC": {"operator": "PUSH B", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
+                    "bytes": 2},
+
             "RAL": {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
             "RAR": {"operator": "RAR", "op_code": 0x1F, "operand1": None, "operand2": None, "addressing": "Imp",
+                    "bytes": 1},
+            "RLC": {"operator": "RLC", "op_code": 0x07, "operand1": None, "operand2": None, "addressing": "Imp",
+                    "bytes": 1},
+            "RDC": {"operator": "RDC", "op_code": 0x0F, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
 
             "RET": {"operator": "RET", "op_code": 0xC9, "operand1": None, "operand2": None, "addressing": "Imp",
@@ -131,10 +172,14 @@ class Instructions:
             "STA": {"operator": "STA", "op_code": 0x32, "operand1": "M", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
 
+            "SUB A": {"operator": "SUB A", "op_code": 0x97, "operand1": "A", "operand2": None, "addressing": "Reg",
+                      "bytes": 1},
             "SUB B": {"operator": "SUB B", "op_code": 0x90, "operand1": "B", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "SUB C": {"operator": "SUB C", "op_code": 0x91, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
+            "SUI": {"operator": "SUI", "op_code": 0xD6, "operand1": "M", "operand2": None, "addressing": "Imm",
+                    "bytes": 2},
 
             "XRA B": {"operator": "XRA B", "op_code": 0x90, "operand1": None, "operand2": None, "addressing": "Reg",
                       "bytes": 1},
@@ -144,6 +189,12 @@ class Instructions:
             "XRI": {"operator": "XRI", "op_code": 0xEE, "operand1": "N", "operand2": None, "addressing": "Imm",
                     "bytes": 2}
         }
+
+    def is_mnemonic(self, mnemonic):
+        return_value = False
+        if mnemonic in self.mnemonics:
+            return_value = True
+        return return_value
 
     def get_mnemonic(self, mnemonic):
         if mnemonic in self.mnemonics:
@@ -163,11 +214,48 @@ class Instructions:
             return_value = True
         return return_value
 
-    def lookup_op_code(self, operator):
-        op_code = -1
-        if self.is_operator(operator):
-            op_code = self.operators[operator]["op_code"]
-        return op_code
+    def lookup_op_code(self, operator, first_operand, second_operand):
+        op_code = -1  # operator not found
+        real_operator = None
+        if self.is_mnemonic(operator):
+            mnemonic = self.get_mnemonic(operator)
+            if mnemonic["operands"] == 0:
+                op_code = self.operators[operator]["op_code"]
+                real_operator = self.get_operator(operator)
+            elif mnemonic["operands"] == 1:
+                if mnemonic["included"] == 1:
+                    test_operator = "{} {}".format(operator, first_operand)
+                    if self.is_operator(test_operator):
+                        op_code = self.operators[test_operator]["op_code"]
+                        real_operator = self.get_operator(test_operator)
+                    else:
+                        op_code = -2  # Bad Operand
+                else:
+                    if self.is_operator(operator):
+                        op_code = self.operators[operator]["op_code"]
+                        real_operator = self.get_operator(operator)
+
+            elif mnemonic["operands"] == 2:
+                if mnemonic["included"] == 2:
+                    test_operator = "{} {},{}".format(operator, first_operand, second_operand)
+                    if self.is_operator(test_operator):
+                        op_code = self.operators[test_operator]["op_code"]
+                        real_operator = self.get_operator(test_operator)
+                    else:
+                        op_code = -2  # Bad Operand
+                elif mnemonic["included"] == 1:
+                    test_operator = "{} {}".format(operator, first_operand)
+                    if self.is_operator(test_operator):
+                        op_code = self.operators[test_operator]["op_code"]
+                        real_operator = self.get_operator(test_operator)
+                    else:
+                        op_code = -2  # Bad Operand
+                else:
+                    if self.is_operator(operator):
+                        op_code = self.operators[operator]["op_code"]
+                        real_operator = self.get_operator(operator)
+
+        return op_code, real_operator
 
     def get_operand_one_type(self, operator):
         operand_type = None
@@ -190,6 +278,12 @@ class Instructions:
     def is_operand_one_numeric(self, operator):
         return self.get_operand_one_type(operator) == "N"
 
+    def is_operand_one_register(self, operator):
+        return ((self.get_operand_one_type(operator) == "A") |
+                (self.get_operand_one_type(operator) == "B") |
+                (self.get_operand_one_type(operator) == "C") |
+                (self.get_operand_one_type(operator) == "BC"))
+
     def is_operand_two_memory(self, operator):
         return self.get_operand_two_type(operator) == "M"
 
@@ -198,3 +292,9 @@ class Instructions:
 
     def is_operand_two_numeric(self, operator):
         return self.get_operand_two_type(operator) == "N"
+
+    def is_operand_two_register(self, operator):
+        return ((self.get_operand_two_type(operator) == "A") |
+                (self.get_operand_two_type(operator) == "B") |
+                (self.get_operand_two_type(operator) == "C") |
+                (self.get_operand_two_type(operator) == "BC"))
