@@ -5,7 +5,7 @@ from GuiComponents.LedArray import LED
 
 
 class ControlLed(wx.Panel):
-    def __init__(self, parent, light_color='#36ff27', dark_color='#077100', topic=None, label=None, size:int = 14):
+    def __init__(self, parent, light_color='#36ff27', dark_color='#077100', topic=None, label=None, size: int = 14):
         wx.Panel.__init__(self, parent, size=(10, 1))
         self.parent = parent
         self.light_color = light_color

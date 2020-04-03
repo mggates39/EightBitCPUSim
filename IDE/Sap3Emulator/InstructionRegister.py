@@ -2,7 +2,8 @@ import wx
 from pubsub import pub
 
 from GuiComponents.LedArray import LEDArray
-from Sap2Emulator.MicroCode import MicroCode
+from GuiComponents.LedArray import MODE_HEX
+from Sap3Emulator.MicroCode import MicroCode
 
 
 class InstructionRegister(wx.Panel):
@@ -15,9 +16,12 @@ class InstructionRegister(wx.Panel):
         self.tick = 0
         self.cycle = 0
         self.ring_count = 0
+        self.active = False
         self.carry_flag = False
         self.zero_flag = False
-        self.minus_flag = False
+        self.sign_flag = False
+        self.parity_flag = False
+        self.auxillary_carry_flag = False
         self.instruction_decoder = instruction_decoder
         self.box = wx.StaticBox(self, wx.ID_ANY, "Instruction Register", wx.DefaultPosition, (100, 150))
         static_box_sizer = wx.StaticBoxSizer(self.box, wx.VERTICAL)
@@ -36,7 +40,7 @@ class InstructionRegister(wx.Panel):
         self.panel.SetSizer(vbox)
 
         self.instruction = LEDArray(self.box, 8, topic="ip.set_instruction")
-        self.data = LEDArray(self.box, 16, topic="ip.set_data", size=10)
+        self.data = LEDArray(self.box, 16, topic="ip.set_data", size=10, mode=MODE_HEX)
         register_box = wx.BoxSizer(wx.VERTICAL)
         register_box.Add(self.instruction, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
         register_box.Add(self.data, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
@@ -55,17 +59,36 @@ class InstructionRegister(wx.Panel):
         pub.subscribe(self.on_reset, 'CPU.Reset')
         pub.subscribe(self.on_bus_change, 'CPU.BusChanged')
         pub.subscribe(self.on_in, 'CPU.IrIn')
-        pub.subscribe(self.on_operand_low, 'CPU.IrAlIn')
-        pub.subscribe(self.on_operand_high, 'CPU.IrAhIn')
+        pub.subscribe(self.on_get_operand_low, 'CPU.IrAlIn')
+        pub.subscribe(self.on_get_operand_high, 'CPU.IrAhIn')
+        pub.subscribe(self.on_get_full_operand, 'CPU.IrAddrIn')
         pub.subscribe(self.on_out, 'CPU.IrOut')
+        pub.subscribe(self.on_out_low, 'CPU.IrAlOut')
+        pub.subscribe(self.on_out_high, 'CPU.IrAhOut')
+
+        pub.subscribe(self.on_set_carry, "CPU.SetCarry")
+        pub.subscribe(self.on_invert_carry, "CPU.CompCarry")
         pub.subscribe(self.on_read_flags, 'alu.FlagValues')
         pub.subscribe(self.on_ring_reset, 'CPU.RingReset')
+        pub.subscribe(self.on_active, 'clock.active')
 
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 
     def set_out_display_flag(self):
         self.read_indicator.SetForegroundColour((0, 0, 255))  # set text color
+
+    def set_out_low_display_flag(self):
+        self.set_in_display_flag()
+        self.set_load_low_display_flag()
+
+    def set_out_high_display_flag(self):
+        self.set_in_display_flag()
+        self.set_load_high_display_flag()
+
+    def set_load_full_display_flag(self):
+        self.set_load_low_display_flag()
+        self.set_load_high_display_flag()
 
     def set_load_low_display_flag(self):
         self.load_operand_low_indicator.SetForegroundColour((0, 0, 255))  # set text color
@@ -79,14 +102,18 @@ class InstructionRegister(wx.Panel):
         self.load_operand_high_indicator.SetForegroundColour((0, 0, 0))  # set text color
         self.read_indicator.SetForegroundColour((0, 0, 0))  # set text color
 
+    def on_active(self, new_active):
+        self.active = new_active
+
     def on_clock(self):
         self.clear_display_flags()
-        microcode = self.microcode[self.ring_count]
-        pub.sendMessage("ir.ring", tick=self.tick, cycle=self.cycle, ring=self.ring_count)
-        for send in microcode:
-            pub.sendMessage(send)
-        self.tick += 1
-        self.ring_count += 1
+        if self.active:
+            microcode = self.microcode[self.ring_count]
+            pub.sendMessage("ir.ring", tick=self.tick, cycle=self.cycle, ring=self.ring_count)
+            for send in microcode:
+                pub.sendMessage(send)
+            self.tick += 1
+            self.ring_count += 1
 
     def on_reset(self):
         self.value = 0
@@ -95,9 +122,12 @@ class InstructionRegister(wx.Panel):
         self.tick = 0
         self.cycle = 0
         self.ring_count = 0
+        self.active = False
         self.carry_flag = False
         self.zero_flag = False
-        self.minus_flag = False
+        self.sign_flag = False
+        self.parity_flag = False
+        self.auxillary_carry_flag = False
 
         self.clear_display_flags()
 
@@ -117,34 +147,56 @@ class InstructionRegister(wx.Panel):
 
     def on_in(self):
         self.value = self.buffer
-        self.operand = 0
         self.set_in_display_flag()
         op_code = int(self.value)
         self.instruction_decoder.decode_op_code(op_code, carry_flag=self.carry_flag, zero_flag=self.zero_flag,
-                                                negative_flag=self.minus_flag)
+                                                sign_flag=self.sign_flag, parity_flag=self.parity_flag,
+                                                auxillary_carry_flag=self.auxillary_carry_flag)
         operator = self.instruction_decoder.get_current_operator()
         operator_name = operator["operator"]
         self.microcode = self.instruction_decoder.get_current_microcode()
+        self.operand = self.instruction_decoder.get_current_call_address()
 
         pub.sendMessage('ip.set_instruction', new_value=op_code)
         pub.sendMessage('ip.set_instruction_label', new_label=operator_name)
         pub.sendMessage('ip.set_data', new_value=self.operand)
 
-    def on_operand_low(self):
+    def on_get_operand_low(self):
         self.operand = int(self.buffer)
         self.set_load_low_display_flag()
         pub.sendMessage('ip.set_data', new_value=self.operand)
 
-    def on_operand_high(self):
+    def on_get_operand_high(self):
         self.operand = (int(self.buffer) << 8) + self.operand
         self.set_load_high_display_flag()
+        pub.sendMessage('ip.set_data', new_value=self.operand)
+
+    def on_get_full_operand(self):
+        self.operand = int(self.buffer)
+        self.set_load_full_display_flag()
         pub.sendMessage('ip.set_data', new_value=self.operand)
 
     def on_out(self):
         self.set_out_display_flag()
         pub.sendMessage('CPU.ChangeBus', new_value=self.operand)
 
-    def on_read_flags(self, new_carry, new_zero, new_minus):
+    def on_out_low(self):
+        self.set_out_low_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=(self.operand & 0xFF))
+
+    def on_out_high(self):
+        self.set_out_high_display_flag()
+        pub.sendMessage('CPU.ChangeBus', new_value=((self.operand >> 8) & 0xFF))
+
+    def on_read_flags(self, new_carry, new_zero, new_sign, new_parity, new_auxillary_carry):
+        self.auxillary_carry_flag = new_auxillary_carry
         self.carry_flag = new_carry
         self.zero_flag = new_zero
-        self.minus_flag = new_minus
+        self.sign_flag = new_sign
+        self.parity_flag = new_parity
+
+    def on_set_carry(self):
+        self.carry_flag = True
+
+    def on_invert_carry(self):
+        self.carry_flag = not self.carry_flag

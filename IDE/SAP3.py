@@ -6,14 +6,14 @@ import wx.adv
 import wx.lib.scrolledpanel
 import wx.stc
 
-from Sap1Assembler.Assembler import Assembler
-from Sap1Assembler.Parser import is_label
-from Sap1Assembler.Parser import make_label
-from Sap1Assembler.Parser import make_target
+from Sap3Assembler.Assembler import Assembler
+from Sap3Assembler.Parser import is_label
+from Sap3Assembler.Parser import make_label
+from Sap3Assembler.Parser import make_target
+from Sap3Emulator.CPU import CPU
+
+
 # Define the tab content as classes:
-from Sap1Emulator.CPU import CPU
-
-
 class SourceTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -80,7 +80,6 @@ class MemoryTab(wx.Panel):
 class ExecutionTab(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-
         self.cpu = CPU(self)
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.sizer.Add(self.cpu, 1, wx.EXPAND)
@@ -92,6 +91,7 @@ class ExecutionTab(wx.Panel):
 
 class MainWindow(wx.Frame):
     def __init__(self, parent, title):
+        self.is_windows = sys.platform.startswith('win')
         self.directory_name = ''
         self.filename = 'untitled'
         self.base_title = title
@@ -101,14 +101,14 @@ class MainWindow(wx.Frame):
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
         wx.Frame.__init__(self, parent, title=title, size=(600, 600))
-        screenSize = wx.DisplaySize()
-        screenWidth = screenSize[0]
-        screenHeight = screenSize[1]
+        screen_size = wx.DisplaySize()
+        screen_width = screen_size[0]
+        screen_height = screen_size[1]
         self.CreateStatusBar()  # A Status bar in the bottom of the window
 
         # Create a panel and notebook (tabs holder)
         # p = wx.Panel(self)
-        p = wx.lib.scrolledpanel.ScrolledPanel(self, -1, size=(screenWidth, screenHeight), pos=(0, 0),
+        p = wx.lib.scrolledpanel.ScrolledPanel(self, -1, size=(screen_width, screen_height), pos=(0, 0),
                                                style=wx.SIMPLE_BORDER)
         p.SetupScrolling()
         self.nb = wx.Notebook(p)
@@ -137,9 +137,11 @@ class MainWindow(wx.Frame):
         menu_save = file_menu.Append(wx.ID_SAVE, "&Save", " Save the file")
         menu_save_as = file_menu.Append(wx.ID_SAVEAS, "Save As", " Save the file with a new name")
         file_menu.AppendSeparator()
-        menu_assemble = file_menu.Append(wx.ID_ANY, "Assemble", " Assemble text in editor")
-        file_menu.AppendSeparator()
         menu_exit = file_menu.Append(wx.ID_EXIT, "E&xit", " Terminate the program")
+
+        emulator_menu = wx.Menu()
+        menu_assemble = emulator_menu.Append(wx.ID_ANY, "Assemble", " Assemble text in editor")
+        menu_execute = emulator_menu.Append(wx.ID_ANY, "Execute", " Execute the Assembled code")
 
         # Setting up the help menu.
         help_menu = wx.Menu()
@@ -148,6 +150,7 @@ class MainWindow(wx.Frame):
         # Creating the menu_bar.
         menu_bar = wx.MenuBar()
         menu_bar.Append(file_menu, "&File")  # Adding the "file_menu" to the MenuBar
+        menu_bar.Append(emulator_menu, "&Emulator")  # Adding the "emulator_menu" to the MenuBar
         menu_bar.Append(help_menu, "&Help")  # Adding the "help_menu" to the MenuBar
         self.SetMenuBar(menu_bar)  # Adding the MenuBar to the Frame content.
 
@@ -157,6 +160,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_save, menu_save)
         self.Bind(wx.EVT_MENU, self.on_save_as, menu_save_as)
         self.Bind(wx.EVT_MENU, self.on_assemble, menu_assemble)
+        self.Bind(wx.EVT_MENU, self.on_execute, menu_execute)
         self.Bind(wx.EVT_MENU, self.on_exit, menu_exit)
         self.Bind(wx.EVT_CLOSE, self.on_close, self)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
@@ -175,7 +179,7 @@ class MainWindow(wx.Frame):
         versions = {"python": sys.version.split()[0], "wx_version": wx.VERSION_STRING}
 
         description = """
-        SAP-1 IDE is an basic SAP assembly code editor, assembler, and 
+        SAP-3 IDE is an basic SAP assembly code editor, assembler, and 
         simulator.  It provides interactive syntax highlighting, listings 
         and memory dumps suitable for including in the JavaScript simulator.
         
@@ -183,12 +187,12 @@ class MainWindow(wx.Frame):
         """
 
         licence = """
-        SAP-1 IDE is free software; you can redistribute it and/or modify it under 
+        SAP-3 IDE is free software; you can redistribute it and/or modify it under 
         the terms of the GNU General Public License as published by 
         the Free Software Foundation; either version 2 of the License, 
         or (at your option) any later version.
 
-        SAP-1 IDE is distributed in the hope that it will be useful, 
+        SAP-3 IDE is distributed in the hope that it will be useful, 
         but WITHOUT ANY WARRANTY; without even the implied warranty of 
         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
         See the GNU General Public License for more details. 
@@ -199,7 +203,7 @@ class MainWindow(wx.Frame):
         info = wx.adv.AboutDialogInfo()
 
         # info.SetIcon(wx.Icon('hunter.png', wx.BITMAP_TYPE_PNG))
-        info.SetName('SAP-1 IDE')
+        info.SetName('SAP-3 IDE')
         info.SetVersion('Alpha 0.9')
         info.SetDescription(description % versions)
         info.SetWebSite("https://github.com/mggates39/EightBitCPUSim", "GitHub Repository")
@@ -266,12 +270,17 @@ class MainWindow(wx.Frame):
             if dlg.ShowModal() == wx.ID_OK:
                 self.filename = dlg.GetFilename()
                 self.directory_name = dlg.GetDirectory()
+                if self.is_windows:
+                    self.source_code_tab.control.Freeze()
                 f = open(os.path.join(self.directory_name, self.filename), 'r')
                 self.source_code_tab.control.SetValue(f.read())
                 f.close()
-                self.highlight_code(e)
+                if not self.is_windows:
+                    self.highlight_code(e)
                 self.source_code_tab.control.SetModified(False)
                 self.source_code_tab.control.DiscardEdits()
+                if self.is_windows:
+                    self.source_code_tab.control.Thaw()
                 self.SetTitle(self.generate_title(self.filename))
                 self.listing_tab.reset_listing()
                 self.memory_tab.reset_memory()
@@ -343,9 +352,6 @@ class MainWindow(wx.Frame):
             self.listing_tab.control.AppendText("\n")
             for line in errors:
                 self.listing_tab.control.AppendText(line)
-            self.nb.SetSelection(1)
-        else:
-            self.nb.SetSelection(0)
 
         memory_dump = a.get_memory_dump()
         self.memory_tab.control.Clear()
@@ -353,6 +359,15 @@ class MainWindow(wx.Frame):
             self.memory_tab.control.AppendText(line)
 
         self.execution_tab.cpu.load_memory(a.get_memory())
+
+        self.nb.SetSelection(1)
+
+    def on_execute(self, e):
+        """
+
+        :param e:
+        """
+        self.nb.SetSelection(3)
 
     def is_valid_label(self, label):
         """
@@ -484,5 +499,5 @@ class MainWindow(wx.Frame):
 
 if __name__ == "__main__":
     app = wx.App(False)
-    frame = MainWindow(None, "SAP-1 IDE")
+    frame = MainWindow(None, "SAP-3 IDE")
     app.MainLoop()

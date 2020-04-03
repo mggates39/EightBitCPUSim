@@ -52,7 +52,7 @@ class Instructions:
             "ADD C": {"operator": "ADD C", "op_code": 0x81, "operand1": "C", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "ADI": {"operator": "ADI", "op_code": 0xC6, "operand1": "M", "operand2": None, "addressing": "Imm",
-                      "bytes": 2},
+                    "bytes": 2},
 
             "ANA B": {"operator": "ANA B", "op_code": 0xA0, "operand1": "B", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
@@ -69,11 +69,11 @@ class Instructions:
                     "bytes": 1},
 
             "CMP B": {"operator": "CMP B", "op_code": 0xB8, "operand1": "B", "operand2": None, "addressing": "Reg",
-                    "bytes": 1},
+                      "bytes": 1},
             "CMP C": {"operator": "CMP C", "op_code": 0xB9, "operand1": "C", "operand2": None, "addressing": "Reg",
-                    "bytes": 1},
+                      "bytes": 1},
             "CPI": {"operator": "CPI", "op_code": 0xFE, "operand1": "N", "operand2": None, "addressing": "Imm",
-                      "bytes": 2},
+                    "bytes": 2},
 
             "DCR A": {"operator": "DCR A", "op_code": 0x3D, "operand1": "A", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
@@ -113,7 +113,7 @@ class Instructions:
             "LDA": {"operator": "LDA", "op_code": 0x3A, "operand1": "M", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
             "LXI B": {"operator": "LXI B", "op_code": 0x01, "operand1": "B", "operand2": "M", "addressing": "Imm",
-                    "bytes": 3},
+                      "bytes": 3},
 
             "MOV A,B": {"operator": "MOV A,B", "op_code": 0x78, "operand1": "A", "operand2": "B", "addressing": "Reg",
                         "bytes": 1},
@@ -152,10 +152,10 @@ class Instructions:
                     "bytes": 2},
 
             "POP BC": {"operator": "POP B", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
-                    "bytes": 2},
+                       "bytes": 2},
 
             "PUSH BC": {"operator": "PUSH B", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
-                    "bytes": 2},
+                        "bytes": 2},
 
             "RAL": {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},

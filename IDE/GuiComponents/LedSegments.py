@@ -20,7 +20,8 @@ class LEDSegment(wx.Panel):
     The LEDSegment class implements a seven segement display
     """
 
-    def __init__(self, parent, led_color='#36ff27', background_color='#077100', topic=None, mode=MODE_DEC):
+    def __init__(self, parent, led_color='#36ff27', background_color='#077100', size=(100, 50), topic=None,
+                 mode=MODE_DEC, num_digits=4):
         """
 
         :param parent: Panel that will hold the Seven Segment display
@@ -33,15 +34,14 @@ class LEDSegment(wx.Panel):
         self.led_color = led_color
         self.background_color = background_color
         self.value = '1'
+        self.format_string = '{}'
+        self.num_digits = num_digits
         self.mode = mode
+        self.set_format_string()
 
         pos = wx.DefaultPosition
-        size = (100, 50)  # wx.DefaultSize
         style = gizmos.LED_ALIGN_RIGHT  # | gizmos.LED_DRAW_FADED
-        if mode == MODE_HEX:
-            self.segment = LEDHexCtrl(self, -1, pos, size, style)
-        else:
-            self.segment = gizmos.LEDNumberCtrl(self, -1, pos, size, style)
+        self.segment = LEDHexCtrl(self, -1, pos, size, style)
 
         # default colours are green on black
         self.segment.SetBackgroundColour(background_color)
@@ -66,6 +66,24 @@ class LEDSegment(wx.Panel):
         if self.value != new_value:
             self.value = new_value
             if self.mode == MODE_HEX:
-                self.segment.SetValue("{0:X}".format(self.value))
+                formatted_value = ''
+                try:
+                    formatted_value = self.format_string.format(self.value)
+                except ValueError:
+                    formatted_value = "{}".format(self.value)
+                finally:
+                    self.segment.SetValue("{}".format(formatted_value))
             else:
                 self.segment.SetValue("{}".format(self.value))
+
+    def set_format_string(self):
+        self.format_string = '{}'
+        if self.mode == MODE_HEX:
+            self.format_string = '{{0:0{0}X}}'.format(self.num_digits)
+
+    def set_mode(self, new_mode):
+        self.mode = new_mode
+        old_value = self.value
+        self.value = None
+        self.set_format_string()
+        self.set_value(old_value)

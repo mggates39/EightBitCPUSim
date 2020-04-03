@@ -10,6 +10,9 @@ from pubsub import pub
 
 from GuiComponents.Led import LED
 
+MODE_DEC = 0x0001
+MODE_HEX = 0x0002
+
 
 class LEDArray(wx.Panel):
     """
@@ -17,7 +20,8 @@ class LEDArray(wx.Panel):
     The label is the value being displayed by the LEDs.
     """
 
-    def __init__(self, parent, number_leds, light_color='#36ff27', dark_color='#077100', topic=None, size:int = 14):
+    def __init__(self, parent, number_leds, light_color='#36ff27', dark_color='#077100', topic=None, size: int = 14,
+                 mode=MODE_DEC):
         """
         Create the string of LEDs and put a label underneath.  If a topic is provided it will
         subscribe to the topic and update the display everytime it receives a message.
@@ -36,7 +40,10 @@ class LEDArray(wx.Panel):
         self.number_leds = number_leds
         self.value = 0
         self.leds = []
-        self.label = wx.StaticText(self, label="0", style=wx.ALIGN_CENTRE)
+        self.mode = MODE_DEC
+        self.format_mask = "{}"
+
+        self.label = wx.StaticText(self, label=self.format_mask.format(0), style=wx.ALIGN_CENTRE)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         led_sizer = wx.BoxSizer(wx.HORIZONTAL)
         for i in range(0, number_leds):
@@ -48,6 +55,8 @@ class LEDArray(wx.Panel):
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
         self.sizer.Fit(self)
+
+        self.set_mode(mode)
 
         if topic is not None:
             pub.subscribe(self.set_value, topic)
@@ -68,14 +77,30 @@ class LEDArray(wx.Panel):
                 else:
                     led.light(False)
                 i = i - 1
-            self.label.SetLabel("{}".format(new_value))
+            self.label.SetLabel(self.format_mask.format(new_value))
             self.sizer.Layout()
 
     def set_label(self, new_label: str) -> None:
         """
-        Set the value to be displayed by the LED Array.
+        Override the value to be displayed by the LED Array.
 
         :param new_label: Value to display below the array of LEDs
         """
         self.label.SetLabel("{}".format(new_label))
         self.sizer.Layout()
+
+    def set_mode(self, new_mode):
+        self.mode = new_mode
+        if new_mode == MODE_HEX:
+            if self.number_leds <= 4:
+                self.format_mask = "0x{0:01X}"
+            elif self.number_leds <= 8:
+                self.format_mask = "0x{0:02X}"
+            else:
+                self.format_mask = "0x{0:04X}"
+        else:
+            self.format_mask = "{}"
+
+        old_value = self.value
+        self.value = None
+        self.set_value(old_value)
