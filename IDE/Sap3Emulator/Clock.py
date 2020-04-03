@@ -210,4 +210,4 @@ class Clock(wx.Panel):
         """
         self.speed = e.GetInt()
         if self.timer.IsRunning():
-            self.timer.Start(1005 - self.speed)
+            self.timer.Start(1001 - self.speed)
