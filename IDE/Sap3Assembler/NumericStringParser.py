@@ -22,37 +22,43 @@ class NumericStringParser(object):
         if toks and toks[0] == '-':
             self.exprStack.append('unary -')
 
-    def __init__(self):
+    def __init__(self, labels=[]):
         """
         expop   :: '^'
         multop  :: '*' | '/'
-        addop   :: '+' | '-'
+        addop   :: '+' | '-' | '&'
         integer :: ['+' | '-'] '0'..'9'+
         atom    :: PI | E | real | fn '(' expr ')' | '(' expr ')'
         factor  :: atom [ expop factor ]*
         term    :: factor [ multop factor ]*
         expr    :: term [ addop term ]*
         """
+        self.labels = labels
         point = pyp.Literal(".")
         e = pyp.CaselessLiteral("E")
-        fnumber = pyp.Combine(pyp.Word("+-" + pyp.nums, pyp.nums) +
-                              pyp.Optional(point + pyp.Optional(pyp.Word(pyp.nums))) +
-                              pyp.Optional(e + pyp.Word("+-" + pyp.nums, pyp.nums)))
+        # fnumber = pyp.Combine(pyp.Word("+-" + pyp.nums, pyp.nums) +
+        #                       pyp.Optional(point + pyp.Optional(pyp.Word(pyp.nums))) +
+        #                       pyp.Optional(e + pyp.Word("+-" + pyp.nums, pyp.nums)))
+        fnumber = pyp.Regex(r"[+-]?\d+(:?\.\d*)?(:?[eE][+-]?\d+)?")
+        hexnumber = pyp.Regex(R"(0x([0-9a-fA-F]+)|([0-9a-fA-F]+)H)")
         ident = pyp.Word(pyp.alphas, pyp.alphas + pyp.nums + "_$")
+        label = pyp.Word(pyp.alphas, pyp.alphas + pyp.nums)
         plus = pyp.Literal("+")
         minus = pyp.Literal("-")
         mult = pyp.Literal("*")
         div = pyp.Literal("/")
         and_ = pyp.Literal("&")
+        or_ = pyp.Literal("|")
         lpar = pyp.Literal("(").suppress()
         rpar = pyp.Literal(")").suppress()
-        addop = plus | minus | and_
+        addop = plus | minus | and_ | or_
         multop = mult | div
         expop = pyp.Literal("^")
         pi = pyp.CaselessLiteral("PI")
         expr = pyp.Forward()
         atom = ((pyp.Optional(pyp.oneOf("- +")) +
-                 (pi | e | fnumber | ident + lpar + expr + rpar).setParseAction(self.pushFirst))
+                 (pi | e | hexnumber | fnumber | ident + lpar + expr + rpar).setParseAction(self.pushFirst))
+                | (label).setParseAction(self.pushFirst)
                 | pyp.Optional(pyp.oneOf("- +")) + pyp.Group(lpar + expr + rpar)
                 ).setParseAction(self.pushUMinus)
         # by defining exponentiation as "atom [ ^ factor ]..." instead of
@@ -72,7 +78,8 @@ class NumericStringParser(object):
                     "*": operator.mul,
                     "/": operator.truediv,
                     "^": operator.pow,
-                    "&": operator.and_}
+                    "&": operator.and_,
+                    "|": operator.or_}
         self.fn = {"sin": math.sin,
                    "cos": math.cos,
                    "tan": math.tan,
@@ -88,9 +95,13 @@ class NumericStringParser(object):
         op = s.pop()
         if op == 'unary -':
             return -self.evaluateStack(s)
-        if op in "+-&*/^":
+        if op in "+-*/^":
             op2 = self.evaluateStack(s)
             op1 = self.evaluateStack(s)
+            return self.opn[op](op1, op2)
+        if op in "&|":
+            op2 = int(self.evaluateStack(s))
+            op1 = int(self.evaluateStack(s))
             return self.opn[op](op1, op2)
         elif op == "PI":
             return math.pi  # 3.1415926535
@@ -99,7 +110,14 @@ class NumericStringParser(object):
         elif op in self.fn:
             return self.fn[op](self.evaluateStack(s))
         elif op[0].isalpha():
-            return 0
+            if op in self.labels:
+                return self.labels[op]
+            else:
+                return 0
+        elif op[:2] == '0x':
+            return int(op[2:], 16)
+        elif op[-1:] == 'H':
+            return int(op[:-1], 16)
         else:
             return float(op)
 
