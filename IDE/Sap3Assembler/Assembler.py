@@ -8,7 +8,7 @@ class Assembler:
         super().__init__()
         self.instructions = Instructions()
         self.errors = []
-        self.sap2_parser = Parser(self.instructions)
+        self.sap3_parser = Parser(self.instructions)
         self.memory = None
         self.memory_dump = []
         self.symbols = []
@@ -64,11 +64,11 @@ class Assembler:
         return self.assemble(lines)
 
     def assemble(self, text):
-        segments = self.sap2_parser.parse_strings(text)
+        segments = self.sap3_parser.parse_strings(text)
         return self.assemble_segments(segments)
 
     def get_errors(self):
-        parse_errors = self.sap2_parser.get_errors()
+        parse_errors = self.sap3_parser.get_errors()
         for error in parse_errors:
             self.errors.append(error)
         return self.errors
