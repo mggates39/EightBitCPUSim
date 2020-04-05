@@ -114,7 +114,7 @@ class NumericStringParser(object):
             if op in self.labels:
                 return self.labels[op]
             else:
-                return 0
+                return op
         elif op[:2] == '0x':
             return int(op[2:], 16)
         elif op[-1:] == 'H':

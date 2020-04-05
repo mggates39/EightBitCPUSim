@@ -63,6 +63,6 @@ if __name__ == "__main__":
     test("STACK", 3)
     test("TEMP0", 512)
     test("int(TEMP0/0FFH)", 2)
-    test("harry", 0)
+    test("harry", "harry")
     test("0FFH", 255)
     test("0xFF", 255)
