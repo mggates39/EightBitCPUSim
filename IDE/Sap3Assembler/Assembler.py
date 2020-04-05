@@ -1,6 +1,8 @@
 from Sap3Assembler.Instructions import Instructions
 from Sap3Assembler.Memory import Memory
 from Sap3Assembler.Parser import Parser
+from Sap3Assembler.NumericStringParser import NumericStringParser
+
 
 
 class Assembler:
@@ -12,9 +14,12 @@ class Assembler:
         self.memory = None
         self.memory_dump = []
         self.symbols = []
+        self.labels = {}
+        self.np = NumericStringParser()
 
     def assemble_segments(self, segments):
         self.symbols = []
+        self.labels = {}
         self.memory = Memory()
         self.memory_dump = []
         listing = ""
@@ -27,9 +32,11 @@ class Assembler:
             for segment in segments:
                 for label in segment.labels:
                     self.symbols.append(label)
+                    self.labels[label[1]] = label[0]
 
+            self.np.set_labels(self.labels)
             for segment in segments:
-                segment.assemble(self.symbols)
+                segment.assemble(self.symbols, self.np)
                 segment_errors = segment.get_errors()
                 for error in segment_errors:
                     self.errors.append(error)
