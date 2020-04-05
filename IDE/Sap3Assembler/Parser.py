@@ -69,18 +69,15 @@ class Parser:
 
     def check_for_overlap(self):
         overlap = False
-        previous_segment = None
 
-        for segment in self.segments:
-            if previous_segment is None:
-                previous_segment = segment
-            else:
-                if previous_segment.overlaps(segment):
-                    overlap = True
-                    self.errors.append(
-                        "ERROR: Segments overlap: Segment at 0x{0:04X} through 0x{1:04X} and segment at 0x{2:04X} through 0x{3:04X}!\n".format(
-                            previous_segment.start, previous_segment.address, segment.start, segment.address))
-                previous_segment = segment
+        for segment1 in self.segments:
+            for segment2 in self.segments:
+                if segment1 != segment2:
+                    if segment1.overlaps(segment2):
+                        overlap = True
+                        self.errors.append(
+                            "ERROR: Segments overlap: Segment at 0x{0:04X} through 0x{1:04X} and segment at 0x{2:04X} through 0x{3:04X}!\n".format(
+                                segment1.start, segment1.address, segment2.start, segment2.address))
 
         return overlap
 
