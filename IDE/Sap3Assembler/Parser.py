@@ -1,3 +1,5 @@
+import re
+
 from Sap3Assembler.Instructions import Instructions
 from Sap3Assembler.Segment import Segment
 
@@ -54,6 +56,8 @@ class Parser:
         else:
             if argument[-1] == 'H':
                 argument = int(argument[:-1], 16)
+            elif argument[0:1] == '0X':
+                argument = int(argument[2:], 16)
         if directive == '.org':
             self.start_segment(int(argument), 'C')
         elif directive == '.corg':
@@ -81,62 +85,72 @@ class Parser:
 
         return overlap
 
-    def process_instructions(self, line_number, label, fields):
-        if label is not None:
-            if len(fields) == 2:
-                self.get_current_segment().add_instruction(line_number, label, fields[1], None)
-            else:
-                arguments = fields[2].split(',')
-                if len(arguments) == 1:
-                    self.get_current_segment().add_instruction(line_number, label, fields[1], make_target(fields[2]))
-                else:
-                    self.get_current_segment().add_instruction(line_number, label, fields[1], make_target(arguments[0]),
-                                                               make_target(arguments[1]))
+    def process_instructions(self, line_number, label, operator, operand_one, opearnd_two):
+        if operand_one is not None:
+            operand_one = make_target(operand_one)
+        if opearnd_two is not None:
+            opearnd_two = make_target(opearnd_two)
 
-        else:
-            if len(fields) == 2:
-                arguments = fields[1].split(',')
-                if len(arguments) == 1:
-                    self.get_current_segment().add_instruction(line_number, None, fields[0], make_target(fields[1]))
-                else:
-                    self.get_current_segment().add_instruction(line_number, None, fields[0], make_target(arguments[0]),
-                                                               make_target(arguments[1]))
-            else:
-                self.get_current_segment().add_instruction(line_number, None, fields[0], None)
+        self.get_current_segment().add_instruction(line_number, label, operator, operand_one, opearnd_two)
 
     def parse_fields(self, line_number, fields):
-        if len(fields) > 0:
-            if fields[0].startswith('.'):
-                if len(fields) == 2:
-                    self.process_directives(line_number, None, fields[0], fields[1])
-                else:
-                    self.process_directives(line_number, None, fields[0], None)
-            elif fields[0].endswith(':'):
-                label = make_label(fields[0])
-                if len(fields) == 1:
-                    self.get_current_segment().add_label(line_number, label)
-                elif fields[1].startswith('.'):
-                    if len(fields) == 3:
-                        self.process_directives(line_number, label, fields[1], fields[2])
-                    else:
-                        self.process_directives(line_number, label, fields[1], None)
-                else:
-                    self.process_instructions(line_number, label, fields)
+        my_fields=[None, None, None, None]
+        label = None
+        if fields[0] is not None:
+            label = make_label(fields[0])
+
+        if len(fields) == 1:
+            self.get_current_segment().add_label(line_number, label)
+        else:
+            i = 0
+            for field in fields:
+                my_fields[i] = field
+                i += 1
+
+            if my_fields[1].startswith('.'):
+                self.process_directives(line_number, label, my_fields[1], my_fields[2])
             else:
-                self.process_instructions(line_number, None, fields)
+                self.process_instructions(line_number, label, my_fields[1], my_fields[2], my_fields[3])
 
     def parse_strings(self, lines):
         line_number = 0
+        b = re.compile(r'^\s*$')
+        p = re.compile(r'^(.*:)?\s(.*)\s(.*),\s?(.*)')
+        s = re.compile(r'^(.*:)?\s(.*)\s(.*)')
+        t = re.compile(r'^(.*:)?\s(.*)')
+        q = re.compile(r'^(.*:)')
         for line in lines:
             line_number += 1
-            # Ignore comment lines
+            # Ignore comment lines and comments at the end of lines
             if line.startswith('#') or line.startswith(';'):
                 continue
 
-            rest = line.split(';', 1)[0]
+            rest = (line.split(';', 1)[0]).rstrip()
 
-            fields = rest.split()
-            self.parse_fields(line_number, fields)
+            m = b.match(rest)
+            if not m:
+                m = p.match(rest)
+                if m:
+                    print('p', m)
+                    print(m.groups())
+                else:
+                    m = s.match(rest)
+                    if m:
+                        print('s', m)
+                        print(m.groups())
+                    else:
+                        m = t.match(rest)
+                        if m:
+                            print('t', m)
+                            print(m.groups())
+                        else:
+                            m = q.match(rest)
+                            if m:
+                                print('q', m)
+                                print(m.groups())
+
+                if m:
+                    self.parse_fields(line_number, m.groups())
 
         if self.end_segment():
             self.errors.append("WARNING: Source file does not have .end directive.\n")
