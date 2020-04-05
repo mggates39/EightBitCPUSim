@@ -1,6 +1,6 @@
 	.org	0
 t_rrc:	ORI 0
-	MVI A,0FEH
+	MVI A, 0FEH	;Comment
 	RRC
 	CC bad
 	RRC
@@ -13,7 +13,7 @@ t_rrc:	ORI 0
 	CNZ bad
 
 t_rar:	ORI 0
-	MVI A,0FEH
+	MVI A, 0FEH
 	RAR
 	CC bad
 	RAR
