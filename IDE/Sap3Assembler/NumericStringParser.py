@@ -83,6 +83,7 @@ class NumericStringParser(object):
         self.fn = {"sin": math.sin,
                    "cos": math.cos,
                    "tan": math.tan,
+                   "int": int,
                    "abs": abs,
                    "trunc": lambda a: int(a),
                    "round": round,
@@ -126,3 +127,6 @@ class NumericStringParser(object):
         results = self.bnf.parseString(num_string, parseAll)
         val = self.evaluateStack(self.exprStack[:])
         return val
+
+    def set_labels(self, labels):
+        self.labels = labels
