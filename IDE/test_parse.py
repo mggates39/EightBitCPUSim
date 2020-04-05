@@ -5,7 +5,7 @@ from pyparsing import ParseException
 from Sap3Assembler.NumericStringParser import NumericStringParser
 
 if __name__ == "__main__":
-    good = {"STACK" : 15, "TEMP0": 512}
+    good = {"STACK": 15, "TEMP0": 512}
 
     np = NumericStringParser()
     np.set_labels(good)
@@ -67,4 +67,3 @@ if __name__ == "__main__":
     test("harry", "harry")
     test("0FFH", 255)
     test("0xFF", 255)
-

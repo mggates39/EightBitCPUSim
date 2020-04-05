@@ -90,7 +90,6 @@ class StatusRegister(wx.Panel):
         pub.subscribe(self.on_out_psw, "CPU.PswOut")
         pub.subscribe(self.on_set_flags, "alu.FlagValues")
 
-
     def set_in_display_flag(self):
         self.write_indicator.SetForegroundColour((0, 0, 255))  # set text color
 

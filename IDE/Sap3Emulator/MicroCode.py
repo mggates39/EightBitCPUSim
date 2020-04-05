@@ -1473,7 +1473,7 @@ operators = {
     0xD1: {"operator": "POP DE", "op_code": 0xD1, "operand1": "DE", "operand2": None, "addressing": "Reg",
            "microcode": [['CPU.PcOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.IrIn', 'CPU.PcInc'],
-                         [ 'CPU.SpOut', 'CPU.MarIn'],
+                         ['CPU.SpOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.ERegIn', 'CPU.SpInc'],
                          ['CPU.SpOut', 'CPU.MarIn'],
                          ['CPU.MemOut', 'CPU.DRegIn', 'CPU.SpInc'],
@@ -1791,6 +1791,7 @@ JUMP_OP_CODE = 0xC3
 RETURN_OP_CODE = 0xC9
 RST_OP_CODE_MASK = 0xC7
 RST_ADDR_MASK = 0x38
+
 
 class MicroCode:
     def __init__(self):

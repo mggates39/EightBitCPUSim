@@ -1,7 +1,9 @@
 from __future__ import division
-import pyparsing as pyp
+
 import math
 import operator
+
+import pyparsing as pyp
 
 
 class NumericStringParser(object):
@@ -106,7 +108,7 @@ class NumericStringParser(object):
             op2 = self.evaluateStack(s)
             op1 = self.evaluateStack(s)
             return self.opn[op](op1, op2)
-        if op in ["&","|","AND","OR","XOR"]:
+        if op in ["&", "|", "AND", "OR", "XOR"]:
             op2 = int(self.evaluateStack(s))
             op1 = int(self.evaluateStack(s))
             return self.opn[op](op1, op2)

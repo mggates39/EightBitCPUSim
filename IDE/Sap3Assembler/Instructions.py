@@ -78,7 +78,8 @@ class Instructions:
             "OUT": {"operands": 1, "included": 0, "bytes": 2, "operators": ["OUT"]},
             "PCHL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["PCHL"]},
             "POP": {"operands": 1, "included": 1, "bytes": 1, "operators": ["POP PSW", "POP BC", "POP DE", "POP HL"]},
-            "PUSH": {"operands": 1, "included": 1, "bytes": 1, "operators": ["PUSH PSW", "PUSH BC", "PUSH DE", "PUSH HL"]},
+            "PUSH": {"operands": 1, "included": 1, "bytes": 1,
+                     "operators": ["PUSH PSW", "PUSH BC", "PUSH DE", "PUSH HL"]},
             "RAL": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAL"]},
             "RAR": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RAR"]},
             "RLC": {"operands": 0, "included": 0, "bytes": 1, "operators": ["RLC"]},
@@ -220,7 +221,7 @@ class Instructions:
                     "bytes": 2},
 
             "DAA": {"operator": "DAA", "op_code": 0x27, "operand1": None, "operand2": None, "addressing": "Imp",
-                       "bytes": 1},
+                    "bytes": 1},
             "DAD BC": {"operator": "DAD BC", "op_code": 0x09, "operand1": "BC", "operand2": None, "addressing": "Reg",
                        "bytes": 1},
             "DAD DE": {"operator": "DAD DE", "op_code": 0x19, "operand1": "DE", "operand2": None, "addressing": "Reg",
@@ -254,9 +255,9 @@ class Instructions:
             "DCX SP": {"operator": "DCX SP", "op_code": 0x3B, "operand1": "SP", "operand2": None, "addressing": "Reg",
                        "bytes": 1},
             "DI": {"operator": "DI", "op_code": 0xF3, "operand1": None, "operand2": None, "addressing": "Imp",
-                    "bytes": 1},
+                   "bytes": 1},
             "EI": {"operator": "EI", "op_code": 0xFB, "operand1": None, "operand2": None, "addressing": "Imp",
-                    "bytes": 1},
+                   "bytes": 1},
 
             "HLT": {"operator": "HLT", "op_code": 0x76, "operand1": None, "operand2": None, "addressing": "Non",
                     "bytes": 1},
@@ -315,7 +316,7 @@ class Instructions:
             "LDAX DE": {"operator": "LDAX DE", "op_code": 0x1A, "operand1": "DE", "operand2": None, "addressing": "Ind",
                         "bytes": 1},
             "LHLD": {"operator": "LHLD", "op_code": 0x2A, "operand1": "P", "operand2": None, "addressing": "Dir",
-                    "bytes": 3},
+                     "bytes": 3},
             "LXI BC": {"operator": "LXI BC", "op_code": 0x01, "operand1": "BC", "operand2": "2", "addressing": "Imm",
                        "bytes": 3},
             "LXI DE": {"operator": "LXI DE", "op_code": 0x11, "operand1": "DE", "operand2": "2", "addressing": "Imm",
@@ -503,14 +504,15 @@ class Instructions:
                     "bytes": 2},
 
             "PCHL": {"operator": "PCHL", "op_code": 0xE9, "operand1": None, "operand2": None, "addressing": "Non",
-                    "bytes": 1},
+                     "bytes": 1},
             "POP BC": {"operator": "POP BC", "op_code": 0xC1, "operand1": "BC", "operand2": None, "addressing": "Reg",
                        "bytes": 2},
             "POP DE": {"operator": "POP DE", "op_code": 0xD1, "operand1": "DE", "operand2": None, "addressing": "Reg",
                        "bytes": 2},
             "POP HL": {"operator": "POP HL", "op_code": 0xE1, "operand1": "HL", "operand2": None, "addressing": "Reg",
                        "bytes": 2},
-            "POP PSW": {"operator": "POP PSW", "op_code": 0xF1, "operand1": "PSW", "operand2": None, "addressing": "Reg",
+            "POP PSW": {"operator": "POP PSW", "op_code": 0xF1, "operand1": "PSW", "operand2": None,
+                        "addressing": "Reg",
                         "bytes": 2},
 
             "PUSH BC": {"operator": "PUSH BC", "op_code": 0xC5, "operand1": "BC", "operand2": None, "addressing": "Reg",
@@ -519,8 +521,9 @@ class Instructions:
                         "bytes": 2},
             "PUSH HL": {"operator": "PUSH HL", "op_code": 0xE5, "operand1": "HL", "operand2": None, "addressing": "Reg",
                         "bytes": 2},
-            "PUSH PSW": {"operator": "PUSH PSW", "op_code": 0xF5, "operand1": "PSW", "operand2": None, "addressing": "Reg",
-                        "bytes": 2},
+            "PUSH PSW": {"operator": "PUSH PSW", "op_code": 0xF5, "operand1": "PSW", "operand2": None,
+                         "addressing": "Reg",
+                         "bytes": 2},
 
             "RAL": {"operator": "RAL", "op_code": 0x17, "operand1": None, "operand2": None, "addressing": "Imp",
                     "bytes": 1},
@@ -588,10 +591,10 @@ class Instructions:
                       "bytes": 1},
 
             "SHLD": {"operator": "SHLD", "op_code": 0x22, "operand1": "P", "operand2": None, "addressing": "Dir",
-                    "bytes": 3},
+                     "bytes": 3},
 
             "SPHL": {"operator": "SPHL", "op_code": 0xF9, "operand1": None, "operand2": None, "addressing": "Imp",
-                    "bytes": 1},
+                     "bytes": 1},
 
             "STA": {"operator": "STA", "op_code": 0x32, "operand1": "P", "operand2": None, "addressing": "Dir",
                     "bytes": 3},
@@ -622,7 +625,7 @@ class Instructions:
                     "bytes": 2},
 
             "XCHG": {"operator": "XCHG", "op_code": 0xEB, "operand1": None, "operand2": None, "addressing": "Imm",
-                    "bytes": 1},
+                     "bytes": 1},
             "XRA A": {"operator": "XRA A", "op_code": 0xAF, "operand1": "A", "operand2": None, "addressing": "Reg",
                       "bytes": 1},
             "XRA B": {"operator": "XRA B", "op_code": 0xA8, "operand1": "B", "operand2": None, "addressing": "Reg",
@@ -643,7 +646,7 @@ class Instructions:
             "XRI": {"operator": "XRI", "op_code": 0xEE, "operand1": "1", "operand2": None, "addressing": "Imm",
                     "bytes": 2},
             "XTHL": {"operator": "XTHL", "op_code": 0xE3, "operand1": None, "operand2": None, "addressing": "Imm",
-                    "bytes": 1}
+                     "bytes": 1}
         }
 
     def is_mnemonic(self, mnemonic):

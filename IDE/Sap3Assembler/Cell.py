@@ -48,7 +48,7 @@ class Cell:
             self.op_code, real_operator = instructions.lookup_op_code(self.operator, self.first_operand,
                                                                       self.second_operand)
             if self.op_code == -1:
-                error = "ERROR: Unknown operator {} at {}.\n".format(self.operator, self.line_number)
+                error = "ERROR: Unknown operator '{}' at {}.\n".format(self.operator, self.line_number)
                 self.op_code = 0
                 self.first_value = None
                 self.second_value = None
