@@ -87,14 +87,15 @@ class Parser:
 
     def process_instructions(self, line_number, label, operator, operand_one, opearnd_two):
         if operand_one is not None:
-            operand_one = make_target(operand_one)
+            operand_one = make_target(operand_one.rstrip())
         if opearnd_two is not None:
-            opearnd_two = make_target(opearnd_two)
+            opearnd_two = make_target(opearnd_two.rstrip())
+        operator = operator.rstrip()
 
         self.get_current_segment().add_instruction(line_number, label, operator, operand_one, opearnd_two)
 
     def parse_fields(self, line_number, fields):
-        my_fields=[None, None, None, None]
+        my_fields = [None, None, None, None]
         label = None
         if fields[0] is not None:
             label = make_label(fields[0])
