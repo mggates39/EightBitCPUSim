@@ -35,8 +35,9 @@ class Assembler:
                     self.labels[label[1]] = label[0]
 
             self.np.set_labels(self.labels)
+            
             for segment in segments:
-                segment.assemble(self.symbols, self.np)
+                segment.assemble( self.np)
                 segment_errors = segment.get_errors()
                 for error in segment_errors:
                     self.errors.append(error)

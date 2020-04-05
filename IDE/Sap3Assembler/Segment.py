@@ -69,7 +69,7 @@ class Segment:
     def add_word(self, line_number, label, value):
         self.add_cell(line_number, label, None, (value & 0xFF), ((value >> 8) & 0xFF))
 
-    def assemble(self, labels, np):
+    def assemble(self, np):
         error = "ERROR: Segment with no operands or directives at address 0x{0:04X}\n".format(self.address)
         for cell in self.cell_list:
             error = cell.assemble_pass_one(self.instructions)
@@ -79,7 +79,7 @@ class Segment:
 
         if error == "":
             for cell in self.cell_list:
-                error = cell.assemble_pass_two(labels, self.instructions, np)
+                error = cell.assemble_pass_two(self.instructions, np)
                 if error != "":
                     self.errors.append(error)
         else:
