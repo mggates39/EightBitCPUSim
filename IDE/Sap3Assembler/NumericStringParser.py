@@ -49,9 +49,12 @@ class NumericStringParser(object):
         div = pyp.Literal("/")
         and_ = pyp.Literal("&")
         or_ = pyp.Literal("|")
+        land = pyp.Literal("AND")
+        lor = pyp.Literal("OR")
+        lxor = pyp.Literal("XOR")
         lpar = pyp.Literal("(").suppress()
         rpar = pyp.Literal(")").suppress()
-        addop = plus | minus | and_ | or_
+        addop = plus | minus | and_ | or_ | land | lor | lxor
         multop = mult | div
         expop = pyp.Literal("^")
         pi = pyp.CaselessLiteral("PI")
@@ -79,7 +82,10 @@ class NumericStringParser(object):
                     "/": operator.truediv,
                     "^": operator.pow,
                     "&": operator.and_,
-                    "|": operator.or_}
+                    "AND": operator.and_,
+                    "|": operator.or_,
+                    "OR": operator.or_,
+                    "XOR": operator.xor}
         self.fn = {"sin": math.sin,
                    "cos": math.cos,
                    "tan": math.tan,
@@ -100,7 +106,7 @@ class NumericStringParser(object):
             op2 = self.evaluateStack(s)
             op1 = self.evaluateStack(s)
             return self.opn[op](op1, op2)
-        if op in "&|":
+        if op in ["&","|","AND","OR","XOR"]:
             op2 = int(self.evaluateStack(s))
             op1 = int(self.evaluateStack(s))
             return self.opn[op](op1, op2)
