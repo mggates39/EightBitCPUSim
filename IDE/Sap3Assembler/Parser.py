@@ -130,24 +130,12 @@ class Parser:
             m = b.match(rest)
             if not m:
                 m = p.match(rest)
-                if m:
-                    print('p', m)
-                    print(m.groups())
-                else:
+                if not m:
                     m = s.match(rest)
-                    if m:
-                        print('s', m)
-                        print(m.groups())
-                    else:
+                    if not m:
                         m = t.match(rest)
-                        if m:
-                            print('t', m)
-                            print(m.groups())
-                        else:
+                        if not m:
                             m = q.match(rest)
-                            if m:
-                                print('q', m)
-                                print(m.groups())
 
                 if m:
                     self.parse_fields(line_number, m.groups())
