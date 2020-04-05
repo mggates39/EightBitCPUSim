@@ -1,8 +1,7 @@
 from Sap3Assembler.Instructions import Instructions
 from Sap3Assembler.Memory import Memory
-from Sap3Assembler.Parser import Parser
 from Sap3Assembler.NumericStringParser import NumericStringParser
-
+from Sap3Assembler.Parser import Parser
 
 
 class Assembler:
@@ -35,9 +34,9 @@ class Assembler:
                     self.labels[label[1]] = label[0]
 
             self.np.set_labels(self.labels)
-            
+
             for segment in segments:
-                segment.assemble( self.np)
+                segment.assemble(self.np)
                 segment_errors = segment.get_errors()
                 for error in segment_errors:
                     self.errors.append(error)
