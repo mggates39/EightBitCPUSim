@@ -33,6 +33,7 @@ Test:	.byte 52
 ; Top of Stack
 ;
 	.org 128
+	DS 10
 Stack:	.byte 0
 
 	.end
