@@ -1,7 +1,7 @@
 class Cell:
 
     def __init__(self, line_number, address, label=None, operator=None, first_operand=None,
-                 second_operand=None) -> None:
+                 second_operand=None, data_size=0, reserved_space=0) -> None:
         super().__init__()
         self.line_number = line_number
         self.address = address
@@ -9,12 +9,14 @@ class Cell:
         self.operator = operator
         self.first_operand = first_operand
         self.second_operand = second_operand
+        self.data_size = data_size
+        self.reserved_space = reserved_space
         self.op_code = None
         self.first_value = None
         self.second_value = None
         self.memory = [None, None, None]
-        self.size = 0
         self.real_operator = None
+        self.size = 0
         self.good = True
 
     def get_size(self):
@@ -33,14 +35,16 @@ class Cell:
         return value, error
 
     def calculate_size(self, instructions):
-        self.size = 1
-        if self.operator is not None:
-            mnemonic = instructions.get_mnemonic(self.operator)
-            if mnemonic is not None:
-                self.size = mnemonic["bytes"]
+        if self.reserved_space != 0:
+            self.size = self.reserved_space
         else:
-            if self.second_operand is not None:
-                self.size = 2
+            self.size = 1
+            if self.operator is not None:
+                mnemonic = instructions.get_mnemonic(self.operator)
+                if mnemonic is not None:
+                    self.size = mnemonic["bytes"]
+            else:
+                self.size = self.data_size
 
     def assemble_pass_one(self, instructions):
         error = ""
@@ -63,9 +67,10 @@ class Cell:
                 self.size = real_operator["bytes"]
                 self.real_operator = real_operator["operator"]
         else:
-            self.size = 1
-            if self.second_operand is not None:
-                self.size = 2
+            if self.reserved_space != 0:
+                self.size = self.reserved_space
+            else:
+                self.size = self.data_size
 
         return error
 
@@ -79,10 +84,10 @@ class Cell:
                         if self.good:
                             self.first_value = value & 0xFF
                             self.second_value = (value >> 8) & 0xFF
-                            self.first_operand = "(0x{0:04X}) ; {1}".format(value, self.first_operand)
+                            # self.first_operand = "(0x{0:04X}) ; {1}".format(value, self.first_operand)
                     elif instructions.is_operand_one_numeric(self.real_operator):
                         self.first_value, error = self.back_patch_label(self.first_operand, np)
-                        self.first_operand = "0x{0:02X}".format(self.first_value)
+                        # self.first_operand = "0x{0:02X}".format(self.first_value)
                     elif instructions.is_operand_one_register(self.real_operator):
                         self.first_value = None
 
@@ -90,19 +95,22 @@ class Cell:
                         if self.second_operand is not None:
                             if instructions.is_operand_two_numeric(self.real_operator):
                                 self.second_value, error = self.back_patch_label(self.second_operand, np)
-                                self.second_operand = "0x{0:02X}".format(self.second_value)
+                                # self.second_operand = "0x{0:02X}".format(self.second_value)
                             elif instructions.is_operand_two_numeric_word(self.real_operator):
                                 value, error = self.back_patch_label(self.second_operand, np)
                                 if self.good:
                                     self.first_value = value & 0xFF
                                     self.second_value = (value >> 8) & 0xFF
-                                    self.second_operand = "0x{0:04X}".format(value)
+                                    # self.second_operand = "0x{0:04X}".format(value)
                             elif instructions.is_operand_two_memory(self.real_operator):
                                 value, error = self.back_patch_label(self.second_operand, np)
                                 if self.good:
                                     self.first_value = value & 0xFF
                                     self.second_value = (value >> 8) & 0xFF
-                                    self.second_operand = "(0x{0:04X}) ; {1}".format(value, self.second_operand)
+                                    # if value != self.second_operand:
+                                    #     self.second_operand = "(0x{0:04X}) ; {1}".format(value, self.second_operand)
+                                    # else:
+                                    #     self.second_operand = "0x{0:04X}".format(value)
                         else:
                             error = "ERROR: Missing second operand"
                             self.good = False
@@ -114,9 +122,14 @@ class Cell:
                     self.first_value = None
                     self.first_operand = ''
         else:
-            self.first_value = int(self.first_operand)
-            if self.second_operand is not None:
-                self.second_value = int(self.second_operand)
+            if self.reserved_space == 0:
+                value, error = self.back_patch_label(self.first_operand, np)
+                if self.good:
+                    self.first_value = value & 0xFF
+                    if self.data_size == 2:
+                        self.second_value = (value >> 8) & 0xFF
+            else:
+                self.first_value = int(self.first_operand)
 
         return error
 
@@ -134,9 +147,12 @@ class Cell:
                         self.memory[1] = self.second_value
 
             else:
-                self.memory[0] = self.first_value
-                if self.second_value is not None:
-                    self.memory[1] = self.second_value
+                if self.reserved_space != 0:
+                    self.memory = [self.first_value] * self.reserved_space
+                else:
+                    self.memory[0] = self.first_value
+                    if self.second_value is not None:
+                        self.memory[1] = self.second_value
 
         return self.memory
 
@@ -145,11 +161,16 @@ class Cell:
         listing += "0x{0:04X}: ".format(self.address)
 
         memory_dump = ""
-        for memory in self.memory:
-            if memory is not None:
-                memory_dump += '0x{0:02X} '.format(memory)
-            else:
-                memory_dump += "     "
+        if self.reserved_space != 0:
+            memory_dump += "0x00 "
+            memory_dump += " ,,, "
+            memory_dump += "     "
+        else:
+            for memory in self.memory:
+                if memory is not None:
+                    memory_dump += '0x{0:02X} '.format(memory)
+                else:
+                    memory_dump += "     "
 
         listing += memory_dump
 
@@ -159,16 +180,18 @@ class Cell:
             listing += "{:<10s}".format(' ')
 
         if self.operator is None:
-            if self.second_operand is None:
-                listing += " .byte {}".format(self.first_operand)
+            if self.reserved_space != 0:
+                listing += " DS {0}".format(self.reserved_space)
+            elif self.data_size ==1:
+                listing += " DB {0}".format(self.first_operand)
             else:
-                listing += " .word {}".format(self.second_operand << 8 | self.first_operand)
+                listing += " DW {0}".format(self.first_operand)
         else:
             listing += " {}".format(self.operator)
             if self.first_operand is not None:
                 listing += " {}".format(self.first_operand)
                 if self.second_operand is not None:
-                    listing += ",{}".format(self.second_operand)
+                    listing += ", {}".format(self.second_operand)
 
         listing += "\n"
 

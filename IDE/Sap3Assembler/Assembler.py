@@ -51,7 +51,7 @@ class Assembler:
 
             for segment in segments:
                 listing += segment.get_listing()
-            listing += "\n\t.end\n\n"
+            listing += "\n\tEND\n\n"
 
             listing += 'Labels:\n'
             lc = 0

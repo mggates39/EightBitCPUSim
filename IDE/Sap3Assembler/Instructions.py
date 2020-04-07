@@ -1,6 +1,20 @@
 class Instructions:
     def __init__(self) -> None:
         super().__init__()
+        self.directives = {
+            "END": {"operands": 1, "included": 0, "bytes": 0, "directive": "END"},
+            "EQU": {"operands": 1, "included": 0, "bytes": 0, "directive": "EQU"},
+            ".org": {"operands": 1, "included": 0, "bytes": 0, "directive": "ORG"},
+            ".end": {"operands": 1, "included": 0, "bytes": 0, "directive": "END"},
+            ".byte": {"operands": 1, "included": 0, "bytes": 1, "directive": "DB"},
+            ".word": {"operands": 1, "included": 0, "bytes": 2, "directive": "DW"},
+            "ORG": {"operands": 1, "included": 0, "bytes": 0, "directive": "ORG"},
+            "DB": {"operands": 1, "included": 0, "bytes": 1, "directive": "DB"},
+            "DW": {"operands": 1, "included": 0, "bytes": 2, "directive": "DW"},
+            "DS": {"operands": 1, "included": 0, "bytes": 0, "directive": "DS"},
+            "SET": {"operands": 1, "included": 0, "bytes": 0, "directive": "SET"},
+        }
+
         self.mnemonics = {
             "ACI": {"operands": 1, "included": 0, "bytes": 2, "operators": ["ACI"]},
             "ADD": {"operands": 1, "included": 1, "bytes": 1,
@@ -648,6 +662,18 @@ class Instructions:
             "XTHL": {"operator": "XTHL", "op_code": 0xE3, "operand1": None, "operand2": None, "addressing": "Imm",
                      "bytes": 1}
         }
+
+    def is_directive(self, mnemonic):
+        return_value = False
+        if mnemonic in self.directives:
+            return_value = True
+        return return_value
+
+    def get_directive(self, mnemonic):
+        if mnemonic in self.directives:
+            return self.directives[mnemonic]
+        else:
+            return None
 
     def is_mnemonic(self, mnemonic):
         return_value = False

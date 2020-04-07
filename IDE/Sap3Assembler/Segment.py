@@ -32,16 +32,18 @@ class Segment:
                 overlap = True
         return overlap
 
-    def add_cell(self, line_number, label=None, operator=None, first_operand=None, second_operand=None):
+    def add_cell(self, line_number, label=None, operator=None, first_operand=None, second_operand=None, data_size=0, reserved_space=0):
         if self.address <= MAX_ADDRESS:
             if self.label_cell is None:
-                cell = Cell(line_number, self.address, label, operator, first_operand, second_operand)
+                cell = Cell(line_number, self.address, label, operator, first_operand, second_operand, data_size, reserved_space)
             else:
                 cell = self.label_cell
                 cell.line_number = line_number
                 cell.operator = operator
                 cell.first_operand = first_operand
                 cell.second_operand = second_operand
+                cell.data_size = data_size
+                cell.reserved_space = reserved_space
                 self.label_cell = None
             cell.calculate_size(self.instructions)
 
@@ -63,11 +65,14 @@ class Segment:
     def add_instruction(self, line_number, label, operator, first_operand=None, second_operand=None):
         self.add_cell(line_number, label, operator, first_operand, second_operand)
 
+    def reserve_space(self, line_number, label, number_bytes):
+        self.add_cell(line_number, label, None, 0, None, 0, number_bytes)
+
     def add_byte(self, line_number, label, value):
-        self.add_cell(line_number, label, None, value)
+        self.add_cell(line_number, label, None, value, None, 1)
 
     def add_word(self, line_number, label, value):
-        self.add_cell(line_number, label, None, (value & 0xFF), ((value >> 8) & 0xFF))
+        self.add_cell(line_number, label, None, value, None, 2)
 
     def assemble(self, np):
         error = "ERROR: Segment with no operands or directives at address 0x{0:04X}\n".format(self.address)
@@ -93,7 +98,7 @@ class Segment:
         return memory
 
     def get_listing(self):
-        listing = "\n\t.org 0x{0:04X}\n".format(self.start)
+        listing = "\n\tORG 0x{0:04X}\n".format(self.start)
         for cell in self.cell_list:
             listing += cell.get_listing()
 

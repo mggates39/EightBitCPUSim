@@ -58,18 +58,21 @@ class Parser:
                 argument = int(argument[:-1], 16)
             elif argument[0:1] == '0X':
                 argument = int(argument[2:], 16)
-        if directive == '.org':
+        real_directive = self.instructions.get_directive(directive)["directive"]
+        if real_directive == "ORG":
             self.start_segment(int(argument), 'C')
-        elif directive == '.corg':
+        elif real_directive == '.corg':
             self.start_segment(int(argument), 'C')
-        elif directive == '.dorg':
+        elif real_directive == '.dorg':
             self.start_segment(int(argument), 'D')
-        elif directive == '.end':
+        elif real_directive == 'END':
             self.end_segment()
-        elif directive == '.byte':
-            self.get_current_segment().add_byte(line_number, label, int(argument))
-        elif directive == '.word':
-            self.get_current_segment().add_word(line_number, label, int(argument))
+        elif real_directive == "DB":
+            self.get_current_segment().add_byte(line_number, label, argument)
+        elif real_directive == "DW":
+            self.get_current_segment().add_word(line_number, label, argument)
+        elif real_directive == "DS":
+            self.get_current_segment().reserve_space(line_number, label, int(argument))
 
     def check_for_overlap(self):
         overlap = False
@@ -108,10 +111,12 @@ class Parser:
                 my_fields[i] = field
                 i += 1
 
-            if my_fields[1].startswith('.'):
+            if self.instructions.is_directive(my_fields[1]):
                 self.process_directives(line_number, label, my_fields[1], my_fields[2])
-            else:
+            elif self.instructions.is_mnemonic(my_fields[1]):
                 self.process_instructions(line_number, label, my_fields[1], my_fields[2], my_fields[3])
+            else:
+                self.errors.append("ERROR: Unknown operator or directive {0} at line {1}.\n".format(my_fields[1], line_number))
 
     def parse_strings(self, lines):
         line_number = 0
