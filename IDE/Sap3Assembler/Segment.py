@@ -32,6 +32,9 @@ class Segment:
                 overlap = True
         return overlap
 
+    def define_label(self, label, value):
+        self.labels.append((value, label))
+
     def add_cell(self, line_number, label=None, operator=None, first_operand=None, second_operand=None, data_size=0, reserved_space=0):
         if self.address <= MAX_ADDRESS:
             if self.label_cell is None:

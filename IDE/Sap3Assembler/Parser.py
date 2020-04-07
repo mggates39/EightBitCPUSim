@@ -50,6 +50,10 @@ class Parser:
         self.active_segment = None
         return was_active
 
+    def add_symbol(self, label, value):
+        if self.active_segment is not None:
+            self.active_segment.define_label(label, value)
+
     def process_directives(self, line_number, label, directive, argument=None):
         if argument is None:
             argument = 0
@@ -67,12 +71,15 @@ class Parser:
             self.start_segment(int(argument), 'D')
         elif real_directive == 'END':
             self.end_segment()
-        elif real_directive == "DB":
+        elif real_directive == 'DB':
             self.get_current_segment().add_byte(line_number, label, argument)
-        elif real_directive == "DW":
+        elif real_directive == 'DW':
             self.get_current_segment().add_word(line_number, label, argument)
-        elif real_directive == "DS":
+        elif real_directive == 'DS':
             self.get_current_segment().reserve_space(line_number, label, int(argument))
+        elif real_directive == 'EQU':
+            self.add_symbol(label, argument)
+
 
     def check_for_overlap(self):
         overlap = False

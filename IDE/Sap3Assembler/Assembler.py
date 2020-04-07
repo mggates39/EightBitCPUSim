@@ -14,6 +14,7 @@ class Assembler:
         self.memory_dump = []
         self.symbols = []
         self.labels = {}
+        self.equates = {}
         self.np = NumericStringParser()
 
     def assemble_segments(self, segments):
@@ -26,12 +27,39 @@ class Assembler:
         if not segments:
             self.errors.append("ERROR: No code found in source code\n")
         else:
+            # Extract all the valid labels, those that have integer values
+            # si we can then parse the ones that don't
 
-            # Extract all the labels from the segments to create a symbol table
+            all_done = True
             for segment in segments:
                 for label in segment.labels:
-                    self.symbols.append(label)
-                    self.labels[label[1]] = label[0]
+                    print(label)
+                    if type(label[0]) is int:
+                        self.labels[label[1]] = label[0]
+                    else:
+                        all_done = False
+
+            # while there were invalid labels
+            while not all_done:
+                all_done = True
+                self.np.set_labels(self.labels)
+                for segment in segments:
+                    for label in segment.labels:
+                        if label[1] not in self.labels:
+                            if type(label[0]) is not int:
+                                # Parse the value and save the label and equate record
+                                value = int(self.np.eval(label[0]))
+                                self.labels[label[1]] = value
+                                self.equates[label[1]] = label[0]
+                                self.np.set_labels(self.labels)
+                                all_done = False
+
+
+            # Extract all the labels from the segments to create a full and correct symbol table from parsed labels
+            for segment in segments:
+                for label in segment.labels:
+                    if label[1] in self.labels:
+                        self.symbols.append((self.labels[label[1]], label[1]))
 
             self.np.set_labels(self.labels)
 
@@ -51,6 +79,14 @@ class Assembler:
 
             for segment in segments:
                 listing += segment.get_listing()
+
+            # Add the leftover equate statements
+            listing += "\n"
+            for label in self.equates:
+                listing += "                               {:<10s}".format(label + ':')
+                listing += " EQU {0}".format(self.equates[label])
+                listing += "\n"
+
             listing += "\n\tEND\n\n"
 
             listing += 'Labels:\n'
