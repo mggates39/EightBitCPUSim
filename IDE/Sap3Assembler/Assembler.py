@@ -33,7 +33,6 @@ class Assembler:
             all_done = True
             for segment in segments:
                 for label in segment.labels:
-                    print(label)
                     if type(label[0]) is int:
                         self.labels[label[1]] = label[0]
                     else:

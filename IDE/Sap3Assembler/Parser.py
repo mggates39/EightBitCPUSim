@@ -54,6 +54,21 @@ class Parser:
         if self.active_segment is not None:
             self.active_segment.define_label(label, value)
 
+    def proces_define_byte(self, line_number, label, directive, argument=None):
+        data_array = []
+        args = argument.split(',')
+        if len(args) == 1:
+            self.get_current_segment().add_byte(line_number, label, argument)
+        else:
+            for arg in args:
+                if arg.startswith("'") or arg.startswith('"'):
+                    for c in arg[1:-1]:
+                        data_array.append(str(ord(c)))
+                else:
+                    data_array.append(arg)
+
+            self.get_current_segment().add_array(line_number, label, argument, len(data_array), data_array)
+
     def process_directives(self, line_number, label, directive, argument=None):
         if argument is None:
             argument = 0
@@ -72,7 +87,7 @@ class Parser:
         elif real_directive == 'END':
             self.end_segment()
         elif real_directive == 'DB':
-            self.get_current_segment().add_byte(line_number, label, argument)
+            self.proces_define_byte(line_number, label, directive, argument)
         elif real_directive == 'DW':
             self.get_current_segment().add_word(line_number, label, argument)
         elif real_directive == 'DS':
@@ -128,6 +143,7 @@ class Parser:
     def parse_strings(self, lines):
         line_number = 0
         b = re.compile(r'^\s*$')
+        db = re.compile(r'(.*:)?\s(DB)\s(.*)')
         p = re.compile(r'^(.*:)?\s(.*)\s(.*),\s?(.*)')
         s = re.compile(r'^(.*:)?\s(.*)\s(.*)')
         t = re.compile(r'^(.*:)?\s(.*)')
@@ -142,13 +158,15 @@ class Parser:
 
             m = b.match(rest)
             if not m:
-                m = p.match(rest)
+                m = db.match(rest)
                 if not m:
-                    m = s.match(rest)
+                    m = p.match(rest)
                     if not m:
-                        m = t.match(rest)
+                        m = s.match(rest)
                         if not m:
-                            m = q.match(rest)
+                            m = t.match(rest)
+                            if not m:
+                                m = q.match(rest)
 
                 if m:
                     self.parse_fields(line_number, m.groups())

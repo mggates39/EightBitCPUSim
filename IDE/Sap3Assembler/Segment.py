@@ -35,10 +35,10 @@ class Segment:
     def define_label(self, label, value):
         self.labels.append((value, label))
 
-    def add_cell(self, line_number, label=None, operator=None, first_operand=None, second_operand=None, data_size=0, reserved_space=0):
+    def add_cell(self, line_number, label=None, operator=None, first_operand=None, second_operand=None, data_size=0, reserved_space=0, data_array=None):
         if self.address <= MAX_ADDRESS:
             if self.label_cell is None:
-                cell = Cell(line_number, self.address, label, operator, first_operand, second_operand, data_size, reserved_space)
+                cell = Cell(line_number, self.address, label, operator, first_operand, second_operand, data_size, reserved_space, data_array)
             else:
                 cell = self.label_cell
                 cell.line_number = line_number
@@ -47,6 +47,7 @@ class Segment:
                 cell.second_operand = second_operand
                 cell.data_size = data_size
                 cell.reserved_space = reserved_space
+                cell.data_array = data_array
                 self.label_cell = None
             cell.calculate_size(self.instructions)
 
@@ -71,11 +72,14 @@ class Segment:
     def reserve_space(self, line_number, label, number_bytes):
         self.add_cell(line_number, label, None, 0, None, 0, number_bytes)
 
-    def add_byte(self, line_number, label, value):
-        self.add_cell(line_number, label, None, value, None, 1)
+    def add_byte(self, line_number, label, operand):
+        self.add_cell(line_number, label, None, operand, None, 1)
 
-    def add_word(self, line_number, label, value):
-        self.add_cell(line_number, label, None, value, None, 2)
+    def add_word(self, line_number, label, operand):
+        self.add_cell(line_number, label, None, operand, None, 2)
+
+    def add_array(self, line_number, label, operand, data_size, data_array):
+        self.add_cell(line_number, label, None, operand, None, -data_size, 0, data_array)
 
     def assemble(self, np):
         error = "ERROR: Segment with no operands or directives at address 0x{0:04X}\n".format(self.address)
@@ -92,7 +96,6 @@ class Segment:
                     self.errors.append(error)
         else:
             self.errors.append(error)
-            error = ""
 
     def load_memory(self, memory):
         for cell in self.cell_list:

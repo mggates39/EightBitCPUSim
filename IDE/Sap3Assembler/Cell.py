@@ -1,7 +1,7 @@
 class Cell:
 
     def __init__(self, line_number, address, label=None, operator=None, first_operand=None,
-                 second_operand=None, data_size=0, reserved_space=0) -> None:
+                 second_operand=None, data_size=0, reserved_space=0, data_array=None) -> None:
         super().__init__()
         self.line_number = line_number
         self.address = address
@@ -11,6 +11,7 @@ class Cell:
         self.second_operand = second_operand
         self.data_size = data_size
         self.reserved_space = reserved_space
+        self.data_array = data_array
         self.op_code = None
         self.first_value = None
         self.second_value = None
@@ -44,7 +45,7 @@ class Cell:
                 if mnemonic is not None:
                     self.size = mnemonic["bytes"]
             else:
-                self.size = self.data_size
+                self.size = abs(self.data_size)
 
     def assemble_pass_one(self, instructions):
         error = ""
@@ -70,7 +71,7 @@ class Cell:
             if self.reserved_space != 0:
                 self.size = self.reserved_space
             else:
-                self.size = self.data_size
+                self.size = abs(self.data_size)
 
         return error
 
@@ -123,11 +124,21 @@ class Cell:
                     self.first_operand = ''
         else:
             if self.reserved_space == 0:
-                value, error = self.back_patch_label(self.first_operand, np)
-                if self.good:
-                    self.first_value = value & 0xFF
-                    if self.data_size == 2:
-                        self.second_value = (value >> 8) & 0xFF
+                if self.data_size > 0:
+                    value, error = self.back_patch_label(self.first_operand, np)
+                    if self.good:
+                        self.first_value = value & 0xFF
+                        if self.data_size == 2:
+                            self.second_value = (value >> 8) & 0xFF
+                else:
+                    clean_data = []
+                    for data in self.data_array:
+                        value, error = self.back_patch_label(data, np)
+                        if self.good:
+                            clean_data.append(value & 0xFF)
+                        else:
+                            break
+                    self.data_array = clean_data
             else:
                 self.first_value = int(self.first_operand)
 
@@ -149,6 +160,8 @@ class Cell:
             else:
                 if self.reserved_space != 0:
                     self.memory = [self.first_value] * self.reserved_space
+                if self.data_size < 0:
+                    self.memory = self.data_array
                 else:
                     self.memory[0] = self.first_value
                     if self.second_value is not None:
@@ -160,17 +173,30 @@ class Cell:
         listing = "{0:05} - ".format(self.line_number)
         listing += "0x{0:04X}: ".format(self.address)
 
+        prefix = "        "
+        prefix += "        "
+        additional = ""
+
         memory_dump = ""
         if self.reserved_space != 0:
             memory_dump += "0x00 "
             memory_dump += " ,,, "
             memory_dump += "     "
         else:
+            i = 0
             for memory in self.memory:
-                if memory is not None:
-                    memory_dump += '0x{0:02X} '.format(memory)
+                if i < 3:
+                    if memory is not None:
+                        memory_dump += '0x{0:02X} '.format(memory)
+                    else:
+                        memory_dump += "     "
                 else:
-                    memory_dump += "     "
+                    if i % 3 == 0:
+                        additional += ("\n" + prefix)
+                    if memory is not None:
+                        additional += '0x{0:02X} '.format(memory)
+                i += 1
+
 
         listing += memory_dump
 
@@ -192,6 +218,9 @@ class Cell:
                 listing += " {}".format(self.first_operand)
                 if self.second_operand is not None:
                     listing += ", {}".format(self.second_operand)
+
+        if len(additional) > 0:
+            listing += additional
 
         listing += "\n"
 
