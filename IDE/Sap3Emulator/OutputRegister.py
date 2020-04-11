@@ -77,6 +77,10 @@ class OutputRegister(wx.Panel):
             self.segment.set_mode(new_mode=MODE_HEX)
             self.leds.set_mode(new_mode=MODE_HEX)
             pub.sendMessage('out.set_value', new_value=self.value)
+        elif self.select == 5:
+            print(chr(self.value), end="")
+        elif self.select == 6:
+            print(chr(self.value))
         else:
             print("{}".format(self.value))
 
