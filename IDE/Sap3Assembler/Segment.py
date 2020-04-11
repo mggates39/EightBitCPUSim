@@ -1,6 +1,6 @@
 from Sap3Assembler.Cell import Cell
 
-MAX_ADDRESS = 2048
+MAX_ADDRESS = 4096
 
 
 class Segment:
