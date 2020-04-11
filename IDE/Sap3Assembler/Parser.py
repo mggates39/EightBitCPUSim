@@ -19,8 +19,9 @@ def is_label(target):
 def make_target(target):
     fixed_target = target
     if is_label(fixed_target):
-        fixed_target = fixed_target[:-1]
-        fixed_target = fixed_target[1:]
+        fixed_target = fixed_target[1:-1]
+    if fixed_target.startswith("'"):
+        fixed_target = str(ord(fixed_target[1:-1]))
     return fixed_target
 
 
@@ -54,20 +55,26 @@ class Parser:
         if self.active_segment is not None:
             self.active_segment.define_label(label, value)
 
+    def load_string(self, line_number, label, argument, arguments):
+        data_array = []
+        for arg in arguments:
+            if arg.startswith("'") or arg.startswith('"'):
+                for c in arg[1:-1]:
+                    data_array.append(str(ord(c)))
+            else:
+                data_array.append(arg)
+        self.get_current_segment().add_array(line_number, label, argument, len(data_array), data_array)
+
     def proces_define_byte(self, line_number, label, directive, argument=None):
         data_array = []
         args = argument.split(',')
         if len(args) == 1:
-            self.get_current_segment().add_byte(line_number, label, argument)
+            if args[0].startswith("'") or args[0].startswith('"'):
+                self.load_string(line_number, label, argument, args)
+            else:
+                self.get_current_segment().add_byte(line_number, label, argument)
         else:
-            for arg in args:
-                if arg.startswith("'") or arg.startswith('"'):
-                    for c in arg[1:-1]:
-                        data_array.append(str(ord(c)))
-                else:
-                    data_array.append(arg)
-
-            self.get_current_segment().add_array(line_number, label, argument, len(data_array), data_array)
+            self.load_string(line_number, label, argument, args)
 
     def process_directives(self, line_number, label, directive, argument=None):
         if argument is None:
