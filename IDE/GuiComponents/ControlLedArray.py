@@ -17,9 +17,9 @@ class ControlLedArray(wx.Panel):
         led_sizer = wx.BoxSizer(wx.HORIZONTAL)
         for message in control_messages:
             led = ControlLed(self, light_color, dark_color, topic=message["topic"], label=message["label"], size=size)
-            led_sizer.Add(led, 1, wx.ALL | wx.ALIGN_CENTER | wx.EXPAND, 1)
+            led_sizer.Add(led, 1, wx.ALL | wx.EXPAND, 1)
             self.leds.append(led)
-        self.sizer.Add(led_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND)
+        self.sizer.Add(led_sizer, 1, wx.EXPAND)
         self.SetSizer(self.sizer)
         self.SetAutoLayout(1)
         self.sizer.Fit(self)

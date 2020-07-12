@@ -31,7 +31,7 @@ class TempRegister(wx.Panel):
 
         self.leds = LEDArray(self.box, 8, topic="tmp.set_value", size=10, mode=MODE_HEX)
 
-        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        vertical_box.Add(self.leds, 1, wx.EXPAND | wx.ALL, 10)
 
         hbox.Add(vertical_box, 1, wx.EXPAND)
         hbox.Add(self.panel, 0, wx.EXPAND)
