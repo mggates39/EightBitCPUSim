@@ -29,7 +29,7 @@ class StackRegister(wx.Panel):
 
         self.leds = LEDArray(self.box, 16, topic="sp.set_value", size=10)
 
-        horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
+        horizontal_box.Add(self.leds, 1, wx.ALL | wx.EXPAND, 10)
         horizontal_box.Add(self.panel, 0, wx.EXPAND)
 
         static_box_sizer.Add(horizontal_box, 1, wx.EXPAND)

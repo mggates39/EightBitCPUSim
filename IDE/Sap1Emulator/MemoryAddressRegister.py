@@ -23,7 +23,7 @@ class MemoryAddressRegister(wx.Panel):
         self.leds = LEDArray(self.box, 4, topic="mar.set_value")
 
         horizontal_box.Add(self.panel, 0, wx.EXPAND)
-        horizontal_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 10)
+        horizontal_box.Add(self.leds, 1, wx.EXPAND | wx.ALL, 10)
 
         static_box_sizer.Add(horizontal_box, 1, wx.EXPAND)
 

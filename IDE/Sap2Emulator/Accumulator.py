@@ -29,7 +29,7 @@ class Accumulator(wx.Panel):
 
         self.leds = LEDArray(self.box, 8, topic=self.topic_prefix + ".set_value")
 
-        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 10)
+        vertical_box.Add(self.leds, 1, wx.ALL | wx.EXPAND, 10)
 
         hbox.Add(vertical_box, 1, wx.EXPAND)
         hbox.Add(self.panel, 0, wx.EXPAND)

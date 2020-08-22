@@ -14,7 +14,7 @@ class ControlLogic(wx.Panel):
 
         self.leds = ControlLedArray(self.box, '#0065ef', '#00075f', control_messages)
 
-        vertical_box.Add(self.leds, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.ALL, 5)
+        vertical_box.Add(self.leds, 1, wx.EXPAND | wx.ALL, 5)
 
         static_box_sizer.Add(vertical_box, 1, wx.EXPAND)
 
